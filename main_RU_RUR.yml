@@ -25,55 +25,63 @@
     with_items:
       - { type : RU , id : 0, patch_number : 0 }
     when:
-      - "item.id == {{ param_patch }}      or {{ param_patch }} == -1"
-      - "item.id >= {{ param_patch_from }} or {{ param_patch_from }} == -1"
-      - "item.id <= {{ param_patch_to }}   or {{ param_patch_to }} == -1"
+      - item.id == param_patch              or param_patch == -1
+      - item.id >= (param_patch_from | int) or param_patch_from == -1
+      - item.id <= (param_patch_to | int)   or param_patch_to == -1
 
   # Execute for every RU
   - include: "{{ patch_file }} patch={{ item }}"
     with_items: "{{ lookup('vars', patch_list) }}"
     when:
       - item.type == "RU"
-      - "item.id == {{ param_patch }}      or {{ param_patch }} == -1"
-      - "item.id >= {{ param_patch_from }} or {{ param_patch_from }} == -1"
-      - "item.id <= {{ param_patch_to }}   or {{ param_patch_to }} == -1"
+      - item.id == param_patch              or param_patch == -1
+      - item.id >= (param_patch_from | int) or param_patch_from == -1
+      - item.id <= (param_patch_to | int)   or param_patch_to == -1
 
   when: param_type is undefined or param_type == "RU"
 
 ### Save latest applied RU as Base Snapshot for OJVM. Why? OJVM can't be appied over base release. They requires a DB RU.
 - block:
-  
-  - name : Get latest RU and generate Snapshot Name
+
+  - name: Get latest RU ID
     set_fact:
-      vm_snapshot: "{{ db_version }} {{ item.type }} {{ item.id }}"
-      latest_RU_id: "{{ db_version }}.{{ item.type }}.{{ item.id }}"
-    with_items: "{{ lookup('vars', patch_list) }}"
-    when: item.type == "RU"
+      latest_RU_id: "{{ lookup('vars', patch_list) | json_query(filter_qry) | max }}"
+    vars:
+      filter_qry: "[?type=='RU'].id"
+
+  - name : Generate Snapshot Name
+    set_fact:
+      vm_snapshot: "{{ db_version }} RU {{ latest_RU_id }}"
+      latest_RU_line: "{{ db_version }}.RU.{{ latest_RU_id }}"
 
   - name: "Latest RU"
-    debug: msg="Latest RU ID - {{ latest_RU_id }}"
+    debug: msg="Latest RU ID - {{ latest_RU_line }}"
 
   # Save lastest RU as a new snapshot - Also changes vm_snapshot variable to it (for OJVM).
   - include: vm_savestate.yml
       patch_type="RU"
-    when: latest_RU_id == latest_processed
+    when: latest_RU_line == latest_processed
 
   when: param_type is undefined or param_type == "RU"
 
-### OJVM load base Snapshot
-# Will load it if not already done by the RU above task. i.e: param_type is defined and "OJVM"
+### OJVM define base Snapshot
+# Will define it if not already done by the RU above task. i.e: param_type is defined and "OJVM"
 - block:
 
-  - name : Define snapshot base version to rollback when vm_reload is called.
+  - name: Get latest RU ID
     set_fact:
-      vm_snapshot: "{{ db_version }} {{ item.type }} {{ item.id }}"
-    with_items: "{{ lookup('vars', patch_list) }}"
-    when: item.type == "RU"
+      latest_RU_id: "{{ lookup('vars', patch_list) | json_query(filter_qry) | max }}"
+    vars:
+      filter_qry: "[?type=='RU'].id"
+
+  - name : Generate Snapshot Name
+    set_fact:
+      vm_snapshot: "{{ db_version }} RU {{ latest_RU_id }}"
 
   - name: "Base Snapshot will be {{ vm_snapshot }}"
     debug: msg="Base Snapshot will be {{ vm_snapshot }}"
 
-  when: param_type is undefined or param_type == "OJVM"
+  when: param_type is defined and param_type == "OJVM"
 
 ### OJVM
 - block:
@@ -83,10 +91,10 @@
     with_items: "{{ lookup('vars', patch_list) }}"
     when:
       - item.type == "OJVM"
-      - "item.id == {{ param_patch }}      or {{ param_patch }} == -1"
-      - "item.id >= {{ param_patch_from }} or {{ param_patch_from }} == -1"
-      - "item.id <= {{ param_patch_to }}   or {{ param_patch_to }} == -1"
-  
+      - item.id == param_patch              or param_patch == -1
+      - item.id >= (param_patch_from | int) or param_patch_from == -1
+      - item.id <= (param_patch_to | int)   or param_patch_to == -1
+
   when: param_type is undefined or param_type == "OJVM"
 
 ### RUR
@@ -95,25 +103,30 @@
   - name : Define snapshot base version to rollback when vm_reload is called.
     set_fact:
       vm_snapshot: "{{ patch_base }}"
-  
-  # Execute for base release if there is at least 1 RUR for that version
-  - include: "{{ patch_file }} patch={{ base_patch }}"
+
+  - name : Check if there is any RUR
+    set_fact:
+      total_RURs: "{{ lookup('vars', patch_list) | json_query(filter_qry) | count }}"
     vars:
-      base_patch: { type : RUR , id : 0, patch_number : 0 }
-    with_items: "{{ lookup('vars', patch_list) }}"
+      filter_qry: "[?type=='RUR'].id"
+
+  # Execute for base release if there is at least 1 RUR for that version
+  - include: "{{ patch_file }} patch={{ item }}"
+    with_items:
+      - { type : RUR , id : 0, patch_number : 0 }
     when:
-      - item.type == "RUR" and item.id == 1
-      - "0 == {{ param_patch }}      or {{ param_patch }} == -1"
-      - "0 >= {{ param_patch_from }} or {{ param_patch_from }} == -1"
-      - "0 <= {{ param_patch_to }}   or {{ param_patch_to }} == -1"
+      - total_RURs != "0"
+      - 0 == param_patch              or param_patch == -1
+      - 0 >= (param_patch_from | int) or param_patch_from == -1
+      - 0 <= (param_patch_to | int)   or param_patch_to == -1
 
   # Execute for every RUR
   - include: "{{ patch_file }} patch={{ item }}"
     with_items: "{{ lookup('vars', patch_list) }}"
     when:
       - item.type == "RUR"
-      - "item.id == {{ param_patch }}      or {{ param_patch }} == -1"
-      - "item.id >= {{ param_patch_from }} or {{ param_patch_from }} == -1"
-      - "item.id <= {{ param_patch_to }}   or {{ param_patch_to }} == -1"
+      - item.id == param_patch              or param_patch == -1
+      - item.id >= (param_patch_from | int) or param_patch_from == -1
+      - item.id <= (param_patch_to | int)   or param_patch_to == -1
 
   when: param_type is undefined or param_type == "RUR"

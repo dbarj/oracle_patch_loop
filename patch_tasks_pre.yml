@@ -55,10 +55,8 @@
   # When patch_folder variable is defined (mostly for BPs), extract that folder from unziped patch to apply
   - block:
   
-    - name : Process only a patch subfolder
-      copy:
-        src: "{{ unzip_patch_folder }}/{{ patch.patch_folder }}"
-        dest: "{{ shared_folder }}"
+    - name: Process only patch subfolder
+      command: "mv {{ unzip_patch_folder }}/{{ patch.patch_folder }} {{ shared_folder }}"
   
     - name : Remove unzipped patch
       file:

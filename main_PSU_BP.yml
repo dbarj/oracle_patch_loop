@@ -25,55 +25,63 @@
     with_items:
       - { type : PSU , id : 0, patch_number : 0 }
     when:
-      - "item.id == {{ param_patch }}      or {{ param_patch }} == -1"
-      - "item.id >= {{ param_patch_from }} or {{ param_patch_from }} == -1"
-      - "item.id <= {{ param_patch_to }}   or {{ param_patch_to }} == -1"
+      - item.id == param_patch              or param_patch == -1
+      - item.id >= (param_patch_from | int) or param_patch_from == -1
+      - item.id <= (param_patch_to | int)   or param_patch_to == -1
 
   # Execute for every PSU
   - include: "{{ patch_file }} patch={{ item }}"
     with_items: "{{ lookup('vars', patch_list) }}"
     when:
       - item.type == "PSU"
-      - "item.id == {{ param_patch }}      or {{ param_patch }} == -1"
-      - "item.id >= {{ param_patch_from }} or {{ param_patch_from }} == -1"
-      - "item.id <= {{ param_patch_to }}   or {{ param_patch_to }} == -1"
+      - item.id == param_patch              or param_patch == -1
+      - item.id >= (param_patch_from | int) or param_patch_from == -1
+      - item.id <= (param_patch_to | int)   or param_patch_to == -1
 
   when: param_type is undefined or param_type == "PSU"
 
 ### Save latest applied PSU as Base Snapshot for OJVM. Why? OJVM can't be appied over base release. They requires a DB PSU.
 - block:
-  
-  - name : Get latest PSU and generate Snapshot Name
+
+  - name: Get latest PSU ID
     set_fact:
-      vm_snapshot: "{{ db_version }} {{ item.type }} {{ item.id }}"
-      latest_psu_id: "{{ db_version }}.{{ item.type }}.{{ item.id }}"
-    with_items: "{{ lookup('vars', patch_list) }}"
-    when: item.type == "PSU"
+      latest_psu_id: "{{ lookup('vars', patch_list) | json_query(filter_qry) | max }}"
+    vars:
+      filter_qry: "[?type=='PSU'].id"
+
+  - name : Generate Snapshot Name
+    set_fact:
+      vm_snapshot: "{{ db_version }} PSU {{ latest_psu_id }}"
+      latest_psu_line: "{{ db_version }}.PSU.{{ latest_psu_id }}"
 
   - name: "Latest PSU"
-    debug: msg="Latest PSU ID - {{ latest_psu_id }}"
+    debug: msg="Latest PSU ID - {{ latest_psu_line }}"
 
   # Save lastest PSU as a new snapshot - Also changes vm_snapshot variable to it (for OJVM).
   - include: vm_savestate.yml
       patch_type="PSU"
-    when: latest_psu_id == latest_processed
+    when: latest_psu_line == latest_processed
 
   when: param_type is undefined or param_type == "PSU"
 
-### OJVM load base Snapshot
-# Will load it if not already done by the PSU above task. i.e: param_type is defined and "OJVM"
+### OJVM define base Snapshot
+# Will define it if not already done by the PSU above task. i.e: param_type is defined and "OJVM"
 - block:
 
-  - name : Define snapshot base version to rollback when vm_reload is called.
+  - name: Get latest PSU ID
     set_fact:
-      vm_snapshot: "{{ db_version }} {{ item.type }} {{ item.id }}"
-    with_items: "{{ lookup('vars', patch_list) }}"
-    when: item.type == "PSU"
+      latest_psu_id: "{{ lookup('vars', patch_list) | json_query(filter_qry) | max }}"
+    vars:
+      filter_qry: "[?type=='PSU'].id"
+
+  - name : Generate Snapshot Name
+    set_fact:
+      vm_snapshot: "{{ db_version }} PSU {{ latest_psu_id }}"
 
   - name: "Base Snapshot will be {{ vm_snapshot }}"
     debug: msg="Base Snapshot will be {{ vm_snapshot }}"
 
-  when: param_type is undefined or param_type == "OJVM"
+  when: param_type is defined and param_type == "OJVM"
 
 ### OJVM
 - block:
@@ -83,10 +91,10 @@
     with_items: "{{ lookup('vars', patch_list) }}"
     when:
       - item.type == "OJVM"
-      - "item.id == {{ param_patch }}      or {{ param_patch }} == -1"
-      - "item.id >= {{ param_patch_from }} or {{ param_patch_from }} == -1"
-      - "item.id <= {{ param_patch_to }}   or {{ param_patch_to }} == -1"
-  
+      - item.id == param_patch              or param_patch == -1
+      - item.id >= (param_patch_from | int) or param_patch_from == -1
+      - item.id <= (param_patch_to | int)   or param_patch_to == -1
+
   when: param_type is undefined or param_type == "OJVM"
 
 ### BP
@@ -95,25 +103,30 @@
   - name : Define snapshot base version to rollback when vm_reload is called.
     set_fact:
       vm_snapshot: "{{ patch_base }}"
-  
-  # Execute for base release if there is at least 1 BP for that version
-  - include: "{{ patch_file }} patch={{ base_patch }}"
+
+  - name : Check if there is any BP
+    set_fact:
+      total_bps: "{{ lookup('vars', patch_list) | json_query(filter_qry) | count }}"
     vars:
-      base_patch: { type : BP , id : 0, patch_number : 0 }
-    with_items: "{{ lookup('vars', patch_list) }}"
+      filter_qry: "[?type=='BP'].id"
+
+  # Execute for base release if there is at least 1 BP for that version
+  - include: "{{ patch_file }} patch={{ item }}"
+    with_items:
+      - { type : BP , id : 0, patch_number : 0 }
     when:
-      - item.type == "BP" and item.id == 1
-      - "0 == {{ param_patch }}      or {{ param_patch }} == -1"
-      - "0 >= {{ param_patch_from }} or {{ param_patch_from }} == -1"
-      - "0 <= {{ param_patch_to }}   or {{ param_patch_to }} == -1"
+      - total_bps != "0"
+      - 0 == param_patch              or param_patch == -1
+      - 0 >= (param_patch_from | int) or param_patch_from == -1
+      - 0 <= (param_patch_to | int)   or param_patch_to == -1
 
   # Execute for every BP
   - include: "{{ patch_file }} patch={{ item }}"
     with_items: "{{ lookup('vars', patch_list) }}"
     when:
       - item.type == "BP"
-      - "item.id == {{ param_patch }}      or {{ param_patch }} == -1"
-      - "item.id >= {{ param_patch_from }} or {{ param_patch_from }} == -1"
-      - "item.id <= {{ param_patch_to }}   or {{ param_patch_to }} == -1"
+      - item.id == param_patch              or param_patch == -1
+      - item.id >= (param_patch_from | int) or param_patch_from == -1
+      - item.id <= (param_patch_to | int)   or param_patch_to == -1
 
   when: param_type is undefined or param_type == "BP"
