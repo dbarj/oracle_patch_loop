@@ -1,0 +1,45 @@
+- name: Copy {{ sha256_file }} to repository
+  copy:
+    src: "{{ shared_folder }}/{{ sha256_file }}"
+    dest: "{{ chksum_folder }}"
+
+- name: "Copy {{ dump_file_prefix }}.dmp to repository"
+  copy:
+    src: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+    dest: "{{ dump_folder }}"
+
+- name: "Copy {{ dump_file_prefix }}.log to repository"
+  copy:
+    src: "{{ shared_folder }}/{{ dump_file_prefix }}.log"
+    dest: "{{ dump_folder }}"
+
+- name : "Remove file {{ sha256_file }}"
+  file:
+    state: absent
+    path: "{{ shared_folder }}/{{ sha256_file }}"
+
+- name : "Remove file {{ dump_file_prefix }}.dmp"
+  file:
+    state: absent
+    path: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+
+- name : "Remove file {{ dump_file_prefix }}.log"
+  file:
+    state: absent
+    path: "{{ shared_folder }}/{{ dump_file_prefix }}.log"
+
+- name : Remove unzipped patch
+  file:
+    state: absent
+    path: "{{ unzip_patch_folder }}"
+  when: patch.id != 0
+
+- name : Remove PatchSearch.xml
+  file:
+    state: absent
+    path: "{{ shared_folder }}/PatchSearch.xml"
+  when: patch.id != 0
+
+- name : Define latest processed
+  set_fact:
+    latest_processed: "{{ db_version }}.{{ patch.type }}.{{ patch.id }}"

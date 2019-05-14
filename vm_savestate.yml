@@ -1,0 +1,16 @@
+## This code will take a snapshot of the latest item on the list given the patch_type.
+## It will also update the vm_snapshot to point to this snapshot
+
+# Save latest machine image if not already
+- name: "Create new VM snapshot \"{{ vm_snapshot }}\" if not exists."
+  shell: |
+       MACHINE="{{ vm_machine }}"
+       SNAPSHOT="{{ vm_snapshot }}"
+       if ! $(VBoxManage showvminfo --machinereadable "$MACHINE" | grep -q "^SnapshotName.*=\"$SNAPSHOT\"")
+       then
+         VBoxManage snapshot "$MACHINE" take "$SNAPSHOT"
+       fi
+       until $(VBoxManage showvminfo --machinereadable "$MACHINE" | grep -q ^VMState=.running.)
+       do
+         sleep 1
+       done

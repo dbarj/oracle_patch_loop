@@ -1,0 +1,13 @@
+# ID :        Full 4 digits database release
+# Patch List: Correspondig patch list on "list_patches" file
+# Main File:  File to process the patch.
+# V Machine:  Virtual Machine name ready for patch apply.
+# Base Snap:  Snapshot on machine that will be used as a base to rollback after every patch apply (must be unique name).
+
+list_versions:
+  - { id : "11.2.0.4" , patch_list : "list_11204" , main_file : "patch_main_11g.yml" , vmachine : "Oracle Linux 6.8" , base_snap : "11.2.0.4 Ready" }
+  - { id : "12.1.0.1" , patch_list : "list_12101" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 6.8" , base_snap : "12.1.0.1 Ready" }
+  - { id : "12.1.0.2" , patch_list : "list_12102" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 6.8" , base_snap : "12.1.0.2 Ready" }
+  - { id : "12.2.0.1" , patch_list : "list_12201" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 6.8" , base_snap : "12.2.0.1 Ready" }
+  - { id : "18.0.0.0" , patch_list : "list_18000" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 6.8" , base_snap : "18.0.0.0 Ready" }
+  - { id : "19.0.0.0" , patch_list : "list_19000" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 6.8" , base_snap : "19.0.0.0 Ready" }

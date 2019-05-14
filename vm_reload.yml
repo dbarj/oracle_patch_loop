@@ -1,0 +1,24 @@
+- name: "Load base snapshot {{ vm_snapshot }}"
+  shell: |
+       set -e
+       MACHINE="{{ vm_machine }}"
+       SNAPSHOT="{{ vm_snapshot }}"
+       function getState () {
+         echo $(VBoxManage showvminfo --machinereadable "$MACHINE" | grep '^VMState=' | cut -d'=' -f 2 | sed 's/"//g')
+       }
+       [ "$(getState)" == "running" ] && VBoxManage controlvm "$MACHINE" poweroff
+       while [ "$(getState)" == "running" ]
+       do
+         sleep 1
+       done
+       VBoxManage snapshot "$MACHINE" restore "$SNAPSHOT"
+       while [ "$(getState)" != "saved" ]
+       do
+         sleep 1
+       done
+       VBoxManage startvm "$MACHINE" --type headless
+       while [ "$(getState)" != "running" ]
+       do
+         sleep 1
+       done
+       sleep 5 # Give some time for SSH.

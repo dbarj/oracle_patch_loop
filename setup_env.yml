@@ -1,0 +1,41 @@
+- name: Create directory
+  file:
+    path: "{{ shared_folder }}"
+    state: directory
+
+- name: Copy ocm.rsp to VM shared folder
+  copy:
+    src: files/ocm.rsp
+    dest: "{{ shared_folder }}"
+    mode: u=rw,g=r,o=r
+
+- name: Copy patch SQL to shared folder
+  copy:
+    src: patch_sql/
+    dest: "{{ shared_folder }}/patch_sql/"
+    mode: u=rw,g=r,o=r
+
+- name: Copy user SQL to shared folder
+  copy:
+    src: user_sql/
+    dest: "{{ shared_folder }}/user_sql/"
+    mode: u=rw,g=r,o=r
+
+- name : Check parameter param_patch
+  set_fact:
+    param_patch: -1
+  when: param_patch is undefined
+
+- name : Check parameter param_patch_from
+  set_fact:
+    param_patch_from: -1
+  when: param_patch_from is undefined
+
+- name : Check parameter param_patch_to
+  set_fact:
+    param_patch_to: -1
+  when: param_patch_to is undefined
+
+- name : Define latest processed as null
+  set_fact:
+    latest_processed: ""
