@@ -20,15 +20,17 @@ The tool was tested and is currently working for all PSUs, OJVM PSUs, Bundle Pat
 - 12.1.0.1
 - 12.1.0.2
 - 12.2.0.1
-- 18.0.0.0
-- 19.0.0.0
+- 18
+- 19
 
 ## Execution Steps ##
 
 1. Clone the repository to your compute:
 
-   $ git clone https://github.com/dbarj/oracle_patch_loop.git
-   $ cd oracle_patch_loop
+``` shell
+$ git clone https://github.com/dbarj/oracle_patch_loop.git
+$ cd oracle_patch_loop
+```
 
 2. Edit config_vars.yml with your current environment configuration. Each variable use is detailed on the file.
 
@@ -36,27 +38,36 @@ The tool was tested and is currently working for all PSUs, OJVM PSUs, Bundle Pat
 
 4. Execute the tool:
 
-   $ ansible-playbook main.yml
+``` shell
+$ ansible-playbook main.yml
+```
 
-   Optionally, you can declare the following command line variables to limit the code execution scope:
+Optionally, you can declare the following command line variables to limit the code execution scope:
 
-   - param_version : Will limit the execution only for the given version:
+- **param_version** : Will limit the execution only for the given version:
 
+``` shell
 $ ansible-playbook main.yml --flush-cache --extra-vars "param_version=18.0.0.0"
+```
 
-   - param_type : Will limit the execution only for the given patch type:
+- **param_type** : Will limit the execution only for the given patch type:
 
+``` shell
 $ ansible-playbook main.yml --flush-cache --extra-vars "param_version=11.2.0.4 param_type=BP"
 $ ansible-playbook main.yml --flush-cache --extra-vars "param_version=12.2.0.1 param_type=RU"
+```
 
-   - param_patch : Will limit the execution only for the given patch version:
+- **param_patch** : Will limit the execution only for the given patch version:
 
+``` shell
 $ ansible-playbook main.yml --flush-cache --extra-vars "param_version=12.2.0.1 param_type=RU param_patch=190416"
+```
 
-   - param_patch_from or param_patch_to : Will limit the execution only for the given patch version:
+- **param_patch_from** or **param_patch_to** : Will limit the execution only for the given patch version:
 
+``` shell
 $ ansible-playbook main.yml --flush-cache --extra-vars "param_version=12.2.0.1 param_type=RU param_patch_from=180116"
-
+```
 
 ## Versions ##
 * v1.01 (2019-05-13) by Rodrigo Jorge
