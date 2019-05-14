@@ -14,14 +14,14 @@ VM_IP_address  : "192.168.56.101"
 mysid : "orcl"
 
 # Folder to store the final generated DB dump
-dump_folder : "/Volumes/Samsung_T3/OraSum/files/exp2"
+dump_folder : "/Volumes/Samsung_T3/OraSum/files/exp"
 
 # Folder to store the final generated ORACLE_HOME checksum
 chksum_folder : "/Volumes/Samsung_T3/OraSum/files/binsum"
 
 # Folder to store the generated files checksum
-user_expdp_sql_pre  : "calculateHash.sql"
-user_expdp_sql_post : "cleanUser.sql"
+user_expdp_sql_pre  : "preActions.sql"
+user_expdp_sql_post : "postActions.sql"
 
 # User that will hold your tables outputs and be exported after each execution
 dump_user : hash
@@ -29,5 +29,5 @@ dump_user : hash
 # User pass
 dump_pass : hash
 
-# This parameter will skip execution for patches that already have a dump file generated.
+# This parameter will skip execution for patches that already have a dump file generated in "dump_folder".
 skip_dump_exists: true
