@@ -1,4 +1,4 @@
-# Folder where the database patches are placed.
+# Folder where the database patches are placed. The patch can be placed in sub-folders of the variable below.
 source_folder : "/Volumes/Untitled/Rodrigo/ORACHKSUM/DB\ Install"
 
 # Folder in RW mode on your compute shared with VM to process files.

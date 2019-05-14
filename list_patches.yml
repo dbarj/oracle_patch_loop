@@ -61,10 +61,10 @@ list_11204:
   - { type : "BP"   , id : 15     , patch_number : 20059387 , patch_folder : 20059375 }
   - { type : "BP"   , id : 16     , patch_number : 20589991 , patch_folder : 20449729 }
   - { type : "BP"   , id : 17     , patch_number : 21142006 , patch_folder : 21025821 }
-  - { type : "BP"   , id : 18     , patch_number : 21439740 , patch_folder : null     }
+  - { type : "BP"   , id : 18     , patch_number : 21439740 }
   - { type : "BP"   , id : 19     , patch_number : 21753535 , patch_folder : 21637587 }
   - { type : "BP"   , id : 20     , patch_number : 21800477 , patch_folder : 21761335 }
-  - { type : "BP"   , id : 151117 , patch_number : 21921082 , patch_folder : null     }
+  - { type : "BP"   , id : 151117 , patch_number : 21921082 }
   - { type : "BP"   , id : 160119 , patch_number : 22320025 , patch_folder : 22309110 }
   - { type : "BP"   , id : 160419 , patch_number : 22899777 , patch_folder : 22738760 }
   - { type : "BP"   , id : 160719 , patch_number : 23274515 , patch_folder : 23061511 }

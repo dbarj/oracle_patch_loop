@@ -6,7 +6,7 @@ The result will be exported using expdp and moved to a folder repository in your
 
 ## How it works ##
 
-Using VirtualBox VM snapshots, the tool will loop over a list of the available patches doing the following steps:
+Using VirtualBox VM snapshots, the playbook will loop over a list of the available patches doing the following steps:
 - Restore VM to base snapshot.
 - Apply Oracle Patch.
 - Collect the information you want.
@@ -14,7 +14,7 @@ Using VirtualBox VM snapshots, the tool will loop over a list of the available p
 
 ## Available version ##
 
-The tool was tested and is currently working for all PSUs, OJVM PSUs, Bundle Patches, RUs or RURs for the following versions:
+The playbook was tested and is currently working for all PSUs, OJVM PSUs, Bundle Patches, RUs or RURs for the following versions:
 
 - 11.2.0.4
 - 12.1.0.1
@@ -22,6 +22,8 @@ The tool was tested and is currently working for all PSUs, OJVM PSUs, Bundle Pat
 - 12.2.0.1
 - 18
 - 19
+
+_P.S: For details of versions and patches that are processed, check list_versions.yml and list_patches.yml files._
 
 ## Execution Steps ##
 
@@ -36,7 +38,7 @@ $ cd oracle_patch_loop
 
 3. Change remote_user with the SSH variable value in ansible.cfg, if not using "oracle" account.
 
-4. Execute the tool:
+4. Execute the playbook:
 
 ``` shell
 $ ansible-playbook main.yml
@@ -73,8 +75,9 @@ $ ansible-playbook main.yml --extra-vars "param_version=12.2.0.1 param_type=RU p
 
 * Passwordless SSH connection to VM user.
 * Passwordless sudo to root to VM user.
+* A shared folder between your machine and the VirtualBox VM must exists and properly configured in config_vars.yml.
 * Base Image used for each release must already have latest OPatch version.
-* VM must be configured to have the network interface auto-started as soon as snapshot is loaded.
+* VM must be configured to have the network interface auto-started as soon as snapshot is reloaded.
 
 ## Versions ##
 * v1.01 (2019-05-13) by Rodrigo Jorge
