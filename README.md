@@ -41,19 +41,21 @@ The tool was tested and is currently working for all PSUs, OJVM PSUs, Bundle Pat
    Optionally, you can declare the following command line variables to limit the code execution scope:
 
    - param_version : Will limit the execution only for the given version:
+
 $ ansible-playbook main.yml --flush-cache --extra-vars "param_version=18.0.0.0"
 
    - param_type : Will limit the execution only for the given patch type:
+
 $ ansible-playbook main.yml --flush-cache --extra-vars "param_version=11.2.0.4 param_type=BP"
 $ ansible-playbook main.yml --flush-cache --extra-vars "param_version=12.2.0.1 param_type=RU"
 
    - param_patch : Will limit the execution only for the given patch version:
+
 $ ansible-playbook main.yml --flush-cache --extra-vars "param_version=12.2.0.1 param_type=RU param_patch=190416"
 
    - param_patch_from or param_patch_to : Will limit the execution only for the given patch version:
-$ ansible-playbook main.yml --flush-cache --extra-vars "param_version=12.2.0.1 param_type=RU param_patch_from=180116"
 
-## Notes ##
+$ ansible-playbook main.yml --flush-cache --extra-vars "param_version=12.2.0.1 param_type=RU param_patch_from=180116"
 
 
 ## Versions ##
