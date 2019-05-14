@@ -1,7 +1,7 @@
 # Oracle Patch Loop Applier #
 
-Oracle Patch Loop Applier is an ansible tool that will loop over all existent configured Oracle Patches and run your scripts on the database.
-You can use it to collect some specific oracle configuration (both OS or DB) for all oracle versions/patches and later compare them for changes.
+Oracle Patch Loop Applier is an ansible playbook that will loop over all existent configured Oracle Patches, running your scripts on the database and collecting information.
+You can use it to extract some specific oracle configuration (from both OS or DB) for all oracle versions/patches and later compare them for changes.
 The result will be exported using expdp and moved to a folder repository in your computer.
 
 ## How it works ##
@@ -47,27 +47,34 @@ Optionally, you can declare the following command line variables to limit the co
 - **param_version** : Will limit the execution only for the given version:
 
 ``` shell
-$ ansible-playbook main.yml --flush-cache --extra-vars "param_version=18.0.0.0"
+$ ansible-playbook main.yml --extra-vars "param_version=18.0.0.0"
 ```
 
 - **param_type** : Will limit the execution only for the given patch type:
 
 ``` shell
-$ ansible-playbook main.yml --flush-cache --extra-vars "param_version=11.2.0.4 param_type=BP"
-$ ansible-playbook main.yml --flush-cache --extra-vars "param_version=12.2.0.1 param_type=RU"
+$ ansible-playbook main.yml --extra-vars "param_version=11.2.0.4 param_type=BP"
+$ ansible-playbook main.yml --extra-vars "param_version=12.2.0.1 param_type=RU"
 ```
 
 - **param_patch** : Will limit the execution only for the given patch version:
 
 ``` shell
-$ ansible-playbook main.yml --flush-cache --extra-vars "param_version=12.2.0.1 param_type=RU param_patch=190416"
+$ ansible-playbook main.yml --extra-vars "param_version=12.2.0.1 param_type=RU param_patch=190416"
 ```
 
-- **param_patch_from** or **param_patch_to** : Will limit the execution only for the given patch version:
+- **param_patch_from** or **param_patch_to** : Will limit the execution range for the given patch version:
 
 ``` shell
-$ ansible-playbook main.yml --flush-cache --extra-vars "param_version=12.2.0.1 param_type=RU param_patch_from=180116"
+$ ansible-playbook main.yml --extra-vars "param_version=12.2.0.1 param_type=RU param_patch_from=180116"
 ```
+
+## Pre-requisites ##
+
+* Passwordless SSH connection to VM user.
+* Passwordless sudo to root to VM user.
+* Base Image used for each release must already have latest OPatch version.
+* VM must be configured to have the network interface auto-started as soon as snapshot is loaded.
 
 ## Versions ##
 * v1.01 (2019-05-13) by Rodrigo Jorge
