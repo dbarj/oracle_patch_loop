@@ -74,10 +74,10 @@ $ ansible-playbook main.yml --extra-vars "param_version=12.2.0.1 param_type=RU p
 ## Pre-requisites ##
 
 * Passwordless SSH connection to VM user.
-* Passwordless sudo to root to VM user.
+* Passwordless sudo to root for VM user.
 * A shared folder between your machine and the VirtualBox VM must exists and properly configured in config_vars.yml.
 * Base Image used for each release must already have latest OPatch version.
-* VM must be configured to have the network interface auto-started as soon as snapshot is reloaded.
+* VM must be configured to have the network interface auto-started as soon as snapshot is loaded.
 
 ## Versions ##
 * v1.01 (2019-05-13) by Rodrigo Jorge

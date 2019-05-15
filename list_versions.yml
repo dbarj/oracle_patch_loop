@@ -1,8 +1,8 @@
 # ID :        Full 4 digits database release
-# Patch List: Correspondig patch list on "list_patches" file
+# Patch List: Corresponding patch list on "list_patches" file
 # Main File:  File to process the patch.
-# V Machine:  Virtual Machine name ready for patch apply.
-# Base Snap:  Snapshot on machine that will be used as a base to rollback after every patch apply (must be unique name).
+# VM Machine: Virtual Machine name that is ready for patch apply.
+# Base Snap:  Snapshot on machine that will be used as a base to rollback before every patch apply (must be unique name for each VM).
 
 list_versions:
   - { id : "11.2.0.4" , patch_list : "list_11204" , main_file : "patch_main_11g.yml" , vmachine : "Oracle Linux 6.8" , base_snap : "11.2.0.4 Ready" }
