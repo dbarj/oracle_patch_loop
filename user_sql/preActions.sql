@@ -1,0 +1,3 @@
+-- This SQL File will be executed before the expdp is called.
+-- If dump_user is not created on the VM snapshot, use this SQL to create it and its objects.
+-- You may also add other scripts to this folder and call them using @@sqlscript.sql syntax.

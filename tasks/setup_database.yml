@@ -1,0 +1,13 @@
+- name: Find the location of DB Home from the SID
+  shell: 'grep {{ mysid }} /etc/oratab |grep -v ^[#] | cut -d: -f2|head -1'
+  register: dbhomeoutput
+  delegate_to: "{{ VM_IP_address }}"
+
+- name : Define DB Home
+  set_fact:
+    dbhome_locl: "{{ dbhomeoutput.stdout }}"
+- debug: var=dbhome_locl
+
+- fail:
+    msg: "Could not find ORACLE_HOME. Check if database {{ mysid }} is registered in /etc/oratab."
+  when: dbhomeoutput.stdout == ''

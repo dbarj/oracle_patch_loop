@@ -1,0 +1,120 @@
+# Pre Actions
+- include: patch_tasks_pre.yml
+
+- block:
+
+  # Stop the database
+  - include: runsql.yml sql_file="shutdown.sql" sql_folder="patch_sql" task_action="Stop Database"
+
+  - name: Run OPatch
+    shell: |
+         export ORACLE_HOME ORACLE_SID
+         ./opatch apply -silent {{ VM_folder }}/{{ patch.patch_number }} -ocmrf {{ VM_folder }}/ocm.rsp
+    environment:
+      ORACLE_HOME: "{{ dbhome_locl }}"
+      ORACLE_SID: "{{ mysid }}"
+    args:
+      chdir: "{{ dbhome_locl }}/OPatch"
+    register: sqloutput
+    become: true
+    become_user: oracle
+    when: patch.id != 0
+    delegate_to: "{{ VM_IP_address }}"
+
+  - name: Opatch Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+    when: sqloutput.stdout_lines is defined
+
+  - name: Generate files checksum
+    shell: |
+         find -type f -exec sha256sum "{}" + > {{ VM_folder }}/{{ sha256_file }}
+    args:
+      chdir: "{{ dbhome_locl }}"
+    register: sqloutput
+    become: true
+    become_user: root
+    delegate_to: "{{ VM_IP_address }}"
+
+  - name: Disable Database Vault
+    shell: |
+         {{ dbhome_locl }}/bin/chopt disable dv
+    environment:
+      ORACLE_HOME: "{{ dbhome_locl }}"
+      ORACLE_SID: "{{ mysid }}"
+    register: sqloutput
+    become: true
+    become_user: oracle
+    delegate_to: "{{ VM_IP_address }}"
+
+  # Start the database
+  - include: runsql.yml sql_file="startup.sql" sql_folder="patch_sql" task_action="Start Database"
+
+  #- name : Apply patch changes on DB (if PSU)
+  - include: runsql.yml sql_file="applySQLPatch.sql" sql_folder="patch_sql" task_action="Apply Patch" sql_parameters="psu"
+    when: patch.id != 0 and patch.type == "PSU"
+
+  #- name : Apply patch changes on DB (if BP)
+  - include: runsql.yml sql_file="applySQLPatch.sql" sql_folder="patch_sql" task_action="Apply Patch" sql_parameters="exa"
+    when: patch.id != 0 and patch.type == "BP"
+
+  # When the SQL Patch is for OJVM
+  - block:
+
+    - name: Find the location of DB Home from the SID
+      shell: 'ls -1 {{ unzip_patch_folder }}/files/sqlpatch'
+      register: sqlpatchidout
+
+    - set_fact:
+        sqlpatchid: "{{ sqlpatchidout.stdout }}"
+
+    - name: SQL Patch ID
+      debug: msg="{{ sqlpatchid }}"
+
+    #- name : Apply patch changes on DB
+    - include: runsql.yml sql_file="applySQLPatchOJVM.sql" sql_folder="patch_sql" task_action="Apply Patch" sql_parameters="{{ sqlpatchid }}"
+
+    when: patch.id != 0 and patch.type == "OJVM"
+
+  # Stop the database
+  - include: runsql.yml sql_file="shutdown.sql" sql_folder="patch_sql" task_action="Stop Database"
+
+  - name: Enable Database Vault
+    shell: |
+         {{ dbhome_locl }}/bin/chopt enable dv
+    environment:
+      ORACLE_HOME: "{{ dbhome_locl }}"
+      ORACLE_SID: "{{ mysid }}"
+    register: sqloutput
+    become: true
+    become_user: oracle
+    delegate_to: "{{ VM_IP_address }}"
+
+  # Start the database
+  - include: runsql.yml sql_file="startup.sql" sql_folder="patch_sql" task_action="Start Database"
+
+  # Collect DB Info
+  - include: runsql.yml sql_file="{{ user_expdp_sql_pre }}" sql_folder="user_sql" task_action="Collect DB Info" sql_parameters="{{ patch.id }} {{ patch.type }} {{ db_version }}"
+
+  # Create External Dir
+  - include: runsql.yml sql_file="externalDir.sql" sql_folder="user_sql" task_action="Create External Directory" sql_parameters="{{ VM_folder }}"
+
+  #- name : Export database tables
+  - name: Export Database Tables
+    shell: |
+         {{ dbhome_locl }}/bin/expdp userid={{ dump_user }}/{{ dump_pass }} directory=expdir compression=all dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log content=data_only schemas={{ dump_user }}
+    environment:
+      ORACLE_HOME: "{{ dbhome_locl }}"
+      ORACLE_SID: "{{ mysid }}"
+    register: sqloutput
+    become: true
+    become_user: oracle
+    delegate_to: "{{ VM_IP_address }}"
+
+  # Post expdp SQL
+  - include: runsql.yml sql_file="{{ user_expdp_sql_post }}" sql_folder="user_sql" task_action="Post expdp SQL"
+
+  # Post Actions
+  - include: patch_tasks_post.yml
+
+  when: skip_all == false
+# Skip all is true when dump file is already generated and skip_dump_exists is true at config.

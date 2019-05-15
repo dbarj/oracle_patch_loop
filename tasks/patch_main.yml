@@ -1,0 +1,105 @@
+# Pre Actions
+- include: patch_tasks_pre.yml
+
+- block:
+
+  # Stop the database
+  - include: runsql.yml sql_file="shutdown.sql" sql_folder="patch_sql" task_action="Stop Database"
+  
+  - name: Run OPatch
+    shell: |
+         export ORACLE_HOME ORACLE_SID
+         ./opatch apply -silent {{ VM_folder }}/{{ patch.patch_number }}
+    environment:
+      ORACLE_HOME: "{{ dbhome_locl }}"
+      ORACLE_SID: "{{ mysid }}"
+    args:
+      chdir: "{{ dbhome_locl }}/OPatch"
+    register: sqloutput
+    become: true
+    become_user: oracle
+    when: patch.id != 0
+    delegate_to: "{{ VM_IP_address }}"
+  
+  - name: Opatch Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+    when: sqloutput.stdout_lines is defined
+  
+  - name: Generate files checksum
+    shell: |
+         find -type f -exec sha256sum "{}" + > {{ VM_folder }}/{{ sha256_file }}
+    args:
+      chdir: "{{ dbhome_locl }}"
+    register: sqloutput
+    become: true
+    become_user: root
+    delegate_to: "{{ VM_IP_address }}"
+  
+  # Start the database
+  - include: runsql.yml sql_file="startupCDB.sql" sql_folder="patch_sql" task_action="Start Database"
+    when: patch.type != "OJVM"
+  
+  # Start the database (in OJVM, it must be in upgrade mode)
+  - include: runsql.yml sql_file="startupCDBOJVM.sql" sql_folder="patch_sql" task_action="Start Database"
+    when: patch.type == "OJVM"
+  
+  #- name : Apply patch changes on DB
+  - name: Run Datapatch
+    shell: |
+         export ORACLE_HOME ORACLE_SID
+         ./datapatch -verbose
+    environment:
+      ORACLE_HOME: "{{ dbhome_locl }}"
+      ORACLE_SID: "{{ mysid }}"
+    args:
+      chdir: "{{ dbhome_locl }}/OPatch"
+    register: sqloutput
+    become: true
+    become_user: oracle
+    when: patch.id != 0
+    delegate_to: "{{ VM_IP_address }}"
+  # Variable export and chdir introduced to solve an issue in 12.1.0.1 PSU 7 - Patch 20299016
+  
+  - name: Datapatch Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+    when: sqloutput.stdout_lines is defined
+  
+  # Evaluate if it's needed to reexecute datapatch on 12.1.1 due to bug.
+  
+  # Bounce instance on OJVM to remove "upgrade" mode
+  - block:
+    - include: runsql.yml sql_file="shutdown.sql"   sql_folder="patch_sql" task_action="Stop Database"
+    - include: runsql.yml sql_file="startupCDB.sql" sql_folder="patch_sql" task_action="Start Database"
+    when: patch.type == "OJVM"
+  
+  # Collect DB Info
+  - include: runsql.yml sql_file="{{ user_expdp_sql_pre }}" sql_folder="user_sql" task_action="Collect DB Info" sql_parameters="{{ patch.id }} {{ patch.type }} {{ db_version }}"
+    when: patch.type != "RUR"
+  
+  # Collect DB Info
+  - include: runsql.yml sql_file="{{ user_expdp_sql_pre }}" sql_folder="user_sql" task_action="Collect DB Info" sql_parameters="{{ patch.id }} {{ patch.base_ru }}{{ patch.type }} {{ db_version }}"
+    when: patch.type == "RUR"
+  
+  # Create External Dir
+  - include: runsql.yml sql_file="externalDir.sql" sql_folder="user_sql" task_action="Create External Directory" sql_parameters="{{ VM_folder }}"
+  
+  #- name : Export database tables
+  - name: Export Database Tables
+    shell: |
+         {{ dbhome_locl }}/bin/expdp userid=c##{{ dump_user }}/{{ dump_pass }} directory=expdir compression=all dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log content=data_only schemas=c##{{ dump_user }}
+    environment:
+      ORACLE_HOME: "{{ dbhome_locl }}"
+      ORACLE_SID: "{{ mysid }}"
+    register: sqloutput
+    become: true
+    become_user: oracle
+    delegate_to: "{{ VM_IP_address }}"
+  
+  # Post expdp SQL
+  - include: runsql.yml sql_file="{{ user_expdp_sql_post }}" sql_folder="user_sql" task_action="Post expdp SQL"
+  
+  # Post Actions
+  - include: patch_tasks_post.yml
+
+  when: skip_all == false
+# Skip all is true when dump file is already generated and skip_dump_exists is true at config.
