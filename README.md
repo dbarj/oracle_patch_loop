@@ -71,6 +71,8 @@ $ ansible-playbook main.yml --extra-vars "param_version=12.2.0.1 param_type=RU p
 $ ansible-playbook main.yml --extra-vars "param_version=12.2.0.1 param_type=RU param_patch_from=180116"
 ```
 
+_P.S: Note that all the 5 parameters above are independent._
+
 ## Pre-requisites ##
 
 * Passwordless SSH connection to VM user.

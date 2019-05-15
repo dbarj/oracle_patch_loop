@@ -45,6 +45,7 @@
     become: true
     become_user: oracle
     delegate_to: "{{ VM_IP_address }}"
+    when: dbvault_enabled == true
 
   # Start the database
   - include: runsql.yml sql_file="startup.sql" sql_folder="patch_sql" task_action="Start Database"
@@ -88,6 +89,7 @@
     become: true
     become_user: oracle
     delegate_to: "{{ VM_IP_address }}"
+    when: dbvault_enabled == true
 
   # Start the database
   - include: runsql.yml sql_file="startup.sql" sql_folder="patch_sql" task_action="Start Database"

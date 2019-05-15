@@ -6,8 +6,32 @@
 - name : Define DB Home
   set_fact:
     dbhome_locl: "{{ dbhomeoutput.stdout }}"
-- debug: var=dbhome_locl
+
+- name : Print DB Home
+  debug: var=dbhome_locl
 
 - fail:
     msg: "Could not find ORACLE_HOME. Check if database {{ mysid }} is registered in /etc/oratab."
   when: dbhomeoutput.stdout == ''
+
+- block:
+
+  - name: Copy ocm.rsp to VM shared folder
+    copy:
+      src: files/ocm.rsp
+      dest: "{{ shared_folder }}"
+      mode: u=rw,g=r,o=r
+  
+  - name: Check if Database Vault is enabled
+    shell: 'ar -t {{dbhome_locl}}/rdbms/lib/libknlopt.a | grep -q kzvidv.o && echo true || echo false'
+    register: dbvaultoutput
+    delegate_to: "{{ VM_IP_address }}"
+
+  - name : Define Database Vault variable
+    set_fact:
+      dbvault_enabled: "{{ dbvaultoutput.stdout | bool }}"
+
+  - name : Print Database Vault value
+    debug: msg="Database Vault Enabled - {{ dbvault_enabled }}"
+
+  when: db_version == "11.2.0.4"

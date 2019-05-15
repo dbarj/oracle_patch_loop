@@ -1,5 +1,4 @@
-## This code will take a snapshot of the latest item on the list given the patch_type.
-## It will also update the vm_snapshot to point to this snapshot
+## This code will take a snapshot named "vm_snapshot" for the VM. It will later be used as a base release for OJVMs.
 
 # Save latest machine image if not already
 - name: "Create new VM snapshot \"{{ vm_snapshot }}\" if not exists."
