@@ -71,6 +71,8 @@ $ ansible-playbook main.yml --extra-vars "param_version=12.2.0.1 param_type=RU p
 $ ansible-playbook main.yml --extra-vars "param_version=12.2.0.1 param_type=RU param_patch_from=180116"
 ```
 
+_P.S: Note that all the 5 parameters above are independent._
+
 ## Pre-requisites ##
 
 * Passwordless SSH connection to VM user.
@@ -80,4 +82,5 @@ $ ansible-playbook main.yml --extra-vars "param_version=12.2.0.1 param_type=RU p
 * VM must be configured to have the network interface auto-started as soon as snapshot is loaded.
 
 ## Versions ##
+* v1.02 (2019-05-17) by Rodrigo Jorge
 * v1.01 (2019-05-13) by Rodrigo Jorge

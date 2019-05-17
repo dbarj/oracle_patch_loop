@@ -47,7 +47,7 @@
   - name: Run Datapatch
     shell: |
          export ORACLE_HOME ORACLE_SID
-         ./datapatch -verbose
+         ./datapatch -verbose > /tmp/datapatch.log 2>&1
     environment:
       ORACLE_HOME: "{{ dbhome_locl }}"
       ORACLE_SID: "{{ mysid }}"

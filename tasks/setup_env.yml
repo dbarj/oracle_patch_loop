@@ -1,14 +1,3 @@
-- name: Create directory
-  file:
-    path: "{{ shared_folder }}"
-    state: directory
-
-- name: Copy ocm.rsp to VM shared folder
-  copy:
-    src: files/ocm.rsp
-    dest: "{{ shared_folder }}"
-    mode: u=rw,g=r,o=r
-
 - name: Copy patch SQL to shared folder
   copy:
     src: patch_sql/
