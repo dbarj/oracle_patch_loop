@@ -59,7 +59,6 @@
 
   # Save lastest RU as a new snapshot - Also changes vm_snapshot variable to it (for OJVM).
   - include: vm_savestate.yml
-      patch_type="RU"
     when: latest_RU_line == latest_processed
 
   when: param_type is undefined or param_type == "RU"
