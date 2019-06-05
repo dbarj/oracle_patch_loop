@@ -1,8 +1,3 @@
-- name: Copy {{ sha256_file }} to repository
-  copy:
-    src: "{{ shared_folder }}/{{ sha256_file }}"
-    dest: "{{ chksum_folder }}"
-
 - name: "Copy {{ dump_file_prefix }}.dmp to repository"
   copy:
     src: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
@@ -12,11 +7,6 @@
   copy:
     src: "{{ shared_folder }}/{{ dump_file_prefix }}.log"
     dest: "{{ dump_folder }}"
-
-- name : "Remove file {{ sha256_file }}"
-  file:
-    state: absent
-    path: "{{ shared_folder }}/{{ sha256_file }}"
 
 - name : "Remove file {{ dump_file_prefix }}.dmp"
   file:

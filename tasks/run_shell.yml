@@ -1,0 +1,12 @@
+- name: "Run Shell-script - {{ shell_param.task_action }}"
+  shell: |
+       sh {{ VM_folder }}/{{ shell_param.folder | default('user_scripts') }}/{{ shell_param.file }} {{ shell_param.params | default('') }}
+  args:
+    chdir: "{{ VM_folder }}/{{ shell_param.folder | default('user_scripts') }}"
+  register: shoutput
+  become: true
+  become_user: oracle
+  delegate_to: "{{ VM_IP_address }}"
+
+- name: Shell-script Output
+  debug: msg="{{ shoutput.stdout_lines }}"

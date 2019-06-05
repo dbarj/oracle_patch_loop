@@ -16,14 +16,15 @@ mysid : "orcl"
 # Folder to store the final generated DB dump
 dump_folder : "/Volumes/Samsung_T3/OraSum/files/exp"
 
-# Folder to store the final generated ORACLE_HOME checksum
-chksum_folder : "/Volumes/Samsung_T3/OraSum/files/binsum"
+# Files in "user_scripts" folder that will run before and after the final expdp. script_types can be "shell", "sql" or "yml".
+user_expdp_pre  :
+- { file : "preActions.sql" , type : "sql" , task_action : "Pre Actions" }
+- { file : "externalDir.sql" , type : "sql" , task_action : "Create External Directory" }
 
-user_expdp_sql_pre  : "preActions.sql"
-user_expdp_sql_post : "postActions.sql"
-# Files in "user_sql" folder that will run before and after the final expdp.
+user_expdp_post :
+- { file : "postActions.sql" , type : "sql" , task_action : "Post Actions" }
 
-# User that will hold your tables outputs and be exported after each execution
+# User that will hold your tables outputs and be exported after each execution. If the database is CDB, "C##" will be automatically inserted if not.
 dump_user : hash
 
 # User pass

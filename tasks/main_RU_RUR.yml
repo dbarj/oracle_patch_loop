@@ -21,22 +21,25 @@
 - block:
 
   # Execute for base release
-  - include: "{{ patch_file }} patch={{ item }}"
-    with_items:
-      - { type : RU , id : 0, patch_number : 0 }
+  - include: "{{ patch_file }}"
+    vars:
+      patch : { type : RU , id : 0, patch_number : 0 }
     when:
-      - item.id == param_patch              or param_patch == -1
-      - item.id >= (param_patch_from | int) or param_patch_from == -1
-      - item.id <= (param_patch_to | int)   or param_patch_to == -1
+      - 0 == (param_patch | int)      or param_patch == -1
+      - 0 >= (param_patch_from | int) or param_patch_from == -1
+      - 0 <= (param_patch_to | int)   or param_patch_to == -1
 
   # Execute for every RU
-  - include: "{{ patch_file }} patch={{ item }}"
-    with_items: "{{ lookup('vars', patch_list) }}"
+  - include: "{{ patch_file }}"
+    loop: "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
+    loop_control:
+      loop_var: patch
+      label: "{{ patch.id }}"
     when:
-      - item.type == "RU"
-      - item.id == param_patch              or param_patch == -1
-      - item.id >= (param_patch_from | int) or param_patch_from == -1
-      - item.id <= (param_patch_to | int)   or param_patch_to == -1
+      - patch.type == "RU"
+      - patch.id == (param_patch | int)      or param_patch == -1
+      - patch.id >= (param_patch_from | int) or param_patch_from == -1
+      - patch.id <= (param_patch_to | int)   or param_patch_to == -1
 
   when: param_type is undefined or param_type == "RU"
 
@@ -59,7 +62,6 @@
 
   # Save lastest RU as a new snapshot - Also changes vm_snapshot variable to it (for OJVM).
   - include: vm_savestate.yml
-      patch_type="RU"
     when: latest_RU_line == latest_processed
 
   when: param_type is undefined or param_type == "RU"
@@ -87,13 +89,16 @@
 - block:
 
   # Execute for every OJVM
-  - include: "{{ patch_file }} patch={{ item }}"
-    with_items: "{{ lookup('vars', patch_list) }}"
+  - include: "{{ patch_file }}"
+    loop: "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
+    loop_control:
+      loop_var: patch
+      label: "{{ patch.id }}"
     when:
-      - item.type == "OJVM"
-      - item.id == param_patch              or param_patch == -1
-      - item.id >= (param_patch_from | int) or param_patch_from == -1
-      - item.id <= (param_patch_to | int)   or param_patch_to == -1
+      - patch.type == "OJVM"
+      - patch.id == (param_patch | int)      or param_patch == -1
+      - patch.id >= (param_patch_from | int) or param_patch_from == -1
+      - patch.id <= (param_patch_to | int)   or param_patch_to == -1
 
   when: param_type is undefined or param_type == "OJVM"
 
@@ -105,12 +110,15 @@
       vm_snapshot: "{{ patch_base }}"
 
   # Execute for every RUR
-  - include: "{{ patch_file }} patch={{ item }}"
-    with_items: "{{ lookup('vars', patch_list) }}"
+  - include: "{{ patch_file }}"
+    loop: "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
+    loop_control:
+      loop_var: patch
+      label: "{{ patch.id }}"
     when:
-      - item.type == "RUR"
-      - item.id == param_patch              or param_patch == -1
-      - item.id >= (param_patch_from | int) or param_patch_from == -1
-      - item.id <= (param_patch_to | int)   or param_patch_to == -1
+      - patch.type == "RUR"
+      - patch.id == (param_patch | int)      or param_patch == -1
+      - patch.id >= (param_patch_from | int) or param_patch_from == -1
+      - patch.id <= (param_patch_to | int)   or param_patch_to == -1
 
   when: param_type is undefined or param_type == "RUR"
