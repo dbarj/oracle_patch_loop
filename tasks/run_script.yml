@@ -1,0 +1,24 @@
+- fail:
+    msg: "Script type is invalid for {{ script_param.file }}."
+  when: script_param.type != "sql" and script_param.type != "shell" and script_param.type != "yml"
+
+#- name: "Debug"
+#  debug: msg="Processing {{ script_param }}"
+
+- name: "Check if {{ shared_folder }}/{{ script_param.folder | default('user_scripts') }}/{{ script_param.file }} exists"
+  stat:
+    path: "{{ shared_folder }}/{{ script_param.folder | default('user_scripts') }}/{{ script_param.file }}"
+  register: file_stat_result
+
+- fail:
+    msg: "Could not find {{ script_param.file }} file in {{ script_param.folder | default('user_scripts') }}."
+  when: file_stat_result.stat.exists == false
+
+- include: run_sql.yml sql_param="{{ script_param }}"
+  when: script_param.type == "sql"
+
+- include: run_shell.yml shell_param="{{ script_param }}"
+  when: script_param.type == "shell"
+
+- include: "{{ script_param.folder | default('user_scripts') }}/{{ script_param.file }}"
+  when: script_param.type == "yml"

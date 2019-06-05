@@ -1,5 +1,5 @@
 .DS_Store
 main.log
 main.retry
-user_sql/*.sql
+user_scripts/*
 *.txt

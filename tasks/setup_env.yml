@@ -6,8 +6,8 @@
 
 - name: Copy user SQL to shared folder
   copy:
-    src: user_sql/
-    dest: "{{ shared_folder }}/user_sql/"
+    src: user_scripts/
+    dest: "{{ shared_folder }}/user_scripts/"
     mode: u=rw,g=r,o=r
 
 - name : Check parameter param_patch

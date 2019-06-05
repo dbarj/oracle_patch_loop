@@ -4,8 +4,10 @@
 - block:
 
   # Stop the database
-  - include: runsql.yml sql_file="shutdown.sql" sql_folder="patch_sql" task_action="Stop Database"
-  
+  - include: run_sql.yml
+    vars:
+      sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database" }
+
   - name: Run OPatch
     shell: |
          export ORACLE_HOME ORACLE_SID
@@ -25,22 +27,16 @@
     debug: msg="{{ sqloutput.stdout_lines }}"
     when: sqloutput.stdout_lines is defined
   
-  - name: Generate files checksum
-    shell: |
-         find -type f -exec sha256sum "{}" + > {{ VM_folder }}/{{ sha256_file }}
-    args:
-      chdir: "{{ dbhome_locl }}"
-    register: sqloutput
-    become: true
-    become_user: root
-    delegate_to: "{{ VM_IP_address }}"
-  
   # Start the database
-  - include: runsql.yml sql_file="startupCDB.sql" sql_folder="patch_sql" task_action="Start Database"
+  - include: run_sql.yml
+    vars:
+      sql_param : { file : "startupCDB.sql" , folder : "patch_sql" , task_action : "Start Database" }
     when: patch.type != "OJVM"
   
   # Start the database (in OJVM, it must be in upgrade mode)
-  - include: runsql.yml sql_file="startupCDBOJVM.sql" sql_folder="patch_sql" task_action="Start Database"
+  - include: run_sql.yml
+    vars:
+      sql_param : { file : "startupCDBOJVM.sql" , folder : "patch_sql" , task_action : "Start Database" }
     when: patch.type == "OJVM"
   
   #- name : Apply patch changes on DB
@@ -68,25 +64,27 @@
   
   # Bounce instance on OJVM to remove "upgrade" mode
   - block:
-    - include: runsql.yml sql_file="shutdown.sql"   sql_folder="patch_sql" task_action="Stop Database"
-    - include: runsql.yml sql_file="startupCDB.sql" sql_folder="patch_sql" task_action="Start Database"
+  
+    - include: run_sql.yml
+      vars:
+        sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database" }
+
+    - include: run_sql.yml
+      vars:
+        sql_param : { file : "startupCDB.sql" , folder : "patch_sql" , task_action : "Start Database" }
+
     when: patch.type == "OJVM"
-  
-  # Collect DB Info
-  - include: runsql.yml sql_file="{{ user_expdp_sql_pre }}" sql_folder="user_sql" task_action="Collect DB Info" sql_parameters="{{ patch.id }} {{ patch.type }} {{ db_version }}"
-    when: patch.type != "RUR"
-  
-  # Collect DB Info
-  - include: runsql.yml sql_file="{{ user_expdp_sql_pre }}" sql_folder="user_sql" task_action="Collect DB Info" sql_parameters="{{ patch.id }} {{ patch.base_ru }}{{ patch.type }} {{ db_version }}"
-    when: patch.type == "RUR"
-  
-  # Create External Dir
-  - include: runsql.yml sql_file="externalDir.sql" sql_folder="user_sql" task_action="Create External Directory" sql_parameters="{{ VM_folder }}"
+
+  # User custom pre-scripts
+  - include: run_script.yml
+    loop: "{{ user_expdp_pre | flatten(levels=1) }}"
+    loop_control:
+      loop_var: script_param
   
   #- name : Export database tables
   - name: Export Database Tables
     shell: |
-         {{ dbhome_locl }}/bin/expdp userid=c##{{ dump_user }}/{{ dump_pass }} directory=expdir compression=all dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log content=data_only schemas=c##{{ dump_user }}
+         {{ dbhome_locl }}/bin/expdp userid={{ dump_user_int }}/{{ dump_pass }} directory=expdir compression=all dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log content=data_only schemas={{ dump_user_int }}
     environment:
       ORACLE_HOME: "{{ dbhome_locl }}"
       ORACLE_SID: "{{ mysid }}"
@@ -95,8 +93,11 @@
     become_user: oracle
     delegate_to: "{{ VM_IP_address }}"
   
-  # Post expdp SQL
-  - include: runsql.yml sql_file="{{ user_expdp_sql_post }}" sql_folder="user_sql" task_action="Post expdp SQL"
+  # User custom post-scripts
+  - include: run_script.yml
+    loop: "{{ user_expdp_post | flatten(levels=1) }}"
+    loop_control:
+      loop_var: script_param
   
   # Post Actions
   - include: patch_tasks_post.yml

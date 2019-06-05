@@ -10,7 +10,8 @@
 - name : Print DB Home
   debug: var=dbhome_locl
 
-- fail:
+- name : Fail when ORACLE_HOME is null
+  fail:
     msg: "Could not find ORACLE_HOME. Check if database {{ mysid }} is registered in /etc/oratab."
   when: dbhomeoutput.stdout == ''
 
@@ -35,3 +36,58 @@
     debug: msg="Database Vault Enabled - {{ dbvault_enabled }}"
 
   when: db_version == "11.2.0.4"
+
+### Check if CDB
+
+- name: "Check if CDB is enabled"
+  shell: |
+       export ORACLE_HOME ORACLE_SID
+       {{ dbhome_locl }}/bin/sqlplus -s "/ as sysdba" <<'EOF' | sed '/^$/d'
+       whenever sqlerror exit sql.sqlcode
+       set pages 0 head off feed off echo off trims on ver off term off
+       
+       COL is_ver_ge_12    new_v is_ver_ge_12    nopri
+       COL is_cdb_temp_col new_v is_cdb_temp_col nopri
+       COL is_cdb          new_v is_cdb
+       
+       select case when version >= 12 then 'Y' else 'N' end is_ver_ge_12
+       from  (select to_number(substr(version,1,instr(version,'.')-1)) version
+                from v$instance);
+       
+       select DECODE('&&is_ver_ge_12.','Y','CDB','''N''') is_cdb_temp_col from dual;
+       
+       set term on
+       select decode(substr(&&is_cdb_temp_col.,1,1),'Y','true','N','false') is_cdb from v$database;
+       exit
+       EOF
+  environment:
+    ORACLE_HOME: "{{ dbhome_locl }}"
+    ORACLE_SID: "{{ mysid }}"
+  register: sqloutput
+  become: true
+  become_user: oracle
+  delegate_to: "{{ VM_IP_address }}"
+
+- name: SQL Output
+  debug: msg="{{ sqloutput.stdout_lines }}"
+
+- name : Define CDB variable
+  set_fact:
+    db_iscdb: "{{ sqloutput.stdout | bool }}"
+
+### Adjust dump_user_int based on database type and provided value.
+
+- name : Fail when dump_user is invalid
+  fail:
+    msg: "Username can't start with C## when not a CDB."
+  when: db_iscdb == false and ( dump_user | regex_replace('(...).*','\\1') | upper ) == "C##"
+
+- name : Define internal dump_user variable
+  set_fact:
+    dump_user_int: "{{ dump_user }}"
+  when: db_iscdb == false or ( dump_user | regex_replace('(...).*','\\1') | upper ) == "C##"
+
+- name : Define internal dump_user variable if CDB
+  set_fact:
+    dump_user_int: "c##{{ dump_user }}"
+  when: db_iscdb == true and ( dump_user | regex_replace('(...).*','\\1') | upper ) != "C##"
