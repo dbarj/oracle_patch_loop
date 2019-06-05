@@ -82,5 +82,6 @@ _P.S: Note that all the 5 parameters above are independent._
 * VM must be configured to have the network interface auto-started as soon as snapshot is loaded.
 
 ## Versions ##
+* v1.03 (2019-06-05) by Rodrigo Jorge
 * v1.02 (2019-05-17) by Rodrigo Jorge
 * v1.01 (2019-05-13) by Rodrigo Jorge
