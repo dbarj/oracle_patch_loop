@@ -1,7 +1,15 @@
-- name: "Run SQL to {{ task_action }}"
+# Will execute the provided SQL file as sysdba.
+
+# sql_param.file        : File to process.
+# sql_param.folder      : Folder on VM shared folder where file is. (Default: "user_scripts")
+# sql_param.params      : Eventual parameters that may be provided to SQL script.
+# sql_param.termout     : Boolean - print the SQL output. (Default: false)
+# sql_param.task_action : Task name to print.
+
+- name: "Run SQL - {{ sql_param.task_action }}"
   shell: |
        export ORACLE_HOME ORACLE_SID
-       {{ dbhome_locl }}/bin/sqlplus -s "/ as sysdba" @{{ VM_folder }}/{{ sql_folder }}/{{ sql_file }} {{ sql_parameters | default('') }}
+       {{ dbhome_locl }}/bin/sqlplus -s "/ as sysdba" @{{ VM_folder }}/{{ sql_param.folder | default('user_scripts') }}/{{ sql_param.file }} {{ sql_param.params | default('') }}
   environment:
     ORACLE_HOME: "{{ dbhome_locl }}"
     ORACLE_SID: "{{ mysid }}"
@@ -12,3 +20,4 @@
 
 - name: SQL Output
   debug: msg="{{ sqloutput.stdout_lines }}"
+  when: (sql_param.termout | default(false)) == true
