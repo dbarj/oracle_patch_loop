@@ -19,14 +19,14 @@
         ORACLE_SID: "{{ mysid }}"
       args:
         chdir: "{{ dbhome_locl }}/OPatch"
-      register: sqloutput
+      register: shell_output
       become: true
       become_user: oracle
       delegate_to: "{{ VM_IP_address }}"
     
     - name: Opatch Output
-      debug: msg="{{ sqloutput.stdout_lines }}"
-      when: sqloutput.stdout_lines is defined
+      debug: msg="{{ shell_output.stdout_lines }}"
+      when: shell_output.stdout_lines is defined
     
     - name: Disable Database Vault
       shell: |
@@ -34,7 +34,7 @@
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
         ORACLE_SID: "{{ mysid }}"
-      register: sqloutput
+      register: shell_output
       become: true
       become_user: oracle
       delegate_to: "{{ VM_IP_address }}"
@@ -88,7 +88,7 @@
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
         ORACLE_SID: "{{ mysid }}"
-      register: sqloutput
+      register: shell_output
       become: true
       become_user: oracle
       delegate_to: "{{ VM_IP_address }}"
@@ -115,7 +115,7 @@
     environment:
       ORACLE_HOME: "{{ dbhome_locl }}"
       ORACLE_SID: "{{ mysid }}"
-    register: sqloutput
+    register: shell_output
     become: true
     become_user: oracle
     delegate_to: "{{ VM_IP_address }}"
