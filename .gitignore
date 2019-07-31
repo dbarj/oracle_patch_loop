@@ -3,3 +3,4 @@ main.log
 main.retry
 user_scripts/*
 *.txt
+*.log

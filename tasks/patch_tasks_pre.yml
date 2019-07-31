@@ -46,7 +46,12 @@
     set_fact:
       db_patch: "{{ find_result.files[0].path }}"
       unzip_patch_folder: "{{ shared_folder }}/{{ patch.patch_number }}"
-  
+
+  - name: Remove unzipped patch folder
+    file:
+      state: absent
+      path: "{{ unzip_patch_folder }}"
+
   - name : Unzip Patch to VM shared folder
     unarchive:
       src: "{{ db_patch }}"

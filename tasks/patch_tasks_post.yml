@@ -18,7 +18,7 @@
     state: absent
     path: "{{ shared_folder }}/{{ dump_file_prefix }}.log"
 
-- name : Remove unzipped patch
+- name : Remove unzipped patch folder
   file:
     state: absent
     path: "{{ unzip_patch_folder }}"
