@@ -17,54 +17,53 @@
       ORACLE_SID: "{{ mysid }}"
     args:
       chdir: "{{ dbhome_locl }}/OPatch"
-    register: sqloutput
+    register: shell_output
     become: true
     become_user: oracle
     when: patch.id != 0
     delegate_to: "{{ VM_IP_address }}"
-  
+
   - name: Opatch Output
-    debug: msg="{{ sqloutput.stdout_lines }}"
-    when: sqloutput.stdout_lines is defined
-  
+    debug: msg="{{ shell_output.stdout_lines }}"
+    when: shell_output.stdout_lines is defined
+
   # Start the database
   - include: run_sql.yml
     vars:
       sql_param : { file : "startupCDB.sql" , folder : "patch_sql" , task_action : "Start Database" }
     when: patch.type != "OJVM"
-  
+
   # Start the database (in OJVM, it must be in upgrade mode)
   - include: run_sql.yml
     vars:
       sql_param : { file : "startupCDBOJVM.sql" , folder : "patch_sql" , task_action : "Start Database" }
     when: patch.type == "OJVM"
-  
-  #- name : Apply patch changes on DB
+
+  # Run Datapatch
   - name: Run Datapatch
-    shell: |
-         export ORACLE_HOME ORACLE_SID
-         ./datapatch -verbose > /tmp/datapatch.log 2>&1
-    environment:
-      ORACLE_HOME: "{{ dbhome_locl }}"
-      ORACLE_SID: "{{ mysid }}"
-    args:
-      chdir: "{{ dbhome_locl }}/OPatch"
-    register: sqloutput
-    become: true
-    become_user: oracle
-    when: patch.id != 0
-    delegate_to: "{{ VM_IP_address }}"
-  # Variable export and chdir introduced to solve an issue in 12.1.0.1 PSU 7 - Patch 20299016
-  
-  - name: Datapatch Output
-    debug: msg="{{ sqloutput.stdout_lines }}"
-    when: sqloutput.stdout_lines is defined
-  
+    include: datapatch.yml
+
+  # This task will retry Datapatch if it's configured on "list_error.yml" file.
+  - name: "Datapatch Retry {{ loop_int }}"
+    include: datapatch.yml
+    loop: "{{ [1, 2, 3] | flatten(levels=1) }}"
+    loop_control:
+      loop_var: loop_int
+    when:
+      - datapatch_output.rc != 0
+      - fix_datapatch_reexec == true
+      - loop_int <= (fix_datapatch_retries | int)
+
+  - name: Datapatch Error
+    fail:
+      msg: "Datapatch failed."
+    when: datapatch_output.rc != 0
+
   # Evaluate if it's needed to reexecute datapatch on 12.1.1 due to bug.
-  
+
   # Bounce instance on OJVM to remove "upgrade" mode
   - block:
-  
+
     - include: run_sql.yml
       vars:
         sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database" }
@@ -80,7 +79,7 @@
     loop: "{{ user_expdp_pre | flatten(levels=1) }}"
     loop_control:
       loop_var: script_param
-  
+
   #- name : Export database tables
   - name: Export Database Tables
     shell: |
@@ -88,17 +87,17 @@
     environment:
       ORACLE_HOME: "{{ dbhome_locl }}"
       ORACLE_SID: "{{ mysid }}"
-    register: sqloutput
+    register: shell_output
     become: true
     become_user: oracle
     delegate_to: "{{ VM_IP_address }}"
-  
+
   # User custom post-scripts
   - include: run_script.yml
     loop: "{{ user_expdp_post | flatten(levels=1) }}"
     loop_control:
       loop_var: script_param
-  
+
   # Post Actions
   - include: patch_tasks_post.yml
 

@@ -6,13 +6,15 @@
     dump_file_prefix: "tables_{{ db_version }}_{{ patch.base_ru | default('')}}{{ patch.type }}_{{ patch.id }}"
     sha256_file: "sha256sum_{{ db_version }}_{{ patch.base_ru | default('')}}{{ patch.type }}_{{ patch.id }}.chk"
     skip_all: false
+    fix_datapatch_reexec: false
+    fix_datapatch_retries: 0
 
 - name: "Check if {{ dump_folder }}/{{ dump_file_prefix }}.dmp exists"
   stat:
     path: "{{ dump_folder }}/{{ dump_file_prefix }}.dmp"
   register: dump_stat_result
 
-# Will skip all the rest if dumpfile exists and 
+# Will skip all the rest if the dump file exists
 - name : Define skip_all
   set_fact:
     skip_all: "{{ dump_stat_result.stat.exists }}"
@@ -24,6 +26,19 @@
     path: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
   when: skip_all == false
 
+# Check if patch will need to reexecute datapatch
+- name : Check datapatch reexecution
+  set_fact:
+    fix_datapatch_reexec: true
+    fix_datapatch_retries: "{{ err_list.retries }}"
+  loop: "{{ list_retry_datapatch | flatten(levels=1) }}"
+  loop_control:
+    loop_var: err_list
+  when:
+    - err_list.version == db_version
+    - err_list.type == patch.type
+    - err_list.id == patch.id
+
 # When not processing base release. i.e patch.id != 0
 - block:
 
@@ -34,14 +49,14 @@
       recurse:          "yes"
       file_type:        "file"
     register: find_result
-  
+
   - fail:
       msg: "Could not find patch file. Check if patch folder is correct."
     when: find_result.files[0] is undefined and patch.id != 0
-  
+
   - name: "Patch File"
     debug: msg="{{ find_result.files[0].path }}"
-  
+
   - name : Define file name
     set_fact:
       db_patch: "{{ find_result.files[0].path }}"
@@ -56,21 +71,21 @@
     unarchive:
       src: "{{ db_patch }}"
       dest: "{{ shared_folder }}"
-  
+
   # When patch_folder variable is defined (mostly for BPs), extract that folder from unziped patch to apply
   - block:
-  
+
     - name: Process only patch subfolder
       command: "mv {{ unzip_patch_folder }}/{{ patch.patch_folder }} {{ shared_folder }}"
-  
+
     - name : Remove unzipped patch
       file:
         state: absent
         path: "{{ unzip_patch_folder }}"
-  
+
     - name : Rename patch subfolder
       shell: "mv {{ shared_folder }}/{{ patch.patch_folder }} {{ unzip_patch_folder }}"
-  
+
     when: patch.patch_folder is defined
 
   when: patch.id != 0 and skip_all == false

@@ -1,0 +1,9 @@
+# 
+# There are some known errors when applying a patch and this file will automate some workaround actions.
+# 
+
+# Patches that will retry "datapatch" if they fail. Max retries is 3.
+
+list_retry_datapatch:
+  - { version: "12.1.0.2" , type : "BP" , id : 190716 , retries : 2 }
+

@@ -29,6 +29,7 @@
     - config_vars.yml
     - list_versions.yml
     - list_patches.yml
+    - list_exceptions.yml
 
   pre_tasks:
     - import_tasks: tasks/setup_env.yml

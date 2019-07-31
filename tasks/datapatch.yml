@@ -1,0 +1,21 @@
+# Apply patch changes on DB
+- name: Run Datapatch
+  shell: |
+       export ORACLE_HOME ORACLE_SID
+       ./datapatch -verbose >> /tmp/datapatch.log 2>&1
+  environment:
+    ORACLE_HOME: "{{ dbhome_locl }}"
+    ORACLE_SID: "{{ mysid }}"
+  args:
+    chdir: "{{ dbhome_locl }}/OPatch"
+  register: datapatch_output
+  become: true
+  become_user: oracle
+  when: patch.id != 0
+  delegate_to: "{{ VM_IP_address }}"
+  ignore_errors: yes
+# Variable export and chdir introduced to solve an issue in 12.1.0.1 PSU 7 - Patch 20299016
+
+- name: Datapatch Output
+  debug: msg="{{ datapatch_output.stdout_lines }}"
+  when: datapatch_output.stdout_lines is defined
