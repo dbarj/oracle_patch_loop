@@ -40,24 +40,12 @@
     when: patch.type == "OJVM"
 
   # Run Datapatch
+  - name: Set datapatch try variable
+    set_fact: datapatch_try=0
+
   - name: Run Datapatch
     include: datapatch.yml
-
-  # This task will retry Datapatch if it's configured on "list_error.yml" file.
-  - name: "Datapatch Retry {{ loop_int }}"
-    include: datapatch.yml
-    loop: "{{ [1, 2, 3] | flatten(levels=1) }}"
-    loop_control:
-      loop_var: loop_int
-    when:
-      - datapatch_output.rc != 0
-      - fix_datapatch_reexec == true
-      - loop_int <= (fix_datapatch_retries | int)
-
-  - name: Datapatch Error
-    fail:
-      msg: "Datapatch failed."
-    when: datapatch_output.rc != 0
+    when: patch.id != 0
 
   # Evaluate if it's needed to reexecute datapatch on 12.1.1 due to bug.
 

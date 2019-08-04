@@ -6,7 +6,6 @@
     dump_file_prefix: "tables_{{ db_version }}_{{ patch.base_ru | default('')}}{{ patch.type }}_{{ patch.id }}"
     sha256_file: "sha256sum_{{ db_version }}_{{ patch.base_ru | default('')}}{{ patch.type }}_{{ patch.id }}.chk"
     skip_all: false
-    fix_datapatch_reexec: false
     fix_datapatch_retries: 0
 
 - name: "Check if {{ dump_folder }}/{{ dump_file_prefix }}.dmp exists"
@@ -29,7 +28,6 @@
 # Check if patch will need to reexecute datapatch
 - name : Check datapatch reexecution
   set_fact:
-    fix_datapatch_reexec: true
     fix_datapatch_retries: "{{ err_list.retries }}"
   loop: "{{ list_retry_datapatch | flatten(levels=1) }}"
   loop_control:
