@@ -1,0 +1,76 @@
+- name: Run Datapatch
+  shell: |
+       export ORACLE_HOME ORACLE_SID
+       ./datapatch -verbose >> /tmp/datapatch.log 2>&1
+  environment:
+    ORACLE_HOME: "{{ dbhome_locl }}"
+    ORACLE_SID: "{{ mysid }}"
+  args:
+    chdir: "{{ dbhome_locl }}/OPatch"
+  register: datapatch_exec
+  become: true
+  become_user: oracle
+  delegate_to: "{{ VM_IP_address }}"
+  ignore_errors: yes
+  # Variable export and chdir introduced to solve an issue in 12.1.0.1 PSU 7 - Patch 20299016
+  
+- name: Datapatch output
+  debug: msg="{{ datapatch_exec.stdout_lines }}"
+  when: datapatch_exec.stdout_lines is defined
+
+##### If datapatch is OK !
+- block:
+
+  - name: "Check if datapatch has extra patches to apply"
+    shell: |
+         export ORACLE_HOME ORACLE_SID
+         ./datapatch -prereq | grep 'The following patches will be applied'
+    environment:
+      ORACLE_HOME: "{{ dbhome_locl }}"
+      ORACLE_SID: "{{ mysid }}"
+    args:
+      chdir: "{{ dbhome_locl }}/OPatch"
+    register: datapatch_check
+    become: true
+    become_user: oracle
+    delegate_to: "{{ VM_IP_address }}"
+    ignore_errors: yes
+
+  - name: Increment variable
+    set_fact: datapatch_try={{ datapatch_try | int + 1 }}
+    when: datapatch_check.rc == 0
+
+  - name: Datapatch Error
+    fail:
+      msg: "Datapatch still has things to apply."
+    when:
+      - datapatch_check.rc == 0
+      - (datapatch_try | int) > (fix_datapatch_retries | int)
+
+  - name: Re-exec datapatch
+    include: datapatch.yml
+    when:
+      - datapatch_check.rc == 0
+      - (datapatch_try | int) <= (fix_datapatch_retries | int)
+
+  when: datapatch_exec.rc == 0
+
+##### If datapatch is not OK !
+- block:
+
+  - name: Increment variable
+    set_fact: datapatch_try={{ datapatch_try | int + 1 }}
+
+  - name: Datapatch Error
+    fail:
+      msg: "Datapatch execution failed."
+    when: (datapatch_try | int) > (fix_datapatch_retries | int)
+
+  - name: Re-exec datapatch
+    include: datapatch.yml
+    when:
+      - (datapatch_try | int) <= (fix_datapatch_retries | int)
+
+  when: datapatch_exec.rc != 0
+
+##########################################################

@@ -63,17 +63,17 @@
   environment:
     ORACLE_HOME: "{{ dbhome_locl }}"
     ORACLE_SID: "{{ mysid }}"
-  register: sqloutput
+  register: shell_output
   become: true
   become_user: oracle
   delegate_to: "{{ VM_IP_address }}"
 
 - name: SQL Output
-  debug: msg="{{ sqloutput.stdout_lines }}"
+  debug: msg="{{ shell_output.stdout_lines }}"
 
 - name : Define CDB variable
   set_fact:
-    db_iscdb: "{{ sqloutput.stdout | bool }}"
+    db_iscdb: "{{ shell_output.stdout | bool }}"
 
 ### Adjust dump_user_int based on database type and provided value.
 
