@@ -232,21 +232,21 @@ list_12201:
 ####################
 
 list_18000:
-  - { type : "RU"   , id : 180417 , patch_number : 27676517 }
-  - { type : "RU"   , id : 180717 , patch_number : 28090523 }
-  - { type : "RU"   , id : 181016 , patch_number : 28655784 }
-  - { type : "RU"   , id : 190115 , patch_number : 28822489 }
-  - { type : "RU"   , id : 190416 , patch_number : 29301631 }
-  - { type : "RU"   , id : 190716 , patch_number : 29757256 }
-  - { type : "RUR"  , id : 180717 , patch_number : 28346593 , base_ru : '18.2' }
-  - { type : "RUR"  , id : 181016 , patch_number : 28601267 , base_ru : '18.2' }
-  - { type : "RUR"  , id : 181016 , patch_number : 28507480 , base_ru : '18.3' }
-  - { type : "RUR"  , id : 190115 , patch_number : 28790643 , base_ru : '18.3' }
-  - { type : "RUR"  , id : 190115 , patch_number : 28822587 , base_ru : '18.4' }
-  - { type : "RUR"  , id : 190416 , patch_number : 29230809 , base_ru : '18.4' }
-  - { type : "RUR"  , id : 190416 , patch_number : 29230887 , base_ru : '18.5' }
-  - { type : "RUR"  , id : 190716 , patch_number : 29708437 , base_ru : '18.5' }
-  - { type : "RUR"  , id : 190716 , patch_number : 29708235 , base_ru : '18.6' }
+  - { type : "RU"   , id : 2 , patch_number : 27676517 }
+  - { type : "RU"   , id : 3 , patch_number : 28090523 }
+  - { type : "RU"   , id : 4 , patch_number : 28655784 }
+  - { type : "RU"   , id : 5 , patch_number : 28822489 }
+  - { type : "RU"   , id : 6 , patch_number : 29301631 }
+  - { type : "RU"   , id : 7 , patch_number : 29757256 }
+  - { type : "RUR"  , id : 1 , patch_number : 28346593 , base_ru : '18.2' }
+  - { type : "RUR"  , id : 2 , patch_number : 28601267 , base_ru : '18.2' }
+  - { type : "RUR"  , id : 1 , patch_number : 28507480 , base_ru : '18.3' }
+  - { type : "RUR"  , id : 2 , patch_number : 28790643 , base_ru : '18.3' }
+  - { type : "RUR"  , id : 1 , patch_number : 28822587 , base_ru : '18.4' }
+  - { type : "RUR"  , id : 2 , patch_number : 29230809 , base_ru : '18.4' }
+  - { type : "RUR"  , id : 1 , patch_number : 29230887 , base_ru : '18.5' }
+  - { type : "RUR"  , id : 2 , patch_number : 29708437 , base_ru : '18.5' }
+  - { type : "RUR"  , id : 1 , patch_number : 29708235 , base_ru : '18.6' }
   - { type : "OJVM" , id : 180417 , patch_number : 27636900 }
   - { type : "OJVM" , id : 180717 , patch_number : 27923415 }
   - { type : "OJVM" , id : 181016 , patch_number : 28502229 }
@@ -260,8 +260,9 @@ list_18000:
 ####################
 
 list_19000:
-  - { type : "RU"   , id : 190416 , patch_number : 29517242 }
-  - { type : "RU"   , id : 190716 , patch_number : 29834717 }
+  - { type : "RU"   , id : 3 , patch_number : 29517242 }
+  - { type : "RU"   , id : 4 , patch_number : 29834717 }
+  - { type : "RUR"  , id : 1 , patch_number : 29799057 , base_ru : '19.3' }
   - { type : "OJVM" , id : 190416 , patch_number : 29548437 }
   - { type : "OJVM" , id : 190716 , patch_number : 29774421 }
 
