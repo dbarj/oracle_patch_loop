@@ -23,8 +23,10 @@
 
   - name: "Check if datapatch has extra patches to apply"
     shell: |
+         set -eo pipefail
          export ORACLE_HOME ORACLE_SID
-         ./datapatch -prereq | grep 'The following patches will be applied'
+         v_out=$(./datapatch -prereq)
+         echo "${v_out}" | grep -q 'The following patches will be applied' && echo has_more_patch || echo no_more_patch
     environment:
       ORACLE_HOME: "{{ dbhome_locl }}"
       ORACLE_SID: "{{ mysid }}"
@@ -34,23 +36,25 @@
     become: true
     become_user: oracle
     delegate_to: "{{ VM_IP_address }}"
-    ignore_errors: yes
+
+  - name: Check Result
+    debug: msg="{{ datapatch_check.stdout_lines }}"
 
   - name: Increment variable
     set_fact: datapatch_try={{ datapatch_try | int + 1 }}
-    when: datapatch_check.rc == 0
+    when: datapatch_check.stdout_lines == "has_more_patch"
 
   - name: Datapatch Error
     fail:
       msg: "Datapatch still has things to apply."
     when:
-      - datapatch_check.rc == 0
+      - datapatch_check.stdout_lines == "has_more_patch"
       - (datapatch_try | int) > (fix_datapatch_retries | int)
 
   - name: Re-exec datapatch
     include: datapatch.yml
     when:
-      - datapatch_check.rc == 0
+      - datapatch_check.stdout_lines == "has_more_patch"
       - (datapatch_try | int) <= (fix_datapatch_retries | int)
 
   when: datapatch_exec.rc == 0
