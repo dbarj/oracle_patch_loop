@@ -16,7 +16,7 @@
   register: sqloutput
   become: true
   become_user: oracle
-  delegate_to: "{{ VM_IP_address }}"
+  delegate_to: "{{ vm_ip_address }}"
 
 - name: SQL Output
   debug: msg="{{ sqloutput.stdout_lines }}"

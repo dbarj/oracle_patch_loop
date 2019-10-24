@@ -21,7 +21,7 @@
     become: true
     become_user: oracle
     when: patch.id != 0
-    delegate_to: "{{ VM_IP_address }}"
+    delegate_to: "{{ vm_ip_address }}"
 
   - name: Opatch Output
     debug: msg="{{ shell_output.stdout_lines }}"
@@ -78,7 +78,7 @@
     register: shell_output
     become: true
     become_user: oracle
-    delegate_to: "{{ VM_IP_address }}"
+    delegate_to: "{{ vm_ip_address }}"
 
   # User custom post-scripts
   - include: run_script.yml

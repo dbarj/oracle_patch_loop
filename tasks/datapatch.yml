@@ -10,7 +10,7 @@
   register: datapatch_exec
   become: true
   become_user: oracle
-  delegate_to: "{{ VM_IP_address }}"
+  delegate_to: "{{ vm_ip_address }}"
   ignore_errors: yes
   # Variable export and chdir introduced to solve an issue in 12.1.0.1 PSU 7 - Patch 20299016
   
@@ -35,7 +35,7 @@
     register: datapatch_check
     become: true
     become_user: oracle
-    delegate_to: "{{ VM_IP_address }}"
+    delegate_to: "{{ vm_ip_address }}"
 
   - name: Check Result
     debug: msg="{{ datapatch_check.stdout_lines }}"

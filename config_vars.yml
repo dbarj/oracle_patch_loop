@@ -7,9 +7,6 @@ shared_folder : "/Users/rodrigo.jorge/Desktop/extract"
 # Path of the folder mounted within the VM.
 VM_folder  : "/media/sf_Patch/"
 
-# Path of the folder mounted within the VM.
-VM_IP_address  : "192.168.56.101"
-
 # Oracle SID. Must be included in /etc/oratab
 mysid : "orcl"
 
