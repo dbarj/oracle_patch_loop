@@ -25,7 +25,8 @@
     shell: |
          set -eo pipefail
          export ORACLE_HOME ORACLE_SID
-         v_out=$(./datapatch -prereq)
+         # Try twice as it can fail with: Queryable inventory could not determine the current opatch status.
+         v_out=$(./datapatch -prereq) || v_out=$(./datapatch -prereq)
          echo "${v_out}" | grep -q 'The following patches will be applied' && echo has_more_patch || echo no_more_patch
     environment:
       ORACLE_HOME: "{{ dbhome_locl }}"
@@ -38,23 +39,23 @@
     delegate_to: "{{ vm_ip_address }}"
 
   - name: Check Result
-    debug: msg="{{ datapatch_check.stdout_lines }}"
+    debug: msg="{{ datapatch_check.stdout }}"
 
   - name: Increment variable
     set_fact: datapatch_try={{ datapatch_try | int + 1 }}
-    when: datapatch_check.stdout_lines == "has_more_patch"
+    when: datapatch_check.stdout == "has_more_patch"
 
   - name: Datapatch Error
     fail:
       msg: "Datapatch still has things to apply."
     when:
-      - datapatch_check.stdout_lines == "has_more_patch"
+      - datapatch_check.stdout == "has_more_patch"
       - (datapatch_try | int) > (fix_datapatch_retries | int)
 
   - name: Re-exec datapatch
     include: datapatch.yml
     when:
-      - datapatch_check.stdout_lines == "has_more_patch"
+      - datapatch_check.stdout == "has_more_patch"
       - (datapatch_try | int) <= (fix_datapatch_retries | int)
 
   when: datapatch_exec.rc == 0

@@ -7,5 +7,10 @@
 list_retry_datapatch:
   - { version: "12.1.0.2" , type : "BP"  , id : 190716 , retries : 2 }
   - { version: "12.1.0.2" , type : "BP"  , id : 191015 , retries : 2 }
+  - { version: "12.1.0.2" , type : "BP"  , id : 200114 , retries : 2 }
   - { version: "12.2.0.1" , type : "RU"  , id : 190716 , retries : 1 }
+  - { version: "12.2.0.1" , type : "RU"  , id : 191015 , retries : 1 }
+  - { version: "12.2.0.1" , type : "RU"  , id : 200114 , retries : 1 }
   - { version: "12.2.0.1" , type : "RUR" , id : 190716 , retries : 1 }
+  - { version: "12.2.0.1" , type : "RUR" , id : 191015 , retries : 1 }
+  - { version: "12.2.0.1" , type : "RUR" , id : 200114 , retries : 1 }
