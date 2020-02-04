@@ -1,7 +1,7 @@
 - name: Find the location of DB Home from the SID
   shell: 'grep {{ mysid }} /etc/oratab |grep -v ^[#] | cut -d: -f2|head -1'
   register: dbhomeoutput
-  delegate_to: "{{ VM_IP_address }}"
+  delegate_to: "{{ vm_ip_address }}"
 
 - name : Define DB Home
   set_fact:
@@ -26,7 +26,7 @@
   - name: Check if Database Vault is enabled
     shell: 'ar -t {{dbhome_locl}}/rdbms/lib/libknlopt.a | grep -q kzvidv.o && echo true || echo false'
     register: dbvaultoutput
-    delegate_to: "{{ VM_IP_address }}"
+    delegate_to: "{{ vm_ip_address }}"
 
   - name : Define Database Vault variable
     set_fact:
@@ -66,7 +66,7 @@
   register: shell_output
   become: true
   become_user: oracle
-  delegate_to: "{{ VM_IP_address }}"
+  delegate_to: "{{ vm_ip_address }}"
 
 - name: SQL Output
   debug: msg="{{ shell_output.stdout_lines }}"
