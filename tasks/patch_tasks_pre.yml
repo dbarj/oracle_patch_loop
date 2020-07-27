@@ -40,6 +40,7 @@
 # When not processing base release. i.e patch.id != 0
 - block:
 
+  # Place patch file on the shared folder
   - name: Finding Patch File
     find:
       paths:            "{{ source_folder }}"
@@ -50,7 +51,7 @@
 
   - fail:
       msg: "Could not find patch file. Check if patch folder is correct."
-    when: find_result.files[0] is undefined and patch.id != 0
+    when: find_result.files[0] is undefined
 
   - name: "Patch File"
     debug: msg="{{ find_result.files[0].path }}"
@@ -90,3 +91,24 @@
 
 - include: vm_reload.yml
   when: skip_all == false
+
+# Replace opatch with latest version, when not processing base release. i.e patch.id != 0
+- block:
+
+  - name: Remove OPatch folder
+    file:
+      state: absent
+      path: "{{ dbhome_locl }}/OPatch"
+    become: true
+    become_user: oracle
+    delegate_to: "{{ vm_ip_address }}"
+
+  - name : Unzip OPatch from VM shared folder
+    unarchive:
+      src: "{{ db_opatch }}"
+      dest: "{{ dbhome_locl }}"
+    become: true
+    become_user: oracle
+    delegate_to: "{{ vm_ip_address }}"
+  
+  when: db_opatch|length > 0 and patch.id != 0 and skip_all == false

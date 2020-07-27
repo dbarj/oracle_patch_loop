@@ -7,7 +7,7 @@ shared_folder : "/Users/rodrigo.jorge/Desktop/extract"
 # Path of the folder mounted within the VM.
 VM_folder  : "/media/sf_Patch/"
 
-# Oracle SID. Must be included in /etc/oratab
+# Oracle SID. Must be included in /etc/oratab for oraenv utility.
 mysid : "orcl"
 
 # Folder to store the final generated DB dump
@@ -15,11 +15,14 @@ dump_folder : "/Volumes/Samsung_T3/OraSum/files/exp"
 
 # Files in "user_scripts" folder that will run before and after the final expdp. script_types can be "shell", "sql" or "yml".
 user_expdp_pre  :
-- { file : "preActions.sql" , type : "sql" , task_action : "Pre Actions" }
-- { file : "externalDir.sql" , type : "sql" , task_action : "Create External Directory" }
+- { file : "fileGet.yml" , folder : "user_scripts/gen" , type : "yml", task_action : "Collect OS Info" }
+- { file : "tables_recreate.sql" , type : "sql" , task_action : "Recreate Tables" }
+- { file : "hashGet.yml" , folder : "user_scripts/gen" , type : "yml", task_action : "Collect DB Info" }
+- { file : "externalDir.yml" , type : "yml" , task_action : "Create External Directory" }
 
 user_expdp_post :
-- { file : "postActions.sql" , type : "sql" , task_action : "Post Actions" }
+# - { file : "run_extractor.sh" , folder : "details_extractor" , type : "shell" , task_action : "Frits Collection", params : "{{ db_version }}_{{ patch.type }}_{{ patch.base_ru | default('') }}_{{ patch.id }}" }
+- { file : "cleanUser.sql" , type : "sql" , task_action : "Clean User" }
 
 # User that will hold your tables outputs and be exported after each execution. If the database is CDB, "C##" will be automatically inserted if not.
 dump_user : hash
@@ -29,3 +32,21 @@ dump_pass : hash
 
 # This parameter will skip execution for patches that already have a dump file generated in "dump_folder".
 skip_dump_exists: true
+
+###########################
+### For loader.yml only ###
+###########################
+
+# When loader is executed, you can specify a strict snapshot to be used for loading all dumps of each version. If null, will be used the one specified for each version in list_versions.
+loader_VM_machine  : "Oracle Linux 7.6"
+loader_VM_snapshot : "19.0.0.0 RU 7"
+loader_VM_IP       : "192.168.56.102"
+
+# Files in "user_scripts" folder that will run before and after the final expdp.
+user_impdp_pre  :
+- { file : "cleanUser.sql" , type : "sql" , task_action : "Clean User" }
+- { file : "externalDir.yml" , type : "yml" , task_action : "Create External Directory" }
+
+user_impdp_post :
+- { file : "fileLoad.yml" , folder : "user_scripts/load" , type : "yml" , task_action : "Load chksum table" }
+- { file : "insert_all_exec.sql" , folder : "user_scripts/load" , type : "sql" , task_action : "Create consolidated tables" }
