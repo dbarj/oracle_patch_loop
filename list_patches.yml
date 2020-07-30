@@ -209,7 +209,7 @@ list_12102:
   - { type : "BP"   , id : 191015 , patch_number : 30070242 , patch_folder : 29972716 }
   - { type : "BP"   , id : 200114 , patch_number : 30464171 , patch_folder : 30364137 }
   - { type : "BP"   , id : 200414 , patch_number : 30805478 , patch_folder : 30691015 }
-  - { type : "BP"   , id : 200714 , patch_number : 31307682 , patch_folder : xxx }
+  - { type : "BP"   , id : 200714 , patch_number : 31307682 , patch_folder : 31001106 }
 
 
 ####################
