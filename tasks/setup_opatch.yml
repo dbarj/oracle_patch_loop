@@ -14,7 +14,7 @@
   
   - name : Define OPatch location to null
     set_fact:
-      db_opatch: null
+      db_opatch: ""
 
   when: find_result.files[0] is undefined
 
