@@ -1,0 +1,19 @@
+# Folder to store the final generated ORACLE_HOME checksum
+- name : Define file names
+  set_fact:
+    chksum_path:   "/Volumes/Samsung_T3/OraSum/files"
+    chksum_folder: "binsum"
+
+- name: "Copy {{ chksum_path }}/{{ chksum_folder }} to shared location."
+  copy:
+    src:  "{{ chksum_path }}/{{ chksum_folder }}"
+    dest: "{{ shared_folder }}"
+
+- include: tasks/run_shell.yml
+  vars:
+    shell_param : { file : "fileLoad.sh" , folder: "user_scripts/load" , task_action : "Load external files for chksum" , params : "{{ VM_folder }}/{{ chksum_folder }} {{ db_version }}" }
+
+- name : "Remove folder {{ chksum_folder }}"
+  file:
+    state: absent
+    path: "{{ shared_folder }}/{{ chksum_folder }}"

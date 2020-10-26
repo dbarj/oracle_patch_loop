@@ -7,6 +7,7 @@
     patch_base:    "{{ item.base_snap }}"
     patch_file:    "{{ item.main_file }}"
     patch_list:    "{{ item.patch_list }}"
+    opatch_file:   "{{ item.opatch_file }}"
   with_items: "{{ list_versions }}"
   when: item.id == db_version
 
@@ -16,6 +17,7 @@
     vm_snapshot: "{{ patch_base }}"
 
 - include: vm_reload.yml
+- include: setup_opatch.yml
 - include: setup_database.yml
 
 ### PSU

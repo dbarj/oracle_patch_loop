@@ -1,0 +1,89 @@
+### Will import all dumps to a given database.
+
+- name : Define version
+  set_fact:
+    vm_machine:    "{{ item.vmachine }}"
+    patch_base:    "{{ item.base_snap }}"
+    patch_list:    "{{ item.patch_list }}"
+    vm_snapshot:   "{{ item.base_snap }}"
+    vm_ip_address: "{{ item.ip }}"
+  with_items: "{{ list_versions }}"
+  when: item.id == db_version
+
+# vm_reload is called before every patch is applied to rollback the VM to the snapshot image.
+- name : Define custom snapshot to be used.
+  set_fact:
+    vm_machine:    "{{ loader_VM_machine }}"
+    vm_snapshot:   "{{ loader_VM_snapshot }}"
+    vm_ip_address: "{{ loader_VM_IP }}"
+  when: loader_VM_snapshot != ""
+
+- include: vm_reload.yml
+- include: setup_database.yml
+
+# Start the database
+- include: run_sql.yml
+  vars:
+    sql_param : { file : "startupCDB.sql" , folder : "patch_sql" , task_action : "Start Database" }
+
+# User custom pre-scripts
+- include: run_script.yml
+  loop: "{{ user_impdp_pre | flatten(levels=1) }}"
+  loop_control:
+    loop_var: script_param
+
+#- fail:
+#    msg: "Stop here."
+
+- name : Check if there is any PSU
+  set_fact:
+    total_psus: "{{ lookup('vars', patch_list) | json_query(filter_qry) | count }}"
+  vars:
+    filter_qry: "[?type=='PSU'].id"
+
+- name : Check if there is any BP
+  set_fact:
+    total_bps: "{{ lookup('vars', patch_list) | json_query(filter_qry) | count }}"
+  vars:
+    filter_qry: "[?type=='BP'].id"
+
+- name : Check if there is any RU
+  set_fact:
+    total_rus: "{{ lookup('vars', patch_list) | json_query(filter_qry) | count }}"
+  vars:
+    filter_qry: "[?type=='RU'].id"
+
+# Execute for every PSU
+- include: "impdp_file.yml patch={{ item }}"
+  with_items:
+    - { type : PSU , id : 0 }
+    - "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
+  when: total_psus != "0"
+
+# Execute for base BP only. The others were included above.
+- include: "impdp_file.yml patch={{ item }}"
+  with_items:
+    - { type : BP , id : 0 }
+  when: total_bps != "0"
+
+# Execute for every RU
+- include: "impdp_file.yml patch={{ item }}"
+  with_items:
+    - { type : RU , id : 0 }
+    - "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
+  when: total_rus != "0"
+
+# User custom post-scripts
+- include: run_script.yml
+  loop: "{{ user_impdp_post | flatten(levels=1) }}"
+  loop_control:
+    loop_var: script_param
+
+- name : Generate Snapshot Name
+  set_fact:
+    vm_snapshot: "{{ db_version }} Loaded"
+
+# Save snapshot.
+- include: vm_savestate.yml
+
+###

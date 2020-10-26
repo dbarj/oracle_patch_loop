@@ -1,0 +1,4 @@
+- include: tasks/run_sql.yml
+  vars:
+    sql_param : { file : "hashGet.sql" , folder : "user_scripts/gen" , task_action : "Calculate Hash" , params : "{{ patch.id }} {{ patch.base_ru | default('') }}{{ patch.type }} {{ db_version }}" }
+# patch.base_ru will only be populated for RURs

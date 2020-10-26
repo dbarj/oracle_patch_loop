@@ -1,0 +1,31 @@
+- name: Finding OPatch File
+  find:
+    paths:            "{{ source_folder }}"
+    patterns:         "{{ opatch_file }}"
+    recurse:          "yes"
+    file_type:        "file"
+  register: find_result
+
+# If OPatch was not found
+- block:
+
+  - debug:
+      msg: "Could not find OPatch file. Skipping."
+  
+  - name : Define OPatch location to null
+    set_fact:
+      db_opatch: ""
+
+  when: find_result.files[0] is undefined
+
+# If OPatch was found
+- block:
+
+  - debug:
+      msg: "OPatch File: {{ find_result.files[0].path }}"
+
+  - name : Define OPatch location
+    set_fact:
+      db_opatch: "{{ find_result.files[0].path }}"
+  
+  when: find_result.files[0] is defined
