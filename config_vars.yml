@@ -39,7 +39,7 @@ skip_dump_exists: true
 
 # When loader is executed, you can specify a strict snapshot to be used for loading all dumps of each version. If null, will be used the one specified for each version in list_versions.
 loader_VM_machine  : "Oracle Linux 7.6"
-loader_VM_snapshot : "19.0.0.0 RU 8"
+loader_VM_snapshot : "19.0.0.0 RU 9"
 loader_VM_IP       : "192.168.56.102"
 
 # Files in "user_scripts" folder that will run before and after the final expdp.
