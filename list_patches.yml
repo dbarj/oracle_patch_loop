@@ -2,7 +2,7 @@
 ##### 11.2.0.4 #####
 ####################
 
-# Database 11.2.0.4 Proactive Patch Information (Doc ID 2285559.1)	
+# Database 11.2.0.4 Proactive Patch Information (Doc ID 2285559.1)
 
 list_11204:
   - { type : "PSU"  , id : 1      , patch_number : 17478514 }
@@ -221,7 +221,7 @@ list_12102:
   - { type : "BP"   , id : 200414 , patch_number : 30805478 , patch_folder : 30691015 }
   - { type : "BP"   , id : 200714 , patch_number : 31307682 , patch_folder : 31001106 }
   - { type : "BP"   , id : 201020 , patch_number : 31718813 , patch_folder : 31511219 }
-  - { type : "BP"   , id : 210119 , patch_number : 32131231	, patch_folder : 31965033 }
+  - { type : "BP"   , id : 210119 , patch_number : 32131231 , patch_folder : 31965033 }
 
 
 ####################
