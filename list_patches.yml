@@ -101,7 +101,7 @@ list_11204:
   - { type : "BP"   , id : 200414 , patch_number : 30805507 , patch_folder : 30691206 }
   - { type : "BP"   , id : 200714 , patch_number : 31220011 , patch_folder : 31103314 }
   - { type : "BP"   , id : 201020 , patch_number : 31718644 , patch_folder : 31537652 }
-#  - { type : "BP"   , id : 210119 , patch_number :  , patch_folder :  }
+# - { type : "BP"   , id : 210119 , patch_number :  , patch_folder :  }
 
 ####################
 ##### 12.1.0.1 #####
