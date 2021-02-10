@@ -25,3 +25,7 @@ list_retry_datapatch:
   - { version: "12.1.0.2" , type : "BP"  , id : 201020 , retries : 2 }
   - { version: "12.2.0.1" , type : "RU"  , id : 201020 , retries : 1 }
   - { version: "12.2.0.1" , type : "RUR" , id : 201020 , retries : 1 }
+  - { version: "12.1.0.2" , type : "PSU" , id : 210119 , retries : 2 }
+  - { version: "12.1.0.2" , type : "BP"  , id : 210119 , retries : 2 }
+  - { version: "12.2.0.1" , type : "RU"  , id : 210119 , retries : 1 }
+  - { version: "12.2.0.1" , type : "RUR" , id : 210119 , retries : 1 }
