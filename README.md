@@ -80,10 +80,3 @@ _P.S: Note that all the 5 parameters above are independent._
 * A shared folder between your machine and the VirtualBox VM must exists and properly configured in config_vars.yml.
 * Base Image used for each release must already have latest OPatch version.
 * VM must be configured to have the network interface auto-started as soon as snapshot is loaded.
-
-## Versions ##
-* v1.05 (2020-01-04) by Rodrigo Jorge
-* v1.04 (2019-08-04) by Rodrigo Jorge
-* v1.03 (2019-06-05) by Rodrigo Jorge
-* v1.02 (2019-05-17) by Rodrigo Jorge
-* v1.01 (2019-05-13) by Rodrigo Jorge
