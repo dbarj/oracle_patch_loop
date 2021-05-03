@@ -1,7 +1,7 @@
 # Folder where the database patches are placed. The patches can also be placed in sub-folders of the directory specified below.
 source_folder : "/Volumes/Untitled/Rodrigo/ORACHKSUM/DB\ Install"
 
-# Folder in RW mode on your compute shared with VM to process files.
+# Folder in RW mode on local compute and shared with the VM. It is used to process the files.
 shared_folder : "/Users/rodrigo.jorge/Desktop/extract"
 
 # Path of the folder mounted within the VM.
@@ -10,7 +10,7 @@ VM_folder  : "/media/sf_Patch/"
 # Oracle SID. Must be included in /etc/oratab for oraenv utility.
 mysid : "orcl"
 
-# Folder to store the final generated DB dump
+# Folder to store the final generated DB expdp dumpfiles.
 dump_folder : "/Volumes/Samsung_T3/OraSum/files/exp"
 
 # Files in "user_scripts" folder that will run before and after the final expdp. script_types can be "shell", "sql" or "yml".
@@ -50,3 +50,4 @@ user_impdp_pre  :
 user_impdp_post :
 - { file : "fileLoad.yml" , folder : "user_scripts/load" , type : "yml" , task_action : "Load chksum table" }
 - { file : "insert_all_exec.sql" , folder : "user_scripts/load" , type : "sql" , task_action : "Create consolidated tables" }
+- { file : "changed_object.sql" , folder : "user_scripts/report" , type : "sql" , task_action : "Create list of changed objects" }

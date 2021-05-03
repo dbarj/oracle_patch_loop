@@ -78,5 +78,5 @@ _P.S: Note that all the 5 parameters above are independent._
 * Passwordless SSH connection to VM user.
 * Passwordless sudo to root for VM user.
 * A shared folder between your machine and the VirtualBox VM must exists and properly configured in config_vars.yml.
-* Base Image used for each release must already have latest OPatch version.
+* Base Image used for each release.
 * VM must be configured to have the network interface auto-started as soon as snapshot is loaded.

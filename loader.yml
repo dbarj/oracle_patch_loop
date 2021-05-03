@@ -17,7 +17,6 @@
 #************************************************************************
 # Available at: https://github.com/dbarj/oracle_patch_loop/
 # Created on: May/2019 by Rodrigo Jorge <http://www.dbarj.com.br/>
-# Version 1.02
 #************************************************************************
 
 - hosts: localhost
