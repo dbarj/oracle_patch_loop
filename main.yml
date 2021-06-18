@@ -25,15 +25,20 @@
   any_errors_fatal: true
 
   vars_files:
-    - config_vars.yml
+    - config_main.yml
     - list_versions.yml
     - list_patches.yml
-    - list_exceptions.yml
-
-  pre_tasks:
-    - import_tasks: tasks/setup_env.yml
+    - list_exceptions.yml    
 
   tasks:
+
+  - include_vars: config_vbox.yml
+    when: oci_mode == false
+
+  - include_vars: config_oci.yml
+    when: oci_mode == true
+
+  - import_tasks: tasks/setup_env.yml
 
   - include: tasks/main_PSU_BP.yml db_version="11.2.0.4"
     when: param_version is undefined or param_version == "11.2.0.4"

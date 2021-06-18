@@ -1,0 +1,47 @@
+- name: Perform action "{{ compute_action }}" on instance
+  oci_compute_instance_actions:
+    instance_id: "{{ oci_instance_id }}"
+    action: "{{ compute_action }}"
+  register: oci_action
+
+- block:
+
+  - name: Get the VNIC attachment details of instance
+    oci_compute_vnic_attachment_facts:
+      compartment_id: "{{ oci_compartment_id }}"
+      instance_id: "{{ oci_instance_id }}"
+    register: result
+
+  - name: Get details of the VNIC
+    oci_network_vnic_facts:
+      id: "{{ result.vnic_attachments[0].vnic_id }}"
+    register: result
+  - set_fact:
+      vm_ip_address: "{{result.vnic.private_ip}}"
+
+  - name: Print the private ip of the newly launched instance
+    debug:
+      msg: "Private IP of launched instance {{ vm_ip_address }}"
+
+  - name: Wait (up to 2 minutes) for port 22 to become open
+    wait_for:
+      port: 22
+      host: '{{ vm_ip_address }}'
+      state: started
+      delay: 10
+      timeout: 120
+    vars:
+      ansible_connection: local
+    when: oci_action.changed
+
+  - name: Wait (up to 10 seconds) for port 22 to become open
+    wait_for:
+      port: 22
+      host: '{{ vm_ip_address }}'
+      state: started
+      timeout: 10
+    vars:
+      ansible_connection: local
+    when: not oci_action.changed
+
+  when: compute_action == "start"

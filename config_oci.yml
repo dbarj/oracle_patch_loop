@@ -1,0 +1,38 @@
+# Folder where the database patches are placed. The patches can also be placed in sub-folders of the directory specified below.
+source_folder : "/u01/patch_automation/patches"
+
+# Folder in RW mode on local compute and shared with the VM. It is used to process the files.
+shared_folder : "/u01/patch_automation/shared"
+
+# Path of the folder mounted within the VM.
+VM_folder  : "/u02/"
+
+# Oracle SID. Must be included in /etc/oratab for oraenv utility.
+mysid : "orcl"
+
+# Folder to store the final generated files.
+output_folder : "/u01/patch_automation/output"
+
+# Files in "user_scripts" folder that will run before and after the final expdp. script_types can be "shell", "sql" or "yml".
+user_expdp_pre  :
+- { file : "fileGet.yml" , folder : "user_scripts/gen" , type : "yml", task_action : "Collect OS Info" }
+- { file : "tables_recreate_OCI.sql" , type : "sql" , task_action : "Recreate Tables" }
+- { file : "hashGet.yml" , folder : "user_scripts/odbfcl" , type : "yml", task_action : "Collect DB Info" }
+- { file : "externalDir.yml" , type : "yml" , task_action : "Create External Directory" }
+
+user_expdp_post :
+- { file : "postActions.sql" , type : "sql", task_action : "Do nothing." }
+
+# User that will hold your tables outputs and be exported after each execution. If the database is CDB, "C##" will be automatically inserted if not.
+dump_user : hash
+
+# User pass
+dump_pass : hash
+
+# This parameter will skip execution for patches that already have a dump file generated in "dump_folder" ("output_folder"/expdp).
+skip_dump_exists: true
+
+# OCI Information to deploy VM
+oci_compartment_id : ocid1.compartment.oc1..aaaaaaaa6lt4nm5eq6uynk4x4h3vyw3cpdszdyyl2qc7kq4wzlaiwtojqgrq
+oci_subnet_id : ocid1.subnet.oc1.iad.aaaaaaaarpoyj63i2hfron6wzhk25rnnsmraome3oz3oqnnfk4cahsi5amgq
+oci_ad : ocid1.subnet.oc1.iad.aaaaaaaarpoyj63i2hfron6wzhk25rnnsmraome3oz3oqnnfk4cahsi5amgq

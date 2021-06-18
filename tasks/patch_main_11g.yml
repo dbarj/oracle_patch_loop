@@ -8,8 +8,8 @@
     # Stop the database
     - include: run_sql.yml
       vars:
-        sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database" }
-    
+        sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database for OPatch" }
+
     - name: Run OPatch
       shell: |
            export ORACLE_HOME ORACLE_SID
@@ -43,7 +43,7 @@
     # Start the database
     - include: run_sql.yml
       vars:
-        sql_param : { file : "startup.sql" , folder : "patch_sql" , task_action : "Start Database" }
+        sql_param : { file : "startup.sql" , folder : "patch_sql" , task_action : "Start Database for sqlpatch" }
     
     # Apply patch changes on DB (if PSU)
     - include: run_sql.yml
@@ -80,8 +80,9 @@
     # Stop the database
     - include: run_sql.yml
       vars:
-        sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database" }
-    
+        sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database to re-enable DB Vault" }
+      when: dbvault_enabled == true
+
     - name: Enable Database Vault
       shell: |
            {{ dbhome_locl }}/bin/chopt enable dv
@@ -96,10 +97,12 @@
 
     when: patch.id != 0
 
-  # Start the database
+  # Reason for Startup Force is that sqlplus may say instance is already up when it is actually down.
+  # This happens when you kill oracle processes when DB is running and reinstate LVM.
   - include: run_sql.yml
     vars:
-      sql_param : { file : "startup.sql" , folder : "patch_sql" , task_action : "Start Database" }
+      sql_param : { file : "startupForce.sql" , folder : "patch_sql" , task_action : "Start Database" }
+    when: patch.id == 0 or (patch.id != 0 and dbvault_enabled == true)
 
   # User custom pre-scripts
   - name: Run user custom pre-scripts

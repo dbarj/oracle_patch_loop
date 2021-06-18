@@ -1,12 +1,12 @@
 - name: "Copy {{ dump_file_prefix }}.dmp to repository"
   copy:
     src: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
-    dest: "{{ dump_folder }}"
+    dest: "{{ output_folder }}/expdp"
 
 - name: "Copy {{ dump_file_prefix }}.log to repository"
   copy:
     src: "{{ shared_folder }}/{{ dump_file_prefix }}.log"
-    dest: "{{ dump_folder }}"
+    dest: "{{ output_folder }}/expdp"
 
 - name : "Remove file {{ dump_file_prefix }}.dmp"
   file:

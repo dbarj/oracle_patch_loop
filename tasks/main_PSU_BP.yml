@@ -11,12 +11,31 @@
   with_items: "{{ list_versions }}"
   when: item.id == db_version
 
+- name : Define Cloud params
+  set_fact:
+    oci_instance_id: "{{ item.oci_instance_id }}"
+    patch_base:    "{{ item.base_snap }}"
+  with_items: "{{ list_info_oci }}"
+  when: item.id == db_version and oci_mode == true
+
 # vm_reload is called before every patch is applied to rollback the VM to the snapshot image.
 - name : Define snapshot base version to rollback when vm_reload is called.
   set_fact:
     vm_snapshot: "{{ patch_base }}"
 
-- include: vm_reload.yml
+- name: Call role to start OCI VM
+  include_role:
+    name: oci_compute_instance_actions
+  vars:
+    compute_action: start
+  when: oci_mode == true
+
+- include: vbox_reload.yml
+  when: oci_mode == false
+
+- include: lvm_reload.yml
+  when: oci_mode == true
+
 - include: setup_opatch.yml
 - include: setup_database.yml
 
@@ -64,7 +83,7 @@
     debug: msg="Latest PSU ID - {{ latest_psu_line }}"
 
   # Save lastest PSU as a new snapshot - Also changes vm_snapshot variable to it (for OJVM).
-  - include: vm_savestate.yml
+  - include: vbox_savestate.yml
     when: latest_psu_line == latest_processed
 
   when: param_type is undefined or param_type == "PSU"
@@ -141,3 +160,10 @@
       - patch.id <= (param_patch_to | int)   or param_patch_to == -1
 
   when: param_type is undefined or param_type == "BP"
+
+- name: Call role to stop OCI VM
+  include_role:
+    name: oci_compute_instance_actions
+  vars:
+    compute_action: stop
+  when: oci_mode == true

@@ -10,8 +10,8 @@ VM_folder  : "/media/sf_Patch/"
 # Oracle SID. Must be included in /etc/oratab for oraenv utility.
 mysid : "orcl"
 
-# Folder to store the final generated DB expdp dumpfiles.
-dump_folder : "/Volumes/Samsung_T3/OraSum/files/exp"
+# Folder to store the final generated files. It must contain the subfolder expdp
+output_folder : "/Volumes/Samsung_T3/OraSum/files"
 
 # Files in "user_scripts" folder that will run before and after the final expdp. script_types can be "shell", "sql" or "yml".
 user_expdp_pre  :
@@ -30,7 +30,7 @@ dump_user : hash
 # User pass
 dump_pass : hash
 
-# This parameter will skip execution for patches that already have a dump file generated in "dump_folder".
+# This parameter will skip execution for patches that already have a dump file generated in "dump_folder" ("output_folder"/expdp).
 skip_dump_exists: true
 
 ###########################

@@ -1,54 +1,68 @@
 # Folder to store the final generated ORACLE_HOME checksum
 - name : Define folder name
   set_fact:
-    chksum_folder: "/Volumes/Samsung_T3/OraSum/files/binsum"
+    chksum_folder: "{{ output_folder }}/binsum"
 
 - name : Define file names
   set_fact:
     sha256_file: "sha256sum_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}.chk"
 
-- name: Generate files checksum
-  shell: |
-       find -type f -exec sha256sum "{}" + > {{ VM_folder }}/{{ sha256_file }}
-  args:
-    chdir: "{{ dbhome_locl }}"
-  register: sqloutput
-  become: true
-  become_user: root
-  delegate_to: "{{ vm_ip_address }}"
+- name: "Check if {{ chksum_folder }}/{{ sha256_file }} exists"
+  stat:
+    path: "{{ chksum_folder }}/{{ sha256_file }}"
+  register: chksum_stat_result
 
-- name: Generate files checksum for static libs
-  shell: |
-       v_libs=$(find {{ dbhome_locl }} -type f -name "*.a")
-       
-       v_ext_fold=/tmp/statlib
-       v_out_file=/tmp/statlib_list.txt
-       
-       IFS=$'\n'
-       for v_lib in ${v_libs}
-       do
-         rm -rf "${v_ext_fold}"
-         mkdir "${v_ext_fold}"
-         cd "${v_ext_fold}"
-         ar x "${v_lib}"
-         find -type f -exec sha256sum "{}" + > ${v_out_file}
-         sed -i "s|  \.|  ${v_lib}|" ${v_out_file}
-         cat ${v_out_file} >> {{ VM_folder }}/{{ sha256_file }}
-         rm -rf ${v_ext_fold} ${v_out_file}
-       done
-  args:
-    chdir: "{{ dbhome_locl }}"
-  register: sqloutput
-  become: true
-  become_user: root
-  delegate_to: "{{ vm_ip_address }}"
+# Will skip all the rest if the chksum file exists
+- name : Define exists_chksum
+  set_fact:
+    exists_chksum: "{{ chksum_stat_result.stat.exists }}"
 
-- name: Copy {{ sha256_file }} to repository
-  copy:
-    src: "{{ shared_folder }}/{{ sha256_file }}"
-    dest: "{{ chksum_folder }}"
+- block :
 
-- name : "Remove file {{ sha256_file }}"
-  file:
-    state: absent
-    path: "{{ shared_folder }}/{{ sha256_file }}"
+  - name: Generate files checksum
+    shell: |
+        find -type f -exec sha256sum "{}" + > {{ VM_folder }}/{{ sha256_file }}
+    args:
+      chdir: "{{ dbhome_locl }}"
+    register: sqloutput
+    become: true
+    become_user: root
+    delegate_to: "{{ vm_ip_address }}"
+
+  - name: Generate files checksum for static libs
+    shell: |
+        v_libs=$(find {{ dbhome_locl }} -type f -name "*.a")
+        
+        v_ext_fold=/tmp/statlib
+        v_out_file=/tmp/statlib_list.txt
+        
+        IFS=$'\n'
+        for v_lib in ${v_libs}
+        do
+          rm -rf "${v_ext_fold}"
+          mkdir "${v_ext_fold}"
+          cd "${v_ext_fold}"
+          ar x "${v_lib}"
+          find -type f -exec sha256sum "{}" + > ${v_out_file}
+          sed -i "s|  \.|  ${v_lib}|" ${v_out_file}
+          cat ${v_out_file} >> {{ VM_folder }}/{{ sha256_file }}
+          rm -rf ${v_ext_fold} ${v_out_file}
+        done
+    args:
+      chdir: "{{ dbhome_locl }}"
+    register: sqloutput
+    become: true
+    become_user: root
+    delegate_to: "{{ vm_ip_address }}"
+
+  - name: Copy {{ sha256_file }} to repository
+    copy:
+      src: "{{ shared_folder }}/{{ sha256_file }}"
+      dest: "{{ chksum_folder }}"
+
+  - name : "Remove file {{ sha256_file }}"
+    file:
+      state: absent
+      path: "{{ shared_folder }}/{{ sha256_file }}"
+
+  when: exists_chksum == false

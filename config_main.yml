@@ -1,0 +1,2 @@
+# OCI Mode? If true, script will load and run in OCI move, otherwise, VBox.
+oci_mode : true
