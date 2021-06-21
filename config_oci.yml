@@ -2,7 +2,7 @@
 source_folder : "/u01/patch_automation/patches"
 
 # Folder in RW mode on local compute and shared with the VM. It is used to process the files.
-shared_folder : "/u01/patch_automation/shared"
+shared_folder : "/u01/patch_automation/shared_bindfs"
 
 # Path of the folder mounted within the VM.
 VM_folder  : "/u02/"
@@ -19,6 +19,7 @@ user_expdp_pre  :
 - { file : "tables_recreate_OCI.sql" , type : "sql" , task_action : "Recreate Tables" }
 - { file : "hashGet.yml" , folder : "user_scripts/odbfcl" , type : "yml", task_action : "Collect DB Info" }
 - { file : "externalDir.yml" , type : "yml" , task_action : "Create External Directory" }
+# - { file : "preActions.sql" , type : "sql", task_action : "Do nothing." }
 
 user_expdp_post :
 - { file : "postActions.sql" , type : "sql", task_action : "Do nothing." }

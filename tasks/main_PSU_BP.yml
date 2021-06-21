@@ -18,7 +18,7 @@
   with_items: "{{ list_info_oci }}"
   when: item.id == db_version and oci_mode == true
 
-# vm_reload is called before every patch is applied to rollback the VM to the snapshot image.
+# reload is called before every patch is applied to rollback the VM to the snapshot image.
 - name : Define snapshot base version to rollback when reload is called.
   set_fact:
     vm_snapshot: "{{ patch_base }}"
@@ -177,6 +177,7 @@
 
   when: param_type is undefined or param_type == "BP"
 
+# Stop OCI VM
 - name: Call role to stop OCI VM
   include_role:
     name: oci_compute_instance_actions

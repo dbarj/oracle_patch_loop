@@ -8,7 +8,7 @@
        if ! $(lvs -a | grep -q "${v_snapshot}")
        then
          v_size=$(lvs --noheadings -o seg_size ${v_disk})
-         lvcreate --size ${v_size} --snapshot --name ${v_snapshot} ${v_disk}
+         lvcreate --size ${v_size} --snapshot --name lv_u01_${v_snapshot} ${v_disk}
        fi
   become: true
   become_user: root

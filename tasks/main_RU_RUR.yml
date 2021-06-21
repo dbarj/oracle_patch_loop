@@ -11,12 +11,31 @@
   with_items: "{{ list_versions }}"
   when: item.id == db_version
 
-# vm_reload is called before every patch is applied to rollback the VM to the snapshot image.
-- name : Define snapshot base version to rollback when vm_reload is called.
+- name : Define Cloud params
+  set_fact:
+    oci_instance_id: "{{ item.oci_instance_id }}"
+    patch_base:    "{{ item.base_snap }}"
+  with_items: "{{ list_info_oci }}"
+  when: item.id == db_version and oci_mode == true
+
+# reload is called before every patch is applied to rollback the VM to the snapshot image.
+- name : Define snapshot base version to rollback when reload is called.
   set_fact:
     vm_snapshot: "{{ patch_base }}"
 
-- include: vm_reload.yml
+- name: Call role to start OCI VM
+  include_role:
+    name: oci_compute_instance_actions
+  vars:
+    compute_action: start
+  when: oci_mode == true
+
+- include: vbox_reload.yml
+  when: oci_mode == false
+
+- include: lvm_reload.yml
+  when: oci_mode == true
+
 - include: setup_opatch.yml
 - include: setup_database.yml
 
@@ -55,17 +74,27 @@
     vars:
       filter_qry: "[?type=='RU'].id"
 
-  - name : Generate Snapshot Name
+  - name : Generate Snapshot Name - VBox Mode
     set_fact:
       vm_snapshot: "{{ db_version }} RU {{ latest_RU_id }}"
       latest_RU_line: "{{ db_version }}.RU.{{ latest_RU_id }}"
+    when: oci_mode == false
+
+  - name : Generate Snapshot Name - LVM Mode
+    set_fact:
+      vm_snapshot: "RU_{{ latest_RU_id }}"
+      latest_RU_line: "{{ db_version }}.RU.{{ latest_RU_id }}"
+    when: oci_mode == true
 
   - name: "Latest RU"
     debug: msg="Latest RU ID - {{ latest_RU_line }}"
 
   # Save lastest RU as a new snapshot - Also changes vm_snapshot variable to it (for OJVM).
-  - include: vm_savestate.yml
-    when: latest_RU_line == latest_processed
+  - include: vbox_savestate.yml
+    when: latest_RU_line == latest_processed and oci_mode == false
+
+  - include: lvm_savestate.yml
+    when: latest_RU_line == latest_processed and oci_mode == true
 
   when: param_type is undefined or param_type == "RU"
 
@@ -79,9 +108,15 @@
     vars:
       filter_qry: "[?type=='RU'].id"
 
-  - name : Generate Snapshot Name
+  - name : Generate Snapshot Name - VBox Mode
     set_fact:
       vm_snapshot: "{{ db_version }} RU {{ latest_RU_id }}"
+    when: oci_mode == false
+
+  - name : Generate Snapshot Name - LVM Mode
+    set_fact:
+      vm_snapshot: "RU_{{ latest_RU_id }}"
+    when: oci_mode == true
 
   - name: "Base Snapshot will be {{ vm_snapshot }}"
     debug: msg="Base Snapshot will be {{ vm_snapshot }}"
@@ -108,7 +143,7 @@
 ### RUR
 - block:
 
-  - name : Define snapshot base version to rollback when vm_reload is called.
+  - name : Define snapshot base version to rollback when reload is called.
     set_fact:
       vm_snapshot: "{{ patch_base }}"
 
@@ -125,3 +160,11 @@
       - patch.id <= (param_patch_to | int)   or param_patch_to == -1
 
   when: param_type is undefined or param_type == "RUR"
+
+# Stop OCI VM
+- name: Call role to stop OCI VM
+  include_role:
+    name: oci_compute_instance_actions
+  vars:
+    compute_action: stop
+  when: oci_mode == true
