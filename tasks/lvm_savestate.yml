@@ -1,0 +1,15 @@
+## This code will take a snapshot named "vm_snapshot" for the VM. It will later be used as a base release for OJVMs.
+
+# Save latest machine image if not already
+- name: "Create new LVM snapshot \"{{ vm_snapshot }}\" if not exists."
+  shell: |
+       v_snapshot="{{ vm_snapshot }}"
+       v_disk='/dev/mapper/vg_u01-lv_u01'
+       if ! $(lvs -a | grep -q "${v_snapshot}")
+       then
+         v_size=$(lvs --noheadings -o seg_size ${v_disk})
+         lvcreate --size ${v_size} --snapshot --name ${v_snapshot} ${v_disk}
+       fi
+  become: true
+  become_user: root
+  delegate_to: "{{ vm_ip_address }}"

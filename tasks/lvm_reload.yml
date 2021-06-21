@@ -7,6 +7,7 @@
        sleep 5
        umount -l -f /u01 || true
        sleep 5
+       lvchange -a n ${v_disk}
        lvconvert --merge -i 1 -v ${v_disk}_${v_snapshot}
        lvchange -a n ${v_disk}
        lvchange -a y ${v_disk}
@@ -20,7 +21,7 @@
          sleep 1
        done
        v_size=$(lvs --noheadings -o seg_size ${v_disk})
-       lvcreate --size 25G --snapshot --name lv_u01_${v_snapshot} ${v_disk}
+       lvcreate --size ${v_size} --snapshot --name lv_u01_${v_snapshot} ${v_disk}
        mount /u01
   become: true
   become_user: root

@@ -99,6 +99,7 @@
 
   # Reason for Startup Force is that sqlplus may say instance is already up when it is actually down.
   # This happens when you kill oracle processes when DB is running and reinstate LVM.
+  # This start is only required if database was never stopped.
   - include: run_sql.yml
     vars:
       sql_param : { file : "startupForce.sql" , folder : "patch_sql" , task_action : "Start Database" }
