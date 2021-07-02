@@ -41,11 +41,17 @@
 
 - block:
 
+  - name: "Startup"
+    include: run_sql.yml
+    vars:
+      sql_param : { file : "startup.sql" , folder : "patch_sql" , task_action : "Start Database" }
+    when: oci_mode == true
+
   - name: "Check if CDB is enabled"
     shell: |
          set -eo pipefail
          export ORACLE_HOME ORACLE_SID
-         {{ dbhome_locl }}/bin/sqlplus -s "/ as sysdba" <<'EOF' | sed '/^$/d'
+         {{ dbhome_locl }}/bin/sqlplus -L -S "/ as sysdba" <<'EOF' | sed '/^$/d'
          whenever sqlerror exit sql.sqlcode
          set pages 0 head off feed off echo off trims on ver off term on
          select decode(substr(CDB,1,1),'Y','true','N','false') is_cdb from v$database;

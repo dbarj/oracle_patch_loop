@@ -1,3 +1,16 @@
+- name: Ensure shared disk "{{ shared_folder }}" is mounted
+  shell: |
+    set -eo pipefail
+    if mount | grep -q -F ' {{ shared_folder }} '
+    then
+      echo ok
+    else
+      mount {{ shared_folder }}
+    fi
+  become: true
+  become_user: root
+  when: oci_mode == true
+
 - name: Copy patch SQL to shared folder
   copy:
     src: patch_sql/

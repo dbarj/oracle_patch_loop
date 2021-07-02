@@ -1,9 +1,9 @@
 # Folder to store the final generated ORACLE_HOME checksum
-- name : Define folder name
+- name : Define chksum folder name
   set_fact:
     chksum_folder: "{{ output_folder }}/binsum"
 
-- name : Define file names
+- name : Define chksum file names
   set_fact:
     sha256_file: "sha256sum_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}.chk"
 
@@ -13,9 +13,6 @@
   register: chksum_stat_result
 
 # Will skip all the rest if the chksum file exists
-- name : Define exists_chksum
-  set_fact:
-    exists_chksum: "{{ chksum_stat_result.stat.exists }}"
 
 - block :
 
@@ -65,4 +62,4 @@
       state: absent
       path: "{{ shared_folder }}/{{ sha256_file }}"
 
-  when: exists_chksum == false
+  when: not chksum_stat_result.stat.exists

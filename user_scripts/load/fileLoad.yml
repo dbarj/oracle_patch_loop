@@ -1,7 +1,7 @@
 # Folder to store the final generated ORACLE_HOME checksum
 - name : Define file names
   set_fact:
-    chksum_path:   "/Volumes/Samsung_T3/OraSum/files"
+    chksum_path:   "{{ output_folder }}"
     chksum_folder: "binsum"
 
 - name: "Copy {{ chksum_path }}/{{ chksum_folder }} to shared location."
