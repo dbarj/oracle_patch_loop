@@ -13,3 +13,12 @@ list_versions:
   - { id : "12.2.0.1" , patch_list : "list_12201" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 6.8" , base_snap : "12.2.0.1 Ready" , opatch_file : "p6880880_200000_Linux-x86-64.zip" , ip : "192.168.56.101" }
   - { id : "18.0.0.0" , patch_list : "list_18000" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 6.8" , base_snap : "18.0.0.0 Ready" , opatch_file : "p6880880_200000_Linux-x86-64.zip" , ip : "192.168.56.101" }
   - { id : "19.0.0.0" , patch_list : "list_19000" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 7.6" , base_snap : "19.0.0.0 Ready" , opatch_file : "p6880880_200000_Linux-x86-64.zip" , ip : "192.168.56.102" }
+
+list_info_oci:
+  - { id : "11.2.0.4" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" }
+  - { id : "12.1.0.1" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" }
+  - { id : "12.1.0.2" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" }
+  - { id : "12.2.0.1" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" }
+  - { id : "18.0.0.0" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" , out_of_box_ru : 3 }
+  - { id : "19.0.0.0" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" , out_of_box_ru : 3 }
+  - { id : "21.0.0.0" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" }

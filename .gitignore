@@ -1,5 +1,6 @@
-
 .DS_Store
 main.retry
 *.txt
 *.log
+/user_scripts/report/*
+/user_scripts/odbfcl/*

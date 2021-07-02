@@ -30,9 +30,6 @@ dump_user : hash
 # User pass
 dump_pass : hash
 
-# This parameter will skip execution for patches that already have a dump file generated in "dump_folder" ("output_folder"/expdp).
-skip_dump_exists: true
-
 ###########################
 ### For loader.yml only ###
 ###########################
