@@ -7,7 +7,7 @@
        sleep 5
        umount -l -f /u01 || true
        sleep 5
-       lvchange -a n ${v_disk}
+       lvchange -a n ${v_disk} -f
        lvconvert --merge -i 1 -v ${v_disk}_${v_snapshot}
        lvchange -a n ${v_disk}
        lvchange -a y ${v_disk}
@@ -22,7 +22,16 @@
        done
        v_size=$(lvs --noheadings -o seg_size ${v_disk})
        lvcreate --size ${v_size} --snapshot --name lv_u01_${v_snapshot} ${v_disk}
-       mount /u01
+       mount /u01 || true
+       mount | grep -q -F ' /u01 '
   become: true
   become_user: root
+  delegate_to: "{{ vm_ip_address }}"
+
+- name: "Clean oracle Shared Segments"
+  shell: |
+      # Clean Shared Segments (ORA-12547 TNS: Lost Contact)
+      ipcs -m | grep oracle | awk ' { print $2 } ' | xargs -I {} ipcrm -m {}
+  become: true
+  become_user: oracle
   delegate_to: "{{ vm_ip_address }}"

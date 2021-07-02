@@ -52,5 +52,3 @@
   file:
     state: absent
     path: "{{ shared_folder }}/{{ dump_file_prefix }}.log"
-
-# Skip all is true when dump file is already generated and skip_dump_exists is true at config.

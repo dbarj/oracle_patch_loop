@@ -1,0 +1,55 @@
+### Will import all dumps to a given database.
+
+- name : Define version
+  set_fact:
+    patch_list:    "{{ item.patch_list }}"
+  with_items: "{{ list_versions }}"
+  when: item.id == db_version
+
+- name : Define Cloud params
+  set_fact:
+    out_of_box_ru: "{{ item.out_of_box_ru | default(0) }}"
+  with_items: "{{ list_info_oci }}"
+  when: item.id == db_version
+
+#- fail:
+#    msg: "Stop here."
+
+- name : Check if there is any PSU
+  set_fact:
+    total_psus: "{{ lookup('vars', patch_list) | json_query(filter_qry) | count }}"
+  vars:
+    filter_qry: "[?type=='PSU'].id"
+
+- name : Check if there is any BP
+  set_fact:
+    total_bps: "{{ lookup('vars', patch_list) | json_query(filter_qry) | count }}"
+  vars:
+    filter_qry: "[?type=='BP'].id"
+
+- name : Check if there is any RU
+  set_fact:
+    total_rus: "{{ lookup('vars', patch_list) | json_query(filter_qry) | count }}"
+  vars:
+    filter_qry: "[?type=='RU'].id"
+
+# Execute for every PSU
+- include: "impdp_file_adb.yml patch={{ item }}"
+  with_items:
+    - { type : PSU , id : 0 }
+    - "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
+  when: total_psus != "0"
+
+# Execute for base BP only. The others were included above.
+- include: "impdp_file_adb.yml patch={{ item }}"
+  with_items:
+    - { type : BP , id : 0 }
+  when: total_bps != "0"
+
+# Execute for every RU
+- include: "impdp_file_adb.yml patch={{ item }}"
+  with_items:
+    - "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
+  when: total_rus != "0"
+
+###

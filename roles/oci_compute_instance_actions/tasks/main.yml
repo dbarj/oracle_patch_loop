@@ -44,4 +44,17 @@
       ansible_connection: local
     when: not oci_action.changed
 
+  - name: Ensure shared disk "{{ VM_folder }}" is mounted
+    shell: |
+      set -eo pipefail
+      if mount | grep -q -F ' {{ VM_folder }} '
+      then
+        echo ok
+      else
+        mount {{ VM_folder }}
+      fi
+    become: true
+    become_user: root
+    delegate_to: "{{ vm_ip_address }}"
+
   when: compute_action == "start"

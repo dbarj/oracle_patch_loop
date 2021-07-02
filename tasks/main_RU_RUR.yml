@@ -15,6 +15,7 @@
   set_fact:
     oci_instance_id: "{{ item.oci_instance_id }}"
     patch_base:    "{{ item.base_snap }}"
+    out_of_box_ru: "{{ item.out_of_box_ru | default(0) }}"
   with_items: "{{ list_info_oci }}"
   when: item.id == db_version and oci_mode == true
 
@@ -45,11 +46,11 @@
   # Execute for base release
   - include: "{{ patch_file }}"
     vars:
-      patch : { type : RU , id : 0, patch_number : 0 }
+      patch : { type : RU , id : "{{ out_of_box_ru }}" , patch_number : 0 }
     when:
-      - 0 == (param_patch | int)      or param_patch == -1
-      - 0 >= (param_patch_from | int) or param_patch_from == -1
-      - 0 <= (param_patch_to | int)   or param_patch_to == -1
+      - (out_of_box_ru | int) == (param_patch | int)      or param_patch == -1
+      - (out_of_box_ru | int) >= (param_patch_from | int) or param_patch_from == -1
+      - (out_of_box_ru | int) <= (param_patch_to | int)   or param_patch_to == -1
 
   # Execute for every RU
   - include: "{{ patch_file }}"
@@ -62,6 +63,7 @@
       - patch.id == (param_patch | int)      or param_patch == -1
       - patch.id >= (param_patch_from | int) or param_patch_from == -1
       - patch.id <= (param_patch_to | int)   or param_patch_to == -1
+      - patch.id > (out_of_box_ru | int)
 
   when: param_type is undefined or param_type == "RU"
 
@@ -167,4 +169,4 @@
     name: oci_compute_instance_actions
   vars:
     compute_action: stop
-  when: oci_mode == true
+  when: oci_mode == true and not only_deploy_patch

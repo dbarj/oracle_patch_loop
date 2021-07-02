@@ -6,7 +6,8 @@
   # Stop the database
   - include: run_sql.yml
     vars:
-      sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database" }
+      sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database for OPatch" }
+    when: oci_mode == false
 
   - name: Run OPatch
     shell: |
@@ -20,7 +21,7 @@
     register: shell_output
     become: true
     become_user: oracle
-    when: patch.id != 0
+    when: patch.patch_number != 0
     delegate_to: "{{ vm_ip_address }}"
 
   - name: Opatch Output
@@ -30,13 +31,13 @@
   # Start the database
   - include: run_sql.yml
     vars:
-      sql_param : { file : "startupCDB.sql" , folder : "patch_sql" , task_action : "Start Database" }
+      sql_param : { file : "startupCDB.sql" , folder : "patch_sql" , task_action : "Start Database for sqlpatch" }
     when: patch.type != "OJVM"
 
   # Start the database (in OJVM, it must be in upgrade mode)
   - include: run_sql.yml
     vars:
-      sql_param : { file : "startupCDBOJVM.sql" , folder : "patch_sql" , task_action : "Start Database" }
+      sql_param : { file : "startupCDBOJVM.sql" , folder : "patch_sql" , task_action : "Start Database for OJVM sqlpatch" }
     when: patch.type == "OJVM"
 
   # Run Datapatch
@@ -45,7 +46,7 @@
 
   - name: Run Datapatch
     include: datapatch.yml
-    when: patch.id != 0
+    when: patch.patch_number != 0
 
   # Evaluate if it's needed to reexecute datapatch on 12.1.1 due to bug.
 
@@ -62,29 +63,34 @@
 
     when: patch.type == "OJVM"
 
-  # User custom pre-scripts
-  - include: run_script.yml
-    loop: "{{ user_expdp_pre | flatten(levels=1) }}"
-    loop_control:
-      loop_var: script_param
+  # When only_deploy_patch is false (most common case)
+  - block:
 
-  #- name : Export database tables
-  - name: Export Database Tables
-    shell: |
-         {{ dbhome_locl }}/bin/expdp userid={{ dump_user_int }}/{{ dump_pass }} directory=expdir compression=all dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log content=data_only schemas={{ dump_user_int }}
-    environment:
-      ORACLE_HOME: "{{ dbhome_locl }}"
-      ORACLE_SID: "{{ mysid }}"
-    register: shell_output
-    become: true
-    become_user: oracle
-    delegate_to: "{{ vm_ip_address }}"
+    # User custom pre-scripts
+    - include: run_script.yml
+      loop: "{{ user_expdp_pre | flatten(levels=1) }}"
+      loop_control:
+        loop_var: script_param
 
-  # User custom post-scripts
-  - include: run_script.yml
-    loop: "{{ user_expdp_post | flatten(levels=1) }}"
-    loop_control:
-      loop_var: script_param
+    #- name : Export database tables
+    - name: Export Database Tables
+      shell: |
+          {{ dbhome_locl }}/bin/expdp userid={{ dump_user_int }}/{{ dump_pass }} directory=expdir compression=all dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log content=data_only schemas={{ dump_user_int }}
+      environment:
+        ORACLE_HOME: "{{ dbhome_locl }}"
+        ORACLE_SID: "{{ mysid }}"
+      register: shell_output
+      become: true
+      become_user: oracle
+      delegate_to: "{{ vm_ip_address }}"
+
+    # User custom post-scripts
+    - include: run_script.yml
+      loop: "{{ user_expdp_post | flatten(levels=1) }}"
+      loop_control:
+        loop_var: script_param
+
+    when: not only_deploy_patch
 
   # Post Actions
   - include: patch_tasks_post.yml

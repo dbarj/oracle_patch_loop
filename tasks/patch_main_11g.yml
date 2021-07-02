@@ -95,41 +95,44 @@
       delegate_to: "{{ vm_ip_address }}"
       when: dbvault_enabled == true
 
-    when: patch.id != 0
+    when: patch.patch_number != 0
 
-  # Reason for Startup Force is that sqlplus may say instance is already up when it is actually down.
-  # This happens when you kill oracle processes when DB is running and reinstate LVM.
   # This start is only required if database was never stopped.
   - include: run_sql.yml
     vars:
-      sql_param : { file : "startupForce.sql" , folder : "patch_sql" , task_action : "Start Database" }
-    when: patch.id == 0 or (patch.id != 0 and dbvault_enabled == true)
+      sql_param : { file : "startup.sql" , folder : "patch_sql" , task_action : "Start Database" }
+    when: patch.patch_number == 0 or (patch.patch_number != 0 and dbvault_enabled == true)
 
-  # User custom pre-scripts
-  - name: Run user custom pre-scripts
-    include: run_script.yml
-    loop: "{{ user_expdp_pre | flatten(levels=1) }}"
-    loop_control:
-      loop_var: script_param
+  # When only_deploy_patch is false (most common case)
+  - block:
 
-  #- name : Export database tables
-  - name: Export Database Tables
-    shell: |
-         {{ dbhome_locl }}/bin/expdp userid={{ dump_user_int }}/{{ dump_pass }} directory=expdir compression=all dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log content=data_only schemas={{ dump_user_int }}
-    environment:
-      ORACLE_HOME: "{{ dbhome_locl }}"
-      ORACLE_SID: "{{ mysid }}"
-    register: shell_output
-    become: true
-    become_user: oracle
-    delegate_to: "{{ vm_ip_address }}"
+    # User custom pre-scripts
+    - name: Run user custom pre-scripts
+      include: run_script.yml
+      loop: "{{ user_expdp_pre | flatten(levels=1) }}"
+      loop_control:
+        loop_var: script_param
 
-  # User custom post-scripts
-  - name: Run user custom post-scripts
-    include: run_script.yml
-    loop: "{{ user_expdp_post | flatten(levels=1) }}"
-    loop_control:
-      loop_var: script_param
+    #- name : Export database tables
+    - name: Export Database Tables
+      shell: |
+          {{ dbhome_locl }}/bin/expdp userid={{ dump_user_int }}/{{ dump_pass }} directory=expdir compression=all dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log content=data_only schemas={{ dump_user_int }}
+      environment:
+        ORACLE_HOME: "{{ dbhome_locl }}"
+        ORACLE_SID: "{{ mysid }}"
+      register: shell_output
+      become: true
+      become_user: oracle
+      delegate_to: "{{ vm_ip_address }}"
+
+    # User custom post-scripts
+    - name: Run user custom post-scripts
+      include: run_script.yml
+      loop: "{{ user_expdp_post | flatten(levels=1) }}"
+      loop_control:
+        loop_var: script_param
+
+    when: not only_deploy_patch
 
   # Post Actions
   - include: patch_tasks_post.yml

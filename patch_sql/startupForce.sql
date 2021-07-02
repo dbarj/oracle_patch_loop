@@ -1,2 +1,0 @@
-startup force;
-exit;

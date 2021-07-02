@@ -1,34 +1,39 @@
-- name: "Copy {{ dump_file_prefix }}.dmp to repository"
-  copy:
-    src: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
-    dest: "{{ output_folder }}/expdp"
+# Skip the dump part if not expdp does not run
+- block:
 
-- name: "Copy {{ dump_file_prefix }}.log to repository"
-  copy:
-    src: "{{ shared_folder }}/{{ dump_file_prefix }}.log"
-    dest: "{{ output_folder }}/expdp"
+  - name: "Copy {{ dump_file_prefix }}.dmp to repository"
+    copy:
+      src: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+      dest: "{{ output_folder }}/expdp"
 
-- name : "Remove file {{ dump_file_prefix }}.dmp"
-  file:
-    state: absent
-    path: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+  - name: "Copy {{ dump_file_prefix }}.log to repository"
+    copy:
+      src: "{{ shared_folder }}/{{ dump_file_prefix }}.log"
+      dest: "{{ output_folder }}/expdp"
 
-- name : "Remove file {{ dump_file_prefix }}.log"
-  file:
-    state: absent
-    path: "{{ shared_folder }}/{{ dump_file_prefix }}.log"
+  - name : "Remove file {{ dump_file_prefix }}.dmp"
+    file:
+      state: absent
+      path: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+
+  - name : "Remove file {{ dump_file_prefix }}.log"
+    file:
+      state: absent
+      path: "{{ shared_folder }}/{{ dump_file_prefix }}.log"
+
+  when: not only_deploy_patch
 
 - name : Remove unzipped patch folder
   file:
     state: absent
     path: "{{ unzip_patch_folder }}"
-  when: patch.id != 0
+  when: patch.patch_number != 0
 
 - name : Remove PatchSearch.xml
   file:
     state: absent
     path: "{{ shared_folder }}/PatchSearch.xml"
-  when: patch.id != 0
+  when: patch.patch_number != 0
 
 - name : Define latest processed
   set_fact:

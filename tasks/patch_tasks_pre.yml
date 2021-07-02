@@ -1,29 +1,33 @@
 - name: "Processing {{ db_version }} {{ patch.type }} {{ patch.id }} - Patch {{ patch.patch_number }}"
   debug: msg="Processing {{ db_version }} {{ patch.type }} {{ patch.id }} - Patch {{ patch.patch_number }}"
 
-- name : Define dump and sha256 file names
+- name : Define dump file name
   set_fact:
     dump_file_prefix: "tables_{{ db_version }}_{{ patch.base_ru | default('')}}{{ patch.type }}_{{ patch.id }}"
-    sha256_file: "sha256sum_{{ db_version }}_{{ patch.base_ru | default('')}}{{ patch.type }}_{{ patch.id }}.chk"
     skip_all: false
     fix_datapatch_retries: 0
 
-- name: "Check if {{ output_folder }}/expdp/{{ dump_file_prefix }}.dmp exists"
-  stat:
-    path: "{{ output_folder }}/expdp/{{ dump_file_prefix }}.dmp"
-  register: dump_stat_result
+# Ignore dumpfile checks when only_deploy_patch is true
+- block:
 
-# Will skip all the rest if the dump file exists
-- name : Define skip_all
-  set_fact:
-    skip_all: "{{ dump_stat_result.stat.exists }}"
-  when: skip_dump_exists == true
+  - name: "Check if {{ output_folder }}/expdp/{{ dump_file_prefix }}.dmp exists"
+    stat:
+      path: "{{ output_folder }}/expdp/{{ dump_file_prefix }}.dmp"
+    register: dump_stat_result
 
-- name : Remove dump file if exists
-  file:
-    state: absent
-    path: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
-  when: skip_all == false
+  # Will skip all the rest if the dump file exists
+  - name : Define skip_all
+    set_fact:
+      skip_all: "{{ dump_stat_result.stat.exists }}"
+    when: skip_dump_exists == true
+
+  - name : Remove dump file if exists
+    file:
+      state: absent
+      path: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+    when: skip_all == false
+
+  when: not only_deploy_patch
 
 # Check if patch will need to reexecute datapatch
 - name : Check datapatch reexecution
@@ -37,7 +41,7 @@
     - err_list.type == patch.type
     - err_list.id == patch.id
 
-# When not processing base release. i.e patch.id != 0
+# When not processing base release. i.e patch.patch_number != 0
 - block:
 
   # Place patch file on the shared folder
@@ -87,7 +91,7 @@
 
     when: patch.patch_folder is defined
 
-  when: patch.id != 0 and skip_all == false
+  when: patch.patch_number != 0 and skip_all == false
 
 - include: vbox_reload.yml
   when: oci_mode == false and skip_all == false
@@ -95,7 +99,7 @@
 - include: lvm_reload.yml
   when: oci_mode == true and skip_all == false
 
-# Replace opatch with latest version, when not processing base release. i.e patch.id != 0
+# Replace opatch with latest version, when not processing base release. i.e patch.patch_number != 0
 - block:
 
   - name: Remove OPatch folder
@@ -114,4 +118,4 @@
     become_user: oracle
     delegate_to: "{{ vm_ip_address }}"
   
-  when: db_opatch|length > 0 and patch.id != 0 and skip_all == false
+  when: db_opatch|length > 0 and patch.patch_number != 0 and skip_all == false
