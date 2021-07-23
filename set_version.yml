@@ -1,0 +1,52 @@
+#************************************************************************
+#
+#   Oracle Patch Loop Applier
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+#************************************************************************
+# Available at: https://github.com/dbarj/oracle_patch_loop/
+# Created on: May/2019 by Rodrigo Jorge <http://www.dbarj.com.br/>
+#************************************************************************
+
+- hosts: localhost
+  gather_facts: true
+  become: false
+  any_errors_fatal: true
+
+  vars_files:
+    - config_main.yml
+    - list_versions.yml
+    - list_patches.yml
+    - list_exceptions.yml    
+
+  tasks:
+
+  - include_vars: config_vbox.yml
+    when: oci_mode == false
+
+  - include_vars: config_oci.yml
+    when: oci_mode == true
+
+  - import_tasks: tasks/setup_env.yml
+
+  - name : Replace settings
+    set_fact:
+      skip_dump_exists: false
+      only_deploy_patch: true
+
+  - include: tasks/main_PSU_BP.yml db_version="{{ param_version }}"
+    when: param_version == "11.2.0.4" or param_version == "12.1.0.1" or param_version == "12.1.0.2"
+
+  - include: tasks/main_RU_RUR.yml db_version="{{ param_version }}"
+    when: param_version == "12.2.0.1" or param_version == "18.0.0.0" or param_version == "19.0.0.0"
