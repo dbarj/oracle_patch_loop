@@ -47,7 +47,7 @@ PRO CDB/DBA_VIEWS
 @@create_hash_view.sql
 
 PRO All others CDB/DBA
-@@create_hash_others.sql
+@@create_hash_dba_cdb.sql
 
 PRO Non CDB/DBA views or tables
 @@create_hash_custom.sql

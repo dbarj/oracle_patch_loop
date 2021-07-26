@@ -45,6 +45,11 @@
       skip_dump_exists: false
       only_deploy_patch: true
 
+  - name: Variables not provided
+    fail:
+      msg: "Variables param_version / param_type / param_patch must be defined."
+    when: param_version is undefined or param_type is undefined or param_patch is undefined
+
   - include: tasks/main_PSU_BP.yml db_version="{{ param_version }}"
     when: param_version == "11.2.0.4" or param_version == "12.1.0.1" or param_version == "12.1.0.2"
 
