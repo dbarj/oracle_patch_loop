@@ -1,0 +1,38 @@
+# Folder to store the collected ORACLE_HOME text files
+- name : Define txtcollect folder name
+  set_fact:
+    txtcollect_folder: "{{ output_folder }}/txtcollect"
+
+- name : Define txtcollect file names
+  set_fact:
+    txtcollect_file: "txtcol_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}.tar.gz"
+
+- name: "Check if {{ txtcollect_folder }}/{{ txtcollect_file }} exists"
+  stat:
+    path: "{{ txtcollect_folder }}/{{ txtcollect_file }}"
+  register: txtcollect_stat_result
+
+# Will skip the rest if the txtcollect file exists
+
+- block :
+
+  - name: Collect text files from ORACLE_HOME
+    shell: |
+        find -type f -not -path "./.patch_storage/*" -not -name "tfa_setup" -print0 | xargs -0 grep -Il '.' | tar -czf {{ VM_folder }}/{{ txtcollect_file }} -T -
+    args:
+      chdir: "{{ dbhome_locl }}"
+    become: true
+    become_user: root
+    delegate_to: "{{ vm_ip_address }}"
+
+  - name: Copy {{ txtcollect_file }} to repository
+    copy:
+      src: "{{ shared_folder }}/{{ txtcollect_file }}"
+      dest: "{{ txtcollect_folder }}"
+
+  - name : "Remove file {{ txtcollect_file }}"
+    file:
+      state: absent
+      path: "{{ shared_folder }}/{{ txtcollect_file }}"
+
+  when: not txtcollect_stat_result.stat.exists

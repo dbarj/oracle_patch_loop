@@ -1,0 +1,64 @@
+- name : Define bugs_fixed filename and folder
+  set_fact:
+    bugs_fixed_file: "bugs_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}.txt"
+    bugs_fixed_folder: "{{ output_folder }}/bugsfixed"
+
+- name: "Check if {{ bugs_fixed_folder }}/{{ bugs_fixed_file }} exists"
+  stat:
+    path: "{{ bugs_fixed_folder }}/{{ bugs_fixed_file }}"
+  register: bugs_fixed_stat_result
+
+# Will skip all the rest if the bugs_fixed file does not exists
+- block:
+
+  - name: "Create sqlldr table"
+    shell: |
+        set -e
+        sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/adb_load_bugs_fixed/create_sqlldr_bugs_fixed_table.sql
+    register: sqloutput
+
+  - name: SQL Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+
+  - name: "Load {{ bugs_fixed_file }} in the database"
+    shell: |
+        set -e
+
+        v_file="{{ bugs_fixed_file }}"
+        v_outpref="{{ shared_folder }}/{{ bugs_fixed_file }}"
+
+        cat << EOF > "${v_outpref}_load.ctl"
+        LOAD
+        INTO TABLE T_BUGSFIXED_LOAD
+        APPEND
+        FIELDS TERMINATED BY x'09'
+        (file_name constant "${v_file}",bug_id, patch_id, bug_desc)
+        EOF
+
+        cd "{{ bugs_fixed_folder }}"
+
+        sqlldr {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} \
+        control="${v_outpref}_load.ctl" \
+        errors=0 \
+        discardmax=0 \
+        direct=Y \
+        data="${v_file}" \
+        log="${v_outpref}_load.log"
+
+        rm -f "${v_outpref}_load.log" "${v_outpref}_load.ctl"
+
+    register: sqloutput
+
+  - name: SQL Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+
+  - name: "Load bugs_fixed table"
+    shell: |
+        set -e
+        sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/adb_load_bugs_fixed/load_bugs_fixed_table.sql
+    register: sqloutput
+
+  - name: SQL Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+
+  when: bugs_fixed_stat_result.stat.exists

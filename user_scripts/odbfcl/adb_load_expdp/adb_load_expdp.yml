@@ -1,0 +1,46 @@
+# This dump_stat_result.stat.exists block is required only because this code is used
+# for both the extraction (main.yml), where the file obviusly exists, but also on the
+# loader_adb.yml.
+
+- block:
+
+  - name: Upload expdp to OCI Bucket
+    include_role:
+      name: oci_object_storage_object
+    vars:
+      oci_upload_file: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+      object_action: "create"
+
+  - name : Define source schema
+    set_fact:
+      dump_user_int: "{{ dump_user }}"
+    when: db_version == "11.2.0.4"
+
+  - name : Define source schema
+    set_fact:
+      dump_user_int: "c##{{ dump_user }}"
+    when: db_version != "11.2.0.4"
+
+  - name: Import DB Tables
+    shell: |
+        impdp \
+        userid={{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} \
+        directory=data_pump_dir \
+        credential='{{ oci_adb_credential }}' \
+        remap_schema='{{ dump_user_int }}:{{ oci_adb_transient_user }}' \
+        parallel=16 \
+        table_exists_action=truncate \
+        dumpfile={{ oci_adb_os_url_prefix }}/{{ dump_file_prefix }}.dmp > "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.log" 2>&1
+    register: shell_output
+
+  - name: Import Output
+    debug: msg="{{ shell_output.stderr_lines }}"
+
+  - name: Remove expdp from OCI Bucket
+    include_role:
+      name: oci_object_storage_object
+    vars:
+      oci_upload_file: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+      object_action: "remove"
+
+  when: dump_stat_result.stat.exists

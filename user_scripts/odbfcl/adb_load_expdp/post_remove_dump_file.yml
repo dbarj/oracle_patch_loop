@@ -1,0 +1,5 @@
+- name : "Remove file {{ dump_file_prefix }}.dmp from shared folder"
+  file:
+    state: absent
+    path: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+  when: dump_stat_result.stat.exists

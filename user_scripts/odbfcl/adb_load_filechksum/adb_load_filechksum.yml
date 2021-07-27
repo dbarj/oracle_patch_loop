@@ -1,0 +1,64 @@
+- name : Define chksum filename and folder
+  set_fact:
+    chksum_file: "sha256sum_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}.chk"
+    chksum_folder: "{{ output_folder }}/binsum"
+
+- name: "Check if {{ chksum_folder }}/{{ chksum_file }} exists"
+  stat:
+    path: "{{ chksum_folder }}/{{ chksum_file }}"
+  register: chksum_stat_result
+
+# Will skip all the rest if the chksum file does not exists
+- block:
+
+  - name: "Create sqlldr table"
+    shell: |
+        set -e
+        sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/adb_load_filechksum/create_sqlldr_chksum_table.sql
+    register: sqloutput
+
+  - name: SQL Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+
+  - name: "Load {{ chksum_file }} in the database"
+    shell: |
+        set -e
+
+        v_file="{{ chksum_file }}"
+        v_outpref="{{ shared_folder }}/{{ chksum_file }}"
+
+        cat << EOF > "${v_outpref}_load.ctl"
+        LOAD
+        INTO TABLE T_FILES_LOAD
+        APPEND
+        FIELDS TERMINATED BY '  '
+        (file_name constant "${v_file}",hash,path)
+        EOF
+
+        cd "{{ chksum_folder }}"
+
+        sqlldr {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} \
+        control="${v_outpref}_load.ctl" \
+        errors=0 \
+        discardmax=0 \
+        direct=Y \
+        data="${v_file}" \
+        log="${v_outpref}_load.log"
+
+        rm -f "${v_outpref}_load.log" "${v_outpref}_load.ctl"
+
+    register: sqloutput
+
+  - name: SQL Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+
+  - name: "Load chksum table"
+    shell: |
+        set -e
+        sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/adb_load_filechksum/load_chksum_table.sql
+    register: sqloutput
+
+  - name: SQL Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+
+  when: chksum_stat_result.stat.exists

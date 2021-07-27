@@ -1,0 +1,67 @@
+- name : Define symbols filename and folder
+  set_fact:
+    symbols_file: "symbols_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}.csv"
+    symbols_folder: "{{ output_folder }}/symbols"
+
+- name: "Check if {{ symbols_folder }}/{{ symbols_file }} exists"
+  stat:
+    path: "{{ symbols_folder }}/{{ symbols_file }}"
+  register: symbols_stat_result
+
+# Will skip all the rest if the symbols file does not exists
+- block:
+
+  - name: "Create sqlldr table"
+    shell: |
+        set -e
+        sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/adb_load_symbols/create_sqlldr_symbols_table.sql
+    register: sqloutput
+
+  - name: SQL Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+
+  - name: "Load {{ symbols_file }} in the database"
+    shell: |
+        set -e
+
+        v_file="{{ symbols_file }}"
+        v_outpref="{{ shared_folder }}/{{ symbols_file }}"
+
+        cat << EOF > "${v_outpref}_load.ctl"
+        LOAD
+        INTO TABLE T_SYMBOLS_LOAD
+        APPEND
+        FIELDS TERMINATED BY '|'
+        (source_file constant "${v_file}",file_name,symbol_type,symbol_name)
+        EOF
+
+        cd "{{ symbols_folder }}"
+
+        # Remove empty lines or sqlldr will fail due to constant.
+        sed -i '/^$/d' "${v_file}"
+
+        sqlldr {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} \
+        control="${v_outpref}_load.ctl" \
+        errors=0 \
+        discardmax=0 \
+        direct=Y \
+        data="${v_file}" \
+        log="${v_outpref}_load.log"
+
+        rm -f "${v_outpref}_load.log" "${v_outpref}_load.ctl"
+
+    register: sqloutput
+
+  - name: SQL Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+
+  - name: "Load symbols table"
+    shell: |
+        set -e
+        sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/adb_load_symbols/load_symbols_table.sql
+    register: sqloutput
+
+  - name: SQL Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+
+  when: symbols_stat_result.stat.exists

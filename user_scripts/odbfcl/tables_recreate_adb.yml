@@ -1,0 +1,12 @@
+- name: Define oci_adb_transient_user
+  set_fact:
+    oci_adb_transient_user: "{{ oci_adb_user }}_{{ db_version | replace('.', '') }}"
+
+- name: "Run tables recreate ADB SQL"
+  shell: |
+       set -e
+       sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/tables_recreate_adb.sql
+  register: sqloutput
+
+- name: SQL Output
+  debug: msg="{{ sqloutput.stdout_lines }}"

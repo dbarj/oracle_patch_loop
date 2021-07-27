@@ -1,0 +1,74 @@
+- name : Define txtcollection filename and folder
+  set_fact:
+    txtcollection_file: "txtcol_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}.tar.gz"
+    txtcollection_folder: "{{ output_folder }}/txtcollect"
+
+- name: "Check if {{ txtcollection_folder }}/{{ txtcollection_file }} exists"
+  stat:
+    path: "{{ txtcollection_folder }}/{{ txtcollection_file }}"
+  register: txtcollection_stat_result
+
+# Will skip all the rest if the txtcollection file does not exists
+- block:
+
+  - name: "Create sqlldr table"
+    shell: |
+        set -e
+        sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/adb_load_txtcollection_files/create_sqlldr_txtcollection_table.sql
+    register: sqloutput
+
+  - name: SQL Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+
+  - name: "Load {{ txtcollection_file }} in the database"
+    shell: |
+        set -e
+
+        v_file="{{ txtcollection_file }}"
+        v_outpref="{{ shared_folder }}/{{ txtcollection_file }}"
+
+        rm -rf "${v_outpref}_unzip"
+        mkdir "${v_outpref}_unzip"
+
+        tar -tvf "{{ txtcollection_folder }}/${v_file}" | grep -o '\./.*' > "${v_outpref}_unzip/${v_file}_files.txt"
+
+        tar -xf "{{ txtcollection_folder }}/${v_file}" -C "${v_outpref}_unzip"
+
+        cat << EOF > "${v_outpref}_load.ctl"
+        LOAD
+        INTO TABLE T_TXTCOLLECTION_LOAD
+        APPEND
+        FIELDS TERMINATED BY ','
+        (file_name constant "${v_file}",
+         path,
+         contents lobfile(path) terminated by eof)
+        EOF
+
+        cd "${v_outpref}_unzip"
+
+        sqlldr {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} \
+        control="${v_outpref}_load.ctl" \
+        errors=0 \
+        discardmax=0 \
+        direct=Y \
+        data="${v_file}_files.txt" \
+        log="${v_outpref}_load.log"
+
+        rm -f "${v_outpref}_load.log" "${v_outpref}_load.ctl"
+        rm -rf "${v_outpref}_unzip"
+
+    register: sqloutput
+
+  - name: SQL Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+
+  - name: "Load txtcollection table"
+    shell: |
+        set -e
+        sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/adb_load_txtcollection_files/load_txtcollection_table.sql
+    register: sqloutput
+
+  - name: SQL Output
+    debug: msg="{{ sqloutput.stdout_lines }}"
+
+  when: txtcollection_stat_result.stat.exists
