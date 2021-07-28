@@ -35,6 +35,7 @@ list_11204:
   - { type : "PSU"  , id : 201020 , patch_number : 31537677 }
   - { type : "PSU"  , id : 210119 , patch_number : 31983472 }
   - { type : "PSU"  , id : 210420 , patch_number : 32328626 }
+  - { type : "PSU"  , id : 210720 , patch_number : 32758711 }
   - { type : "OJVM" , id : 1      , patch_number : 19282021 }
   - { type : "OJVM" , id : 2      , patch_number : 19877440 }
   - { type : "OJVM" , id : 3      , patch_number : 20406239 }
@@ -62,6 +63,7 @@ list_11204:
   - { type : "OJVM" , id : 201020 , patch_number : 31668908 }
 # - { type : "OJVM" , id : 210119 , patch_number :  }
   - { type : "OJVM" , id : 210420 , patch_number : 32671980 }
+  - { type : "OJVM" , id : 210720 , patch_number : 32876451 }
   - { type : "BP"   , id : 1      , patch_number : 17628025 , patch_folder : 17628006 }
   - { type : "BP"   , id : 2      , patch_number : 17838803 , patch_folder : 17741631 }
   - { type : "BP"   , id : 3      , patch_number : 17904156 , patch_folder : 17943261 }
@@ -105,10 +107,14 @@ list_11204:
   - { type : "BP"   , id : 201020 , patch_number : 31718644 , patch_folder : 31537652 }
   - { type : "BP"   , id : 210119 , patch_number : 32131241 , patch_folder : 31983477 }
   - { type : "BP"   , id : 210420 , patch_number : 32537095 , patch_folder : 32328629 }
+  - { type : "BP"   , id : 210720 , patch_number : 32917411 , patch_folder : 32758732 }
+
 
 ####################
 ##### 12.1.0.1 #####
 ####################
+
+# No more updates on this one.
 
 list_12101:
   - { type : "PSU"  , id : 1      , patch_number : 17027533 }
@@ -131,6 +137,8 @@ list_12101:
   - { type : "OJVM" , id : 160119 , patch_number : 22139235 }
   - { type : "OJVM" , id : 160419 , patch_number : 22674703 }
   - { type : "OJVM" , id : 160719 , patch_number : 23177541 }
+
+# No more updates on this one.
 
 ####################
 ##### 12.1.0.2 #####
@@ -167,6 +175,7 @@ list_12102:
   - { type : "PSU"  , id : 201020 , patch_number : 31550110 }
   - { type : "PSU"  , id : 210119 , patch_number : 31985579 }
   - { type : "PSU"  , id : 210420 , patch_number : 32328635 }
+  - { type : "PSU"  , id : 210720 , patch_number : 32768233 }
   - { type : "OJVM" , id : 1      , patch_number : 19282028 }
   - { type : "OJVM" , id : 2      , patch_number : 19877336 }
   - { type : "OJVM" , id : 3      , patch_number : 20415564 }
@@ -194,6 +203,7 @@ list_12102:
   - { type : "OJVM" , id : 201020 , patch_number : 31668915 }
   - { type : "OJVM" , id : 210119 , patch_number : 32119956 }
   - { type : "OJVM" , id : 210420 , patch_number : 32473164 }
+  - { type : "OJVM" , id : 210720 , patch_number : 32876425 }
   - { type : "BP"   , id : 1      , patch_number : 19404326 , patch_folder : 19189240 }
   - { type : "BP"   , id : 2      , patch_number : 19774304 , patch_folder : 19649591 }
   - { type : "BP"   , id : 3      , patch_number : 20026159 , patch_folder : 19878106 }
@@ -230,6 +240,7 @@ list_12102:
   - { type : "BP"   , id : 201020 , patch_number : 31718813 , patch_folder : 31511219 }
   - { type : "BP"   , id : 210119 , patch_number : 32131231 , patch_folder : 31965033 }
   - { type : "BP"   , id : 210420 , patch_number : 32518631 , patch_folder : 32328632 }
+  - { type : "BP"   , id : 210720 , patch_number : 32917362 , patch_folder : 32768230 }
 
 
 ####################
@@ -256,6 +267,7 @@ list_12201:
   - { type : "RU"   , id : 201020 , patch_number : 31741641 }
   - { type : "RU"   , id : 210119 , patch_number : 32228578 }
   - { type : "RU"   , id : 210420 , patch_number : 32507738 }
+  - { type : "RU"   , id : 210720 , patch_number : 32916808 }
   - { type : "RUR"  , id : 171017 , patch_number : 26518812 , base_ru : JUL2017 }
   - { type : "RUR"  , id : 180116 , patch_number : 27013506 , base_ru : JUL2017 }
   - { type : "RUR"  , id : 180116 , patch_number : 27013510 , base_ru : OCT2017 }
@@ -297,12 +309,15 @@ list_12201:
   - { type : "OJVM" , id : 201020 , patch_number : 31668898 }
   - { type : "OJVM" , id : 210119 , patch_number : 32119931 }
   - { type : "OJVM" , id : 210420 , patch_number : 32473172 }
+  - { type : "OJVM" , id : 210720 , patch_number : 32876409 }
 
 ####################
 ##### 18.0.0.0 #####
 ####################
 
 # Database 18 Proactive Patch Information (Doc ID 2369376.1)
+
+# No more updates on this one.
 
 list_18000:
   - { type : "RU"   , id : 2  , patch_number : 27676517 , base_snap : "18.1.0" }
@@ -355,6 +370,8 @@ list_18000:
   - { type : "OJVM" , id : 210119 , patch_number : 32119939 }
   - { type : "OJVM" , id : 210420 , patch_number : 32552752 }
 
+# No more updates on this one.
+
 ####################
 ##### 19.0.0.0 #####
 ####################
@@ -371,6 +388,7 @@ list_19000:
   - { type : "RU"   , id : 9  , patch_number : 31771877 }
   - { type : "RU"   , id : 10 , patch_number : 32218454 }
   - { type : "RU"   , id : 11 , patch_number : 32545013 }
+  - { type : "RU"   , id : 12 , patch_number : 32904851 }
   - { type : "RUR"  , id : 1 , patch_number : 29799057 , base_ru : '19.3' }
   - { type : "RUR"  , id : 2 , patch_number : 30087906 , base_ru : '19.3' }
   - { type : "RUR"  , id : 1 , patch_number : 30080447 , base_ru : '19.4' }
@@ -386,6 +404,9 @@ list_19000:
   - { type : "RUR"  , id : 1 , patch_number : 32072711 , base_ru : '19.9' }
   - { type : "RUR"  , id : 2 , patch_number : 32421507 , base_ru : '19.9' }
   - { type : "RUR"  , id : 1 , patch_number : 32441092 , base_ru : '19.10' }
+  - { type : "RUR"  , id : 2 , patch_number : 32819074 , base_ru : '19.10' }
+  - { type : "RUR"  , id : 3 , patch_number : 32923627 , base_ru : '19.10' }
+  - { type : "RUR"  , id : 1 , patch_number : 32844504 , base_ru : '19.11' }
   - { type : "OJVM" , id : 190416 , patch_number : 29548437 }
   - { type : "OJVM" , id : 190716 , patch_number : 29774421 }
   - { type : "OJVM" , id : 191015 , patch_number : 30128191 }
@@ -395,3 +416,4 @@ list_19000:
   - { type : "OJVM" , id : 201020 , patch_number : 31668882 }
   - { type : "OJVM" , id : 210119 , patch_number : 32067171 }
   - { type : "OJVM" , id : 210420 , patch_number : 32399816 }
+  - { type : "OJVM" , id : 210720 , patch_number : 32876380 }
