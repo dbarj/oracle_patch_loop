@@ -98,6 +98,8 @@
   - include: lvm_savestate.yml
     when: latest_RU_line == latest_processed and oci_mode == true
 
+  - include: clean_ojvm_dumps.yml base_id="RU_{{ latest_RU_id }}"
+
   when: param_type is undefined or param_type == "RU"
 
 ### OJVM define base Snapshot

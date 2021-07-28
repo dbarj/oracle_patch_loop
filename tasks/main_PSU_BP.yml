@@ -96,6 +96,8 @@
   - include: lvm_savestate.yml
     when: latest_psu_line == latest_processed and oci_mode == true
 
+  - include: clean_ojvm_dumps.yml base_id="PSU_{{ latest_psu_id }}"
+
   when: param_type is undefined or param_type == "PSU"
 
 ### OJVM define base Snapshot

@@ -2,7 +2,7 @@
 oci_mode : true
 
 # This parameter will skip execution for patches that already have a dump file generated in "dump_folder" ("output_folder"/expdp).
-skip_dump_exists: false
+skip_dump_exists: true
 
 # If true, will only deploy the patch and skip the expdp and the pre/post steps.
 only_deploy_patch: false

@@ -1,0 +1,22 @@
+## This code will clean all OJVM dump files from past executions that have a old RU or PSU base.
+
+- name: "Remove old OJVM expdp dumps for previous RU or PSU if exists."
+  shell: |
+       set -eo pipefail
+       set -x
+
+       v_ojvm_path="{{ output_folder }}/expdp"
+       v_ojvm_pref="tables_{{ db_version }}_OJVM"
+       v_ojvm_name="${v_ojvm_pref}.txt"
+       v_ojvm_base_file="${v_ojvm_path}/${v_ojvm_name}"
+
+       [ ! -f "${v_ojvm_base_file}" ] && touch "${v_ojvm_base_file}"
+
+       v_ojvm_val=$(cat "${v_ojvm_base_file}")
+
+       if [ "${v_ojvm_val}" != "{{ base_id }}" ]
+       then
+         rm -f ${v_ojvm_path}/${v_ojvm_pref}_*
+         echo "{{ base_id }}" > "${v_ojvm_base_file}"
+       fi
+  register: shell_output
