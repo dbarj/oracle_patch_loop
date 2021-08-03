@@ -3,7 +3,7 @@ WHENEVER SQLERROR EXIT SQL.SQLCODE
 -- TODO: CHANGE 2 QUERIES FOR 1 USING "INSERT ALL"
 
 insert /*+ append */
-  into T_BUGS (BUG_ID, BUG_DESC)
+  into DM_BUGS (BUG_ID, BUG_DESC)
 select BUG_ID, BUG_DESC
 from (
     select BUG_ID,

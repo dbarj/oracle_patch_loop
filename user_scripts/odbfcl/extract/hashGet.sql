@@ -36,11 +36,17 @@ BEGIN
 END;
 /
 
+PRO CREATE TABLE FOR HASH_LOAD
+@@create_hash_load_table.sql
+
 PRO CDB/DBA_SOURCE
 @@load_source.sql
 
 PRO CDB/DBA_VIEWS
 @@load_view.sql
+
+PRO LOAD HASH/CODE TABLES
+@@load_code.sql
 
 PRO Some CDB/DBA Views
 @@load_dba_cdb.sql
