@@ -6,3 +6,6 @@ skip_dump_exists: true
 
 # If true, will only deploy the patch and skip the expdp and the pre/post steps.
 only_deploy_patch: false
+
+# Target DB version where dumps will be imported
+target_db_version: 19 # Used to check if version parameter will be required on expdp

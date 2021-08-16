@@ -72,9 +72,14 @@
       loop_control:
         loop_var: script_param
 
+    - name: Set version parameter for expdp
+      set_fact:
+        expdp_version: "version={{ target_db_version }}"
+      when: db_version.split('.')[1] > target_db_version
+
     - name: Export Database Tables
       shell: |
-          {{ dbhome_locl }}/bin/expdp userid={{ dump_user_int }}/{{ dump_pass }} directory=expdir compression=all dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log content=data_only schemas={{ dump_user_int }}
+          {{ dbhome_locl }}/bin/expdp userid={{ dump_user_int }}/{{ dump_pass }} directory=expdir compression=all dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log content=data_only schemas={{ dump_user_int }} {{ expdp_version }}
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
         ORACLE_SID: "{{ mysid }}"

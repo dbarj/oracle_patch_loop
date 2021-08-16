@@ -57,3 +57,6 @@
 
   - include: tasks/main_RU_RUR.yml db_version="19.0.0.0"
     when: param_version is undefined or param_version == "19.0.0.0"
+
+  - include: tasks/main_RU_RUR.yml db_version="21.0.0.0"
+    when: param_version is undefined or param_version == "21.0.0.0"

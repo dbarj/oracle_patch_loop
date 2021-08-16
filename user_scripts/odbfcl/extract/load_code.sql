@@ -3,7 +3,7 @@ WHENEVER SQLERROR EXIT SQL.SQLCODE
 -- TODO: CHANGE 2 QUERIES FOR 1 USING "INSERT ALL"
 
 insert /*+ append */
-  into DM_CODES (MD5_HASH, CODE, WRAPPED)
+  into &v_username..DM_CODES (MD5_HASH, CODE, WRAPPED)
 select MD5_ENC,
        CODE,
        CASE
@@ -16,12 +16,12 @@ from (
     select MD5_ENC,
            CODE,
            RANK() over (partition by MD5_ENC order by rowid asc) col_ind
-    from T_HASH_LOAD
+    from &v_username..T_HASH_LOAD
 )
 where col_ind=1;
 
 insert /*+ append */
-  into T_HASH (OWNER, NAME, TYPE, ORIGIN_CON_ID, CON_ID, MD5_ENC, SHA1_ENC, ORAVERSION, ORASERIES, ORAPATCH)
+  into &v_username..T_HASH (OWNER, NAME, TYPE, ORIGIN_CON_ID, CON_ID, MD5_ENC, SHA1_ENC, ORAVERSION, ORASERIES, ORAPATCH)
 select OWNER,
        NAME,
        TYPE,
@@ -32,11 +32,11 @@ select OWNER,
        '&P_VERS.' oraversion,
        '&P_SER.'  oraseries,
        &P_PATCH.  orapatch
-from T_HASH_LOAD;
+from &v_username..T_HASH_LOAD;
 
 commit;
 
-drop table T_HASH_LOAD purge;
+drop table &v_username..T_HASH_LOAD purge;
 
 ---------------------------------------------
 ------------    SECTION START    ------------
@@ -253,40 +253,40 @@ set def &
 ---------------------------------------------
 
 -- Create unwrapped table
-create table DM_CODES_LOAD AS
+create table &v_username..DM_CODES_LOAD AS
 select SYS.DBMS_CRYPTO.HASH(UNCODE,2) MD5_HASH,
        MD5_HASH MD5_HASH_WRAPPED,
        UNCODE CODE,
        'N' WRAPPED
 from ( select cux_unwrapper.unwrap(code) uncode, MD5_HASH
-       from DM_CODES
+       from &v_username..DM_CODES
        where WRAPPED='Y');
 
 -- Load back into DM_CODES
 insert /*+ append */
-  into DM_CODES (MD5_HASH, CODE, WRAPPED)
+  into &v_username..DM_CODES (MD5_HASH, CODE, WRAPPED)
 select MD5_HASH,
        CODE,
        'N' WRAPPED
 from ( select MD5_HASH,
               CODE,
               RANK() over (partition by MD5_HASH order by rowid asc) col_ind
-       from DM_CODES_LOAD
+       from &v_username..DM_CODES_LOAD
 )
 where col_ind=1;
 
 commit;
 
 -- Update DM_CODES
-update DM_CODES T1 SET T1.MD5_HASH_UNWRAPPED =
+update &v_username..DM_CODES T1 SET T1.MD5_HASH_UNWRAPPED =
        (SELECT T2.MD5_HASH
-          FROM DM_CODES_LOAD T2
+          FROM &v_username..DM_CODES_LOAD T2
          WHERE T2.MD5_HASH_WRAPPED=T1.MD5_HASH)
 WHERE  T1.WRAPPED = 'Y';
 
 commit;
 
-drop table DM_CODES_LOAD purge;
+drop table &v_username..DM_CODES_LOAD purge;
 
 drop package cux_unwrapper;
 
