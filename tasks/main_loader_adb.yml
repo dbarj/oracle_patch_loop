@@ -33,7 +33,7 @@
   vars:
     filter_qry: "[?type=='RU'].id"
 
-# Execute for every PSU
+# Execute for every PSU, BP and OJVM if has a single PSU
 - include: "impdp_file_adb.yml patch={{ item }}"
   with_items:
     - { type : PSU , id : 0 }
@@ -46,7 +46,7 @@
     - { type : BP , id : 0 }
   when: total_bps != "0"
 
-# Execute for every RU
+# Execute for every RU, RUR and OJVM if has a single RU
 - include: "impdp_file_adb.yml patch={{ item }}"
   with_items:
     - "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
