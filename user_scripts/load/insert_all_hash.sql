@@ -3,20 +3,20 @@
 @@insert_all_privs_clean "T_FILES"
 ---------------------------------------------------
 
-alter table T_HASH modify (code null, md5_enc null,sha1_enc null);
+alter table T_HASH modify (code null, md5_hash null,sha1_hash null);
 
 var v_table_cols clob
 var v_table_id_cols clob
 var v_print_cols clob
 
 def v_table_name = "T_HASH"
---exec :v_table_cols := 'owner, name, type, origin_con_id, md5_enc, sha1_enc';
-exec :v_table_cols := 'owner, name, type, sha1_enc';
+--exec :v_table_cols := 'owner, name, type, origin_con_id, md5_hash, sha1_hash';
+exec :v_table_cols := 'owner, name, type, sha1_hash';
 exec :v_table_id_cols := 'owner, name, type, con_id, oraversion, hash_line_id';
 
-def v_hash_col_id = "sha1_enc"
+def v_hash_col_id = "sha1_hash"
 def v_print_table = "&&v_table_name."
-exec :v_print_cols := 'owner, name_comp, type, con_id, sha1_enc';
+exec :v_print_cols := 'owner, name_comp, type, con_id, sha1_hash';
 def v_file_pref = 'db'
 def v_srczip_pref = 'db'
 
@@ -33,12 +33,12 @@ var v_table_id_cols clob
 var v_print_cols clob
 
 def v_table_name = "T_FILES"
-exec :v_table_cols := 'path, sha256_enc';
+exec :v_table_cols := 'path, sha256_hash';
 exec :v_table_id_cols := 'path, con_id, oraversion, hash_line_id';
 
-def v_hash_col_id = "sha256_enc"
+def v_hash_col_id = "sha256_hash"
 def v_print_table = "&&v_table_name."
-exec :v_print_cols := 'path, con_id, sha256_enc';
+exec :v_print_cols := 'path, con_id, sha256_hash';
 def v_file_pref = 'files'
 def v_srczip_pref = 'files.all'
 

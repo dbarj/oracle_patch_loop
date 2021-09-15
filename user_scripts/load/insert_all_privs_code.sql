@@ -277,7 +277,7 @@ and not exists (select 1
 commit;
 
 -- Analisar isso: oracle/net/ano/a em t_hash ou o output da query:
--- select * from t_hash_final t1, t_hash_final t2 where t1.hash_line_id=t2.hash_line_id and t1.series <> 'OJVM' and t2.series='OJVM' and t1.sha1_enc=t2.sha1_enc and t1.flag='A' and t2.flag='A';
+-- select * from t_hash_final t1, t_hash_final t2 where t1.hash_line_id=t2.hash_line_id and t1.series <> 'OJVM' and t2.series='OJVM' and t1.sha1_hash=t2.sha1_hash and t1.flag='A' and t2.flag='A';
 delete from &&v_table_final. a
 where series = 'OJVM'
 and PSU_FROM = (select min(c.PSU_FROM) from &&v_table_final. c where c.series = a.series and c.oraversion=a.oraversion and c.PSU_FROM>=0)

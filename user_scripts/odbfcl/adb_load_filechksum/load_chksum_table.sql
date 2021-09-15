@@ -1,6 +1,6 @@
 WHENEVER SQLERROR EXIT SQL.SQLCODE
 
-insert /*+ append */ into T_FILES (PATH, SHA256_ENC, ORAVERSION, ORASERIES, ORAPATCH)
+insert /*+ append */ into T_FILES (PATH, SHA256_HASH, ORAVERSION, ORASERIES, ORAPATCH)
 select path,
        hash,
        substr(file_name,instr(file_name,'_',1,1)+1,instr(file_name,'_',1,2)-instr(file_name,'_',1,1)-1)           oraversion,

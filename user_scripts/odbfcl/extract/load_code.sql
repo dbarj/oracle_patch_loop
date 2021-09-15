@@ -4,7 +4,7 @@ WHENEVER SQLERROR EXIT SQL.SQLCODE
 
 insert /*+ append */
   into &v_username..DM_CODES (MD5_HASH, CODE, WRAPPED)
-select MD5_ENC,
+select MD5_HASH,
        CODE,
        CASE
         WHEN REGEXP_INSTR(CODE, 'wrapped', 1, 1, 0, 'i') > 0
@@ -13,22 +13,22 @@ select MD5_ENC,
         ELSE 'N'
         END WRAPPED
 from (
-    select MD5_ENC,
+    select MD5_HASH,
            CODE,
-           RANK() over (partition by MD5_ENC order by rowid asc) col_ind
+           RANK() over (partition by MD5_HASH order by rowid asc) col_ind
     from &v_username..T_HASH_LOAD
 )
 where col_ind=1;
 
 insert /*+ append */
-  into &v_username..T_HASH (OWNER, NAME, TYPE, ORIGIN_CON_ID, CON_ID, MD5_ENC, SHA1_ENC, ORAVERSION, ORASERIES, ORAPATCH)
+  into &v_username..T_HASH (OWNER, NAME, TYPE, ORIGIN_CON_ID, CON_ID, MD5_HASH, SHA1_HASH, ORAVERSION, ORASERIES, ORAPATCH)
 select OWNER,
        NAME,
        TYPE,
        ORIGIN_CON_ID,
        CON_ID,
-       MD5_ENC,
-       SHA1_ENC,
+       MD5_HASH,
+       SHA1_HASH,
        '&P_VERS.' oraversion,
        '&P_SER.'  oraseries,
        &P_PATCH.  orapatch

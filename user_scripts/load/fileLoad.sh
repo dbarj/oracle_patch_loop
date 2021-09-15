@@ -55,13 +55,13 @@ BEGIN EXECUTE IMMEDIATE 'DROP TABLE T_FILES PURGE'; EXCEPTION WHEN OTHERS THEN N
 
 CREATE TABLE T_FILES (
   PATH        VARCHAR2(500),
-  SHA256_ENC  RAW(32),
+  SHA256_HASH  RAW(32),
   SERIES      VARCHAR2(10),
   ORAVERSION  VARCHAR2(20),
   PSU         NUMBER)
 COMPRESS NOLOGGING;
 
-insert /*+ append */ into T_FILES (PATH, SHA256_ENC, ORAVERSION, SERIES, PSU)
+insert /*+ append */ into T_FILES (PATH, SHA256_HASH, ORAVERSION, SERIES, PSU)
 select path,
        hash,
        substr(file_name,instr(file_name,'_',1,1)+1,instr(file_name,'_',1,2)-instr(file_name,'_',1,1)-1)           oraversion,
