@@ -75,7 +75,7 @@
     - name: Set version parameter for expdp
       set_fact:
         expdp_version: "version={{ target_db_version }}"
-      when: db_version.split('.')[1] > target_db_version
+      when: (db_version.split('.')[0] | int) > target_db_version
 
     - name: Export Database Tables
       shell: |
