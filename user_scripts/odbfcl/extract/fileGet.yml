@@ -46,7 +46,7 @@
           ar x "${v_lib}"
           find -type f -exec sha256sum "{}" + > ${v_out_file}
           sed -i "s|  \.|  ${v_lib}|" ${v_out_file}
-          sed -i 's/$/  L/'
+          sed -i 's/$/  L/' ${v_out_file}
           cat ${v_out_file} >> {{ VM_folder }}/{{ sha256_file }}
           rm -rf ${v_ext_fold} ${v_out_file}
         done
