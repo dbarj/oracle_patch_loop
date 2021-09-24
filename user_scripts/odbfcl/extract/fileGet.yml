@@ -22,6 +22,7 @@
   - name: Generate files checksum
     shell: |
         find -type f -exec sha256sum "{}" + > {{ VM_folder }}/{{ sha256_file }}
+        sed -i 's/$/  F/' {{ VM_folder }}/{{ sha256_file }}
     args:
       chdir: "{{ dbhome_locl }}"
     register: sqloutput
@@ -45,6 +46,7 @@
           ar x "${v_lib}"
           find -type f -exec sha256sum "{}" + > ${v_out_file}
           sed -i "s|  \.|  ${v_lib}|" ${v_out_file}
+          sed -i 's/$/  L/'
           cat ${v_out_file} >> {{ VM_folder }}/{{ sha256_file }}
           rm -rf ${v_ext_fold} ${v_out_file}
         done
