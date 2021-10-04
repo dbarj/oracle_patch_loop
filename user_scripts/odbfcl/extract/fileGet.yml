@@ -40,9 +40,9 @@
         IFS=$'\n'
         for v_lib in ${v_libs}
         do
-          rm -rf "${v_ext_fold}"
-          mkdir "${v_ext_fold}"
-          cd "${v_ext_fold}"
+          rm -rf ${v_ext_fold}
+          mkdir ${v_ext_fold}
+          cd ${v_ext_fold}
           ar x "${v_lib}"
           find -type f -exec sha256sum "{}" + > ${v_out_file}
           sed -i "s|  \.|  ${v_lib}|" ${v_out_file}
