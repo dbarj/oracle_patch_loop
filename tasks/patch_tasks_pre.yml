@@ -20,13 +20,13 @@
   - name : Define skip_all
     set_fact:
       skip_all: "{{ dump_stat_result.stat.exists }}"
-    when: skip_dump_exists == true
+    when: skip_dump_exists
 
   - name : Remove dump file if exists
     file:
       state: absent
       path: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
-    when: skip_all == false
+    when: not skip_all
 
   when: not only_deploy_patch
 
@@ -69,7 +69,7 @@
         file_type: "file"
       register: find_result
     
-    when: find_result.files[0] is undefined and download_patch == true
+    when: find_result.files[0] is undefined and download_patch
 
   # If still can't find the patch but ignore flag is set, jump to the next.
   - name : Patch is not there, but ignoring...
@@ -101,36 +101,37 @@
         src: "{{ db_patch }}"
         dest: "{{ shared_folder }}"
 
-    when: skip_all == false
+    # When patch_folder variable is defined (mostly for BPs), extract that folder from unziped patch to apply
+    - block:
 
-  # When patch_folder variable is defined (mostly for BPs), extract that folder from unziped patch to apply
-  - block:
+      - name: Process only patch subfolder
+        command: "mv {{ unzip_patch_folder }}/{{ patch.patch_folder }} {{ shared_folder }}"
 
-    - name: Process only patch subfolder
-      command: "mv {{ unzip_patch_folder }}/{{ patch.patch_folder }} {{ shared_folder }}"
+      - name : Remove unzipped patch
+        file:
+          state: absent
+          path: "{{ unzip_patch_folder }}"
 
-    - name : Remove unzipped patch
-      file:
-        state: absent
-        path: "{{ unzip_patch_folder }}"
+      - name : Rename patch subfolder
+        shell: "mv {{ shared_folder }}/{{ patch.patch_folder }} {{ unzip_patch_folder }}"
 
-    - name : Rename patch subfolder
-      shell: "mv {{ shared_folder }}/{{ patch.patch_folder }} {{ unzip_patch_folder }}"
+      when: patch.patch_folder is defined
 
-    when: patch.patch_folder is defined
+    # This is required as skip_all may be set by error_on_no_patch == false
+    when: not skip_all
 
-  when: patch.patch_number != 0 and skip_all == false
+  when: patch.patch_number != 0 and not skip_all
 
 # Trigger database refresh command if it was already started
 - block:
 
   - include: vbox_reload.yml
-    when: oci_mode == false
+    when: not oci_mode
 
   - include: lvm_reload.yml
-    when: oci_mode == true
+    when: oci_mode
 
-  when: database_started == true and skip_all == false
+  when: database_started and not skip_all
 
 # Trigger database start command for the first time if never started
 - block:
@@ -140,13 +141,13 @@
       name: oci_compute_instance_actions
     vars:
       compute_action: start
-    when: oci_mode == true
+    when: oci_mode
 
   - include: vbox_reload.yml
-    when: oci_mode == false
+    when: not oci_mode
 
   - include: lvm_reload.yml
-    when: oci_mode == true
+    when: oci_mode
 
   - include: setup_opatch.yml
   - include: setup_database.yml
@@ -155,7 +156,7 @@
     set_fact:
       database_started: true
 
-  when: database_started == false and skip_all == false
+  when: not database_started and not skip_all
 
 # Replace opatch with latest version, when not processing base release. i.e patch.patch_number != 0
 - block:
@@ -177,4 +178,4 @@
     delegate_to: "{{ vm_ip_address }}"
   
   # skip_all must come first as db_opatch may not yet be declared
-  when: skip_all == false and db_opatch|length > 0 and patch.patch_number != 0
+  when: not skip_all and db_opatch|length > 0 and patch.patch_number != 0

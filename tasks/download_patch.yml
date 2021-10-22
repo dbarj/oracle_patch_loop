@@ -19,6 +19,8 @@
     patch={{ patch.patch_number }} \
     platform=226P \
     download=all \
+    silent=yes \
+    regexp='.*_{{ db_version | replace('.','') }}0_.*' \
     MOSUser={{ downloader_user }} \
     MOSPass='{{ downloader_pass }}'
   args:
