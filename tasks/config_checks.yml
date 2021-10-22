@@ -1,0 +1,16 @@
+- name: Variables not provided
+  fail:
+    msg: "Variables downloader_tool / downloader_user / downloader_pass must be defined when download_patch is true."
+  when: ( downloader_tool is undefined or downloader_user is undefined
+   or (downloader_tool|length == 0) or (downloader_user|length == 0)) and download_patch == true
+
+- name: "Check if {{ downloader_tool }} exists"
+  stat:
+    path: "{{ downloader_tool }}"
+  register: downloader_tool_result
+  when: download_patch == true
+
+- name: Tool does not exist
+  fail:
+    msg: "{{ downloader_tool }} must exist when download_patch is true."
+  when: downloader_tool_result.stat.exists == false and download_patch == true

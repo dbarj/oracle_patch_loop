@@ -54,27 +54,54 @@
       file_type: "file"
     register: find_result
 
-  - fail:
-      msg: "Could not find patch file. Check if patch folder is correct."
-    when: find_result.files[0] is undefined
+  # Call downloader when download_patch is defined
+  - block:
 
-  - name: "Patch File"
-    debug: msg="{{ find_result.files[0].path }}"
+    - name: Call downloader
+      include: download_patch.yml
 
-  - name : Define Patch file name
+    # Try again after downloader was called
+    - name: Finding Patch File
+      find:
+        paths:     "{{ source_folder }}"
+        patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}0_Linux-x86-64.zip"
+        recurse:   "yes"
+        file_type: "file"
+      register: find_result
+    
+    when: find_result.files[0] is undefined and download_patch == true
+
+  # If still can't find the patch but ignore flag is set, jump to the next.
+  - name : Patch is not there, but ignoring...
     set_fact:
-      db_patch: "{{ find_result.files[0].path }}"
-      unzip_patch_folder: "{{ shared_folder }}/{{ patch.patch_number }}"
+      skip_all: true
+    when: find_result.files[0] is undefined and error_on_no_patch == false
 
-  - name: Remove unzipped patch folder
-    file:
-      state: absent
-      path: "{{ unzip_patch_folder }}"
+  - block:
 
-  - name : Unzip Patch to VM shared folder
-    unarchive:
-      src: "{{ db_patch }}"
-      dest: "{{ shared_folder }}"
+    - fail:
+        msg: "Could not find patch file. Check if patch folder is correct."
+      when: find_result.files[0] is undefined
+
+    - name: "Patch File"
+      debug: msg="{{ find_result.files[0].path }}"
+
+    - name : Define Patch file name
+      set_fact:
+        db_patch: "{{ find_result.files[0].path }}"
+        unzip_patch_folder: "{{ shared_folder }}/{{ patch.patch_number }}"
+
+    - name: Remove unzipped patch folder
+      file:
+        state: absent
+        path: "{{ unzip_patch_folder }}"
+
+    - name : Unzip Patch to VM shared folder
+      unarchive:
+        src: "{{ db_patch }}"
+        dest: "{{ shared_folder }}"
+
+    when: skip_all == false
 
   # When patch_folder variable is defined (mostly for BPs), extract that folder from unziped patch to apply
   - block:
@@ -94,11 +121,41 @@
 
   when: patch.patch_number != 0 and skip_all == false
 
-- include: vbox_reload.yml
-  when: oci_mode == false and skip_all == false
+# Trigger database refresh command if it was already started
+- block:
 
-- include: lvm_reload.yml
-  when: oci_mode == true and skip_all == false
+  - include: vbox_reload.yml
+    when: oci_mode == false
+
+  - include: lvm_reload.yml
+    when: oci_mode == true
+
+  when: database_started == true and skip_all == false
+
+# Trigger database start command for the first time if never started
+- block:
+
+  - name: Call role to start OCI VM
+    include_role:
+      name: oci_compute_instance_actions
+    vars:
+      compute_action: start
+    when: oci_mode == true
+
+  - include: vbox_reload.yml
+    when: oci_mode == false
+
+  - include: lvm_reload.yml
+    when: oci_mode == true
+
+  - include: setup_opatch.yml
+  - include: setup_database.yml
+
+  - name : Define database_started variable to true.
+    set_fact:
+      database_started: true
+
+  when: database_started == false and skip_all == false
 
 # Replace opatch with latest version, when not processing base release. i.e patch.patch_number != 0
 - block:
@@ -119,4 +176,5 @@
     become_user: oracle
     delegate_to: "{{ vm_ip_address }}"
   
-  when: db_opatch|length > 0 and patch.patch_number != 0 and skip_all == false
+  # skip_all must come first as db_opatch may not yet be declared
+  when: skip_all == false and db_opatch|length > 0 and patch.patch_number != 0

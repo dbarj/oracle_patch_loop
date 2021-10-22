@@ -38,6 +38,7 @@
   - include_vars: config_oci.yml
     when: oci_mode == true
 
+  - import_tasks: tasks/config_checks.yml
   - import_tasks: tasks/setup_env.yml
 
   - include: tasks/main_PSU_BP.yml db_version="11.2.0.4"

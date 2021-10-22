@@ -16,7 +16,8 @@
 
        if [ "${v_ojvm_val}" != "{{ base_id }}" ]
        then
-         rm -f ${v_ojvm_path}/${v_ojvm_pref}_*
+         find "{{ output_folder }}" -name "*_{{ db_version }}_OJVM_*" -delete
+         # rm -f ${v_ojvm_path}/${v_ojvm_pref}_*
          echo "{{ base_id }}" > "${v_ojvm_base_file}"
        fi
   register: shell_output

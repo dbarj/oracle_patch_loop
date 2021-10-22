@@ -24,21 +24,10 @@
   set_fact:
     vm_snapshot: "{{ patch_base }}"
 
-- name: Call role to start OCI VM
-  include_role:
-    name: oci_compute_instance_actions
-  vars:
-    compute_action: start
-  when: oci_mode == true
-
-- include: vbox_reload.yml
-  when: oci_mode == false
-
-- include: lvm_reload.yml
-  when: oci_mode == true
-
-- include: setup_opatch.yml
-- include: setup_database.yml
+# This parameter will control if database start command was ever called.
+- name : Define database_started variable to false.
+  set_fact:
+    database_started: false
 
 ### RU
 - block:
@@ -171,4 +160,4 @@
     name: oci_compute_instance_actions
   vars:
     compute_action: stop
-  when: oci_mode == true and not only_deploy_patch
+  when: oci_mode == true and not only_deploy_patch and database_started == true

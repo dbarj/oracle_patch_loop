@@ -1,0 +1,26 @@
+- block:
+
+  - name: "Get password for {{ downloader_user }}"
+    pause:
+      prompt: "Enter password for {{ downloader_user }}: "
+      echo: false
+    register: input
+
+  - name: Set Password
+    set_fact:
+      downloader_pass: "{{ input.user_input }}"
+
+  when: downloader_pass is undefined
+
+
+- name: "Calling {{ downloader_tool }}"
+  shell: |
+    $ORACLE_HOME/jdk/bin/java -jar {{ downloader_tool }} \
+    patch={{ patch.patch_number }} \
+    platform=226P \
+    download=all \
+    MOSUser={{ downloader_user }} \
+    MOSPass='{{ downloader_pass }}'
+  args:
+    chdir: "{{ source_folder }}"
+  register: shell_output
