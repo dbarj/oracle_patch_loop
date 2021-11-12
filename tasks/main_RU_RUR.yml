@@ -160,4 +160,4 @@
     name: oci_compute_instance_actions
   vars:
     compute_action: stop
-  when: oci_mode == true and not only_deploy_patch and database_started == true
+  when: oci_mode == true and not only_deploy_patch and database_started

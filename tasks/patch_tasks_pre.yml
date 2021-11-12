@@ -7,6 +7,7 @@
     skip_all: false
     fix_datapatch_retries: 0
     expdp_version: ""
+    patch_file_path: ""
 
 # Ignore dumpfile checks when only_deploy_patch is true
 - block:
@@ -54,6 +55,11 @@
       file_type: "file"
     register: find_result
 
+  - name : Define patch_file_path
+    set_fact:
+      patch_file_path: "{{ find_result.files[0].path }}"
+    when: find_result.files[0] is defined
+
   # Call downloader when download_patch is defined
   - block:
 
@@ -61,34 +67,39 @@
       include: download_patch.yml
 
     # Try again after downloader was called
-    - name: Finding Patch File
+    - name: Finding Patch File Again
       find:
         paths:     "{{ source_folder }}"
         patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}0_Linux-x86-64.zip"
         recurse:   "yes"
         file_type: "file"
       register: find_result
-    
-    when: find_result.files[0] is undefined and download_patch
+
+    - name : Define patch_file_path
+      set_fact:
+        patch_file_path: "{{ find_result.files[0].path }}"
+      when: find_result.files[0] is defined
+
+    when: (patch_file_path|length == 0) and download_patch
 
   # If still can't find the patch but ignore flag is set, jump to the next.
   - name : Patch is not there, but ignoring...
     set_fact:
       skip_all: true
-    when: find_result.files[0] is undefined and error_on_no_patch == false
+    when: (patch_file_path|length == 0) and error_on_no_patch == false
 
   - block:
 
     - fail:
         msg: "Could not find patch file. Check if patch folder is correct."
-      when: find_result.files[0] is undefined
+      when: (patch_file_path|length == 0)
 
     - name: "Patch File"
-      debug: msg="{{ find_result.files[0].path }}"
+      debug: msg="{{ patch_file_path }}"
 
     - name : Define Patch file name
       set_fact:
-        db_patch: "{{ find_result.files[0].path }}"
+        db_patch: "{{ patch_file_path }}"
         unzip_patch_folder: "{{ shared_folder }}/{{ patch.patch_number }}"
 
     - name: Remove unzipped patch folder
@@ -122,17 +133,6 @@
 
   when: patch.patch_number != 0 and not skip_all
 
-# Trigger database refresh command if it was already started
-- block:
-
-  - include: vbox_reload.yml
-    when: not oci_mode
-
-  - include: lvm_reload.yml
-    when: oci_mode
-
-  when: database_started and not skip_all
-
 # Trigger database start command for the first time if never started
 - block:
 
@@ -157,6 +157,18 @@
       database_started: true
 
   when: not database_started and not skip_all
+
+# Trigger database refresh command.
+# This must be executed even if the "not database_started" block was just executed because of setup_database.yml script. 
+- block:
+
+  - include: vbox_reload.yml
+    when: not oci_mode
+
+  - include: lvm_reload.yml
+    when: oci_mode
+
+  when: not skip_all
 
 # Replace opatch with latest version, when not processing base release. i.e patch.patch_number != 0
 - block:
