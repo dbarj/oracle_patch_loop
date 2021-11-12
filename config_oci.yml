@@ -13,6 +13,11 @@ mysid : "orcl"
 # Folder to store the final generated files.
 output_folder : "/u01/patch_automation/output"
 
+# Download utility info, if you are using one.
+# wget https://github.com/MarisElsins/getMOSPatch/raw/master/getMOSPatch.jar
+downloader_tool : "/u01/patch_automation/patches/getMOSPatch.jar"
+downloader_user : ""
+downloader_pass : ""
 # Files in "user_scripts" folder that will run before and after the final expdp. script_types can be "shell", "sql" or "yml".
 user_expdp_pre  :
 - { file : "bugsGet.yml" , folder : "user_scripts/odbfcl/extract" , type : "yml", task_action : "Generate fixed bugs list for ORACLE_HOME" }
