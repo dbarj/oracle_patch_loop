@@ -12,16 +12,16 @@
   when: oci_mode == true
 
 - name: Copy patch SQL to shared folder
-  copy:
+  synchronize:
     src: patch_sql/
     dest: "{{ shared_folder }}/patch_sql/"
-    mode: u=rw,g=r,o=r
+    delete: yes
 
 - name: Copy user SQL to shared folder
-  copy:
+  synchronize:
     src: user_scripts/
     dest: "{{ shared_folder }}/user_scripts/"
-    mode: u=rw,g=r,o=r
+    delete: yes
 
 - name : Check parameter param_patch
   set_fact:

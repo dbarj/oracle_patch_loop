@@ -34,24 +34,4 @@
     - import_tasks: tasks/setup_env.yml
 
   tasks:
-
-  - include: tasks/main_loader_adb.yml db_version="11.2.0.4"
-    when: param_version is undefined or param_version == "11.2.0.4"
-
-  - include: tasks/main_loader_adb.yml db_version="12.1.0.1"
-    when: param_version is undefined or param_version == "12.1.0.1"
-
-  - include: tasks/main_loader_adb.yml db_version="12.1.0.2"
-    when: param_version is undefined or param_version == "12.1.0.2"
-
-  - include: tasks/main_loader_adb.yml db_version="12.2.0.1"
-    when: param_version is undefined or param_version == "12.2.0.1"
-
-  - include: tasks/main_loader_adb.yml db_version="18.0.0.0"
-    when: param_version is undefined or param_version == "18.0.0.0"
-
-  - include: tasks/main_loader_adb.yml db_version="19.0.0.0"
-    when: param_version is undefined or param_version == "19.0.0.0"
-
-  - include: tasks/main_loader_adb.yml db_version="21.0.0.0"
-    when: param_version is undefined or param_version == "21.0.0.0"
+  - include: tasks/main_loader_manual.yml

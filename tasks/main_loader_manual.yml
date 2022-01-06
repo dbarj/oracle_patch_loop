@@ -1,0 +1,147 @@
+### Will import all dumps to a given database.
+
+- name: Variables not provided
+  fail:
+    msg: "Variables input_version / input_series / input_patch / input_file must be defined."
+  when: input_version is undefined or (input_version|length == 0) or
+        input_series is undefined  or (input_series|length == 0)  or
+        input_patch is undefined   or (input_patch|length == 0)   or
+        input_file is undefined    or (input_file|length == 0)
+
+- name: Error
+  fail:
+    msg: "input_series must start with L."
+  when: input_series is not match("L.*")
+
+- name : Define db_version
+  set_fact:
+    db_version:    "{{ input_version }}"
+    param_type:    "{{ input_series }}" 
+    param_patch:   "{{ input_patch }}"
+    output_folder: "{{ shared_folder }}/temp_load"
+
+- name: "Check if {{ input_file }} exists"
+  stat:
+    path: "{{ input_file }}"
+  register: ifile_stat_result
+
+- fail:
+    msg: "Could not find {{ input_file }} file."
+  when: ifile_stat_result.stat.exists == false
+
+- name: Delete content & directory
+  file:
+    state: absent
+    path: "{{ output_folder }}"
+
+- name: Creates directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ output_folder }}"
+    - "{{ output_folder }}/bugsfixed"
+    - "{{ output_folder }}/binsum"
+    - "{{ output_folder }}/txtcollect"
+    - "{{ output_folder }}/symbols"
+    - "{{ output_folder }}/expdp"
+
+- name: "Extract {{ input_file }} into {{ output_folder }}"
+  unarchive:
+    src: "{{ input_file }}"
+    dest: "{{ output_folder }}"
+
+#####################################################################
+### Place the files in the correct directories. Also rename them. ###
+#####################################################################
+
+## Dump
+- name: Find dump file
+  find:
+    paths:     "{{ output_folder }}"
+    patterns:  "tables_*.dmp"
+    recurse:   "no"
+    file_type: "file"
+  register: find_result
+
+- name: "Move it to {{ output_folder }}/expdp"
+  command: mv "{{ find_result.files[0].path }}" "{{ output_folder }}/expdp/tables_{{ db_version }}_{{ param_type }}_{{ param_patch }}.dmp"
+  when: find_result.files[0] is defined
+
+## Bugs
+- name: Find bugs file
+  find:
+    paths:     "{{ output_folder }}"
+    patterns:  "bugs_*.txt"
+    recurse:   "no"
+    file_type: "file"
+  register: find_result
+
+- name: "Move it to {{ output_folder }}/bugsfixed"
+  command: mv "{{ find_result.files[0].path }}" "{{ output_folder }}/bugsfixed/bugs_{{ db_version }}_{{ param_type }}_{{ param_patch }}.txt"
+  when: find_result.files[0] is defined
+
+## Symbols
+- name: Find symbols file
+  find:
+    paths:     "{{ output_folder }}"
+    patterns:  "symbols_*.csv"
+    recurse:   "no"
+    file_type: "file"
+  register: find_result
+
+- name: "Move it to {{ output_folder }}/symbols"
+  command: mv "{{ find_result.files[0].path }}" "{{ output_folder }}/symbols/symbols_{{ db_version }}_{{ param_type }}_{{ param_patch }}.csv"
+  when: find_result.files[0] is defined
+
+## Collection
+- name: Find txt collection file
+  find:
+    paths:     "{{ output_folder }}"
+    patterns:  "txtcol_*.tar.gz"
+    recurse:   "no"
+    file_type: "file"
+  register: find_result
+
+- name: "Move it to {{ output_folder }}/txtcollect"
+  command: mv "{{ find_result.files[0].path }}" "{{ output_folder }}/txtcollect/txtcol_{{ db_version }}_{{ param_type }}_{{ param_patch }}.tar.gz"
+  when: find_result.files[0] is defined
+
+## Chksum
+- name: Find chksum file
+  find:
+    paths:     "{{ output_folder }}"
+    patterns:  "sha256sum_*.chk"
+    recurse:   "no"
+    file_type: "file"
+  register: find_result
+
+- name: "Move it to {{ output_folder }}/binsum"
+  command: mv "{{ find_result.files[0].path }}" "{{ output_folder }}/binsum/sha256sum_{{ db_version }}_{{ param_type }}_{{ param_patch }}.chk"
+  when: find_result.files[0] is defined
+
+#####################################################################
+#####################################################################
+
+- name : Define version
+  set_fact:
+    patch_list:    "{{ item.patch_list }}"
+  with_items: "{{ list_versions }}"
+  when: item.id == db_version
+
+- name : Define Cloud params
+  set_fact:
+    out_of_box_ru: "{{ item.out_of_box_ru | default(0) }}"
+  with_items: "{{ list_info_oci }}"
+  when: item.id == db_version
+
+- include: "impdp_file_adb.yml patch={{ item }}"
+  with_items:
+    - { type : "{{ input_series }}" , id : "{{ input_patch }}" }
+
+- name: Delete content & directory
+  file:
+    state: absent
+    path: "{{ output_folder }}"
+
+###

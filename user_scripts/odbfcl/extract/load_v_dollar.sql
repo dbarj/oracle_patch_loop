@@ -67,3 +67,25 @@ BEGIN
 
 END;
 /
+
+commit;
+
+-- Get Fixed View Definition full code
+
+DECLARE
+  l_clob CLOB;
+  VVERS VARCHAR2(20) := '&P_VERS.';
+BEGIN
+  IF VVERS = '11.2.0.4' THEN
+    RETURN;
+  END IF;
+  FOR I IN (select view_name from v_$fixed_view_definition t1 where length(t1.view_definition)=4000)
+  LOOP
+    DBMS_UTILITY.expand_sql_text (
+      input_sql_text  => 'select * from ' || i.view_name,
+      output_sql_text => l_clob
+    );
+    update &v_username..t_fixed_view_definition t1 set t1.view_definition_clob=l_clob where t1.view_name=i.view_name;
+  END LOOP;
+END;
+/

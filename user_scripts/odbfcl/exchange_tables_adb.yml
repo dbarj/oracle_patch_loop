@@ -1,7 +1,7 @@
 - name: "Load {{ oci_adb_transient_user }} tables into {{ oci_adb_user }} schema"
   shell: |
        set -e
-       sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/exchange_tables_adb.sql {{ oci_adb_user }} {{ patch.id }} {{ patch.base_ru | default('') }}{{ patch.type }} {{ db_version }}
+       sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/exchange_tables_adb.sql {{ oci_adb_user }} {{ db_version }} {{ patch.base_ru | default('') }}{{ patch.type }} {{ patch.id }}
   register: sqloutput
 
 - name: SQL Output
