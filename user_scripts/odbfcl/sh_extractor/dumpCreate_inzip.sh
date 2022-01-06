@@ -54,17 +54,14 @@ fi
 
 echo "Generating tables export. Please wait.." 
 
-cd "${v_thisdir}"/../
 $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
 @tables_recreate.sql
 EOF
 
-cd ..
 $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
 @externalDir.sql ${v_output_fdr}
 EOF
 
-cd odbfcl/extract/
 $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
 @hashGet.sql ${v_patch_id} ${v_patch_type} ${v_patch_version}
 EOF
@@ -78,7 +75,6 @@ logfile="${v_output_file_noext}.log" \
 content=data_only \
 schemas="${v_user}"
 
-cd ../extract/sh_extractor/
 $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
 @cleanUser.sql
 EOF

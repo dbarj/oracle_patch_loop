@@ -1,6 +1,7 @@
 #!/bin/bash
 # Script to get all bugs fixed on OPatch
 # Created by Rodrigo Jorge <http://www.dbarj.com.br/>
+# v1.0.0.0
 
 set -eo pipefail
 
@@ -49,25 +50,27 @@ if ! [[ $v_patch_id =~ $re ]] ; then
    exitError "\"$v_patch_id\" must be a number. Eg: 19.0.0.0_RU-L_14"
 fi
 
+v_thisdir="$(cd "$(dirname "$0")"; pwd)"
+
 v_zip=${v_pattern}.zip
 
 v_file=bugs_${v_pattern}.txt
-sh bugsGet.sh ${v_file}
+sh "${v_thisdir}/bugsGet.sh" ${v_file}
 zip -m ${v_zip} ${v_file}
 
 v_file=sha256sum_${v_pattern}.chk
-sh fileGet.sh ${v_file}
+sh "${v_thisdir}/fileGet.sh" ${v_file}
 zip -m ${v_zip} ${v_file}
 
 v_file=txtcol_${v_pattern}.tar.gz
-sh fileCollect.sh ${v_file}
+sh "${v_thisdir}/fileCollect.sh" ${v_file}
 zip -m ${v_zip} ${v_file}
 
 v_file=symbols_${v_pattern}.csv
-sh symbolGet.sh ${v_file}
+sh "${v_thisdir}/symbolGet.sh" ${v_file}
 zip -m ${v_zip} ${v_file}
 
-sh dumpCreate.sh ${v_pattern}.dmp
+sh "${v_thisdir}/dumpCreate.sh" ${v_pattern}.dmp
 mv ${v_pattern}.dmp tables_${v_pattern}.dmp
 mv ${v_pattern}.log tables_${v_pattern}.log
 zip -m ${v_pattern}.zip tables_${v_pattern}.dmp
