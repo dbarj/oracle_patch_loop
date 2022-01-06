@@ -27,6 +27,6 @@
 
   when:
     - param_type is undefined or param_type == patch.type
-    - param_patch is undefined or (param_patch | int) == patch.id
+    - param_patch is undefined or (param_patch | int) == (patch.id | int)
 
 # Skip all is true when dump file is already generated and skip_dump_exists is true at config.
