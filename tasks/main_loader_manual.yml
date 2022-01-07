@@ -8,11 +8,6 @@
         input_patch is undefined   or (input_patch|length == 0)   or
         input_file is undefined    or (input_file|length == 0)
 
-- name: Error
-  fail:
-    msg: "input_series must start with L."
-  when: input_series is not match("L.*")
-
 - name : Define db_version
   set_fact:
     db_version:    "{{ input_version }}"
@@ -20,19 +15,47 @@
     param_patch:   "{{ input_patch }}"
     output_folder: "{{ shared_folder }}/temp_load"
 
-- name: "Check if {{ input_file }} exists"
-  stat:
-    path: "{{ input_file }}"
-  register: ifile_stat_result
-
-- fail:
-    msg: "Could not find {{ input_file }} file."
-  when: ifile_stat_result.stat.exists == false
-
 - name: Delete content & directory
   file:
     state: absent
     path: "{{ output_folder }}"
+
+- name: Creates output folder
+  file:
+    path: "{{ output_folder }}"
+    state: directory
+
+- name: List files in OCI Bucket
+  include_role:
+    name: oci_object_storage_object_facts
+  vars:
+    object_action: "list"
+
+# Not working for whatever reason...
+
+# - name: Download file from OCI Bucket
+#   include_role:
+#     name: oci_object_storage_object_facts
+#   vars:
+#     oci_download_file: "{{ input_file }}"
+#     oci_dest_file: "{{ output_folder }}/{{ input_file }}"
+#     object_action: "download"
+
+- name: Download file from OCI Bucket
+  shell: |
+       export LC_ALL=C.UTF-8
+       export LANG=C.UTF-8
+       oci os object get --bucket-name {{ oci_manual_bucket }} --name {{ input_file }} --file {{ output_folder }}/{{ input_file }}
+  register: shoutput
+
+- name: "Check if {{ output_folder }}/{{ input_file }} exists"
+  stat:
+    path: "{{ output_folder }}/{{ input_file }}"
+  register: ifile_stat_result
+
+- fail:
+    msg: "Could not find {{ output_folder }}/{{ input_file }} file."
+  when: ifile_stat_result.stat.exists == false
 
 - name: Creates directory
   file:
@@ -46,9 +69,9 @@
     - "{{ output_folder }}/symbols"
     - "{{ output_folder }}/expdp"
 
-- name: "Extract {{ input_file }} into {{ output_folder }}"
+- name: "Extract {{ output_folder }}/{{ input_file }} into {{ output_folder }}"
   unarchive:
-    src: "{{ input_file }}"
+    src: "{{ output_folder }}/{{ input_file }}"
     dest: "{{ output_folder }}"
 
 #####################################################################

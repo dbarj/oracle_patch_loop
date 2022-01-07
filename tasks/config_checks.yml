@@ -13,4 +13,4 @@
 - name: Tool does not exist
   fail:
     msg: "{{ downloader_tool }} must exist when download_patch is true."
-  when: downloader_tool_result.stat.exists == false and download_patch == true
+  when: download_patch == true and downloader_tool_result.stat.exists == false

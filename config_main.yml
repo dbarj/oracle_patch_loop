@@ -11,7 +11,7 @@ only_deploy_patch: false
 target_db_version: 19 # Used to check if version parameter will be required on expdp
 
 # Download Mode? If true, script will try to download the patch if not found in "source_folder".
-download_patch : true
+download_patch : false
 
 # Stop when patch zip is not found? Control if the code will fail or just skip that patch.
 error_on_no_patch : true
