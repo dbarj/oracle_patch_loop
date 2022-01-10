@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to list all symbols in ORACLE_HOME
+# Script to collect dictionary tables
 # Created by Rodrigo Jorge <http://www.dbarj.com.br/>
 
 set -eo pipefail
@@ -84,3 +84,4 @@ $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
 EOF
 
 exit 0
+###

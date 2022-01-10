@@ -1,7 +1,7 @@
 #!/bin/bash
-# Script to get all bugs fixed on OPatch
+# Script to collect all info needed for ORAdiff
 # Created by Rodrigo Jorge <http://www.dbarj.com.br/>
-# v1.0.0.0
+# v1.0.0.1
 
 set -eo pipefail
 
@@ -27,27 +27,27 @@ The pattern is composed by 3 parts, divided by \"_\":
 2nd - Type. Can be any string.
 3rd - ID. Must be a number.
 
-Eg: $0 19.0.0.0_RU-L_14
+Eg: $0 19.0.0.0_LRU14_20220101
 
 The output is a zip file.
 "
 
 v_pattern_cnt=`awk -F"_" '{print NF-1}' <<< "${v_pattern}"`
-[ ${v_pattern_cnt} -ne 2 ] && exitError "Pattern \"${v_output}\" must have 2 \"_\" on it. Eg: 19.0.0.0_RU-L_14"
+[ ${v_pattern_cnt} -ne 2 ] && exitError "Pattern \"${v_output}\" must have 2 \"_\" on it. Eg: 19.0.0.0_LRU14_20220101"
 
 v_pattern_cnt=`awk -F" " '{print NF-1}' <<< "${v_pattern}"`
-[ ${v_pattern_cnt} -ne 0 ] && exitError "Pattern \"${v_output}\" must not have any spaces. Eg: 19.0.0.0_RU-L_14"
+[ ${v_pattern_cnt} -ne 0 ] && exitError "Pattern \"${v_output}\" must not have any spaces. Eg: 19.0.0.0_LRU14_20220101"
 
 v_patch_version=`cut -d '_' -f 1 <<< "${v_pattern}"`
 v_patch_type=`cut -d '_' -f 2 <<< "${v_pattern}"`
 v_patch_id=`cut -d '_' -f 3 <<< "${v_pattern}"`
 
 v_pattern_cnt=`awk -F"." '{print NF-1}' <<< "${v_patch_version}"`
-[ ${v_pattern_cnt} -ne 3 ] && exitError "Version \"${v_patch_version}\" must be in \"X.X.X.X\" format. Eg: 19.0.0.0_RU-L_14"
+[ ${v_pattern_cnt} -ne 3 ] && exitError "Version \"${v_patch_version}\" must be in \"X.X.X.X\" format. Eg: 19.0.0.0_LRU14_20220101"
 
 re='^[0-9]+$'
 if ! [[ $v_patch_id =~ $re ]] ; then
-   exitError "\"$v_patch_id\" must be a number. Eg: 19.0.0.0_RU-L_14"
+   exitError "\"$v_patch_id\" must be a number. Eg: 19.0.0.0_LRU14_20220101"
 fi
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
