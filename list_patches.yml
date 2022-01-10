@@ -208,7 +208,7 @@ list_12102:
   - { type : "OJVM" , id : 210119 , patch_number : 32119956 }
   - { type : "OJVM" , id : 210420 , patch_number : 32473164 }
   - { type : "OJVM" , id : 210720 , patch_number : 32876425 }
-  - { type : "OJVM" , id : 211019 , patch_number : 33192662 }
+  - { type : "OJVM" , id : 211019 , patch_number : 33192628 }
   - { type : "BP"   , id : 1      , patch_number : 19404326 , patch_folder : 19189240 }
   - { type : "BP"   , id : 2      , patch_number : 19774304 , patch_folder : 19649591 }
   - { type : "BP"   , id : 3      , patch_number : 20026159 , patch_folder : 19878106 }
