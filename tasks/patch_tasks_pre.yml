@@ -49,7 +49,7 @@
   # Place patch file on the shared folder
   - name: Finding Patch File
     find:
-      paths:     "{{ source_folder }}"
+      paths:     "{{ patch_folder }}"
       patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}0_Linux-x86-64.zip"
       recurse:   "yes"
       file_type: "file"
@@ -69,7 +69,7 @@
     # Try again after downloader was called
     - name: Finding Patch File Again
       find:
-        paths:     "{{ source_folder }}"
+        paths:     "{{ patch_folder }}"
         patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}0_Linux-x86-64.zip"
         recurse:   "yes"
         file_type: "file"

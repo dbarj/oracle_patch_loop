@@ -1,6 +1,6 @@
 - name: Finding OPatch File
   find:
-    paths:            "{{ source_folder }}"
+    paths:            "{{ patch_folder }}"
     patterns:         "{{ opatch_file }}"
     recurse:          "yes"
     file_type:        "file"
