@@ -7,13 +7,22 @@
 # IP Address:  For local SSH connection.          
 
 list_versions:
-  - { id : "11.2.0.4" , patch_list : "list_11204" , main_file : "patch_main_11g.yml" , vmachine : "Oracle Linux 6.8" , base_snap : "11.2.0.4 Ready" , opatch_file : "p6880880_112000_Linux-x86-64.zip" , ip : "192.168.56.101" }
-  - { id : "12.1.0.1" , patch_list : "list_12101" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 6.8" , base_snap : "12.1.0.1 Ready" , opatch_file : "p6880880_200000_Linux-x86-64.zip" , ip : "192.168.56.101" }
-  - { id : "12.1.0.2" , patch_list : "list_12102" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 6.8" , base_snap : "12.1.0.2 Ready" , opatch_file : "p6880880_200000_Linux-x86-64.zip" , ip : "192.168.56.101" }
-  - { id : "12.2.0.1" , patch_list : "list_12201" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 6.8" , base_snap : "12.2.0.1 Ready" , opatch_file : "p6880880_200000_Linux-x86-64.zip" , ip : "192.168.56.101" }
-  - { id : "18.0.0.0" , patch_list : "list_18000" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 6.8" , base_snap : "18.0.0.0 Ready" , opatch_file : "p6880880_200000_Linux-x86-64.zip" , ip : "192.168.56.101" }
-  - { id : "19.0.0.0" , patch_list : "list_19000" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 7.6" , base_snap : "19.0.0.0 Ready" , opatch_file : "p6880880_200000_Linux-x86-64.zip" , ip : "192.168.56.102" }
-  - { id : "21.0.0.0" , patch_list : "list_21000" , main_file : "patch_main.yml"     , vmachine : "Oracle Linux 8"   , base_snap : "21.0.0.0 Ready" , opatch_file : "p6880880_200000_Linux-x86-64.zip" , ip : "192.168.56.102" }
+  - { id : "11.2.0.4" , patch_list : "list_11204" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_112000_Linux-x86-64.zip" }
+  - { id : "12.1.0.1" , patch_list : "list_12101" , main_file : "patch_main.yml"     , opatch_file : "p6880880_210000_Linux-x86-64.zip" }
+  - { id : "12.1.0.2" , patch_list : "list_12102" , main_file : "patch_main.yml"     , opatch_file : "p6880880_210000_Linux-x86-64.zip" }
+  - { id : "12.2.0.1" , patch_list : "list_12201" , main_file : "patch_main.yml"     , opatch_file : "p6880880_210000_Linux-x86-64.zip" }
+  - { id : "18.0.0.0" , patch_list : "list_18000" , main_file : "patch_main.yml"     , opatch_file : "p6880880_210000_Linux-x86-64.zip" }
+  - { id : "19.0.0.0" , patch_list : "list_19000" , main_file : "patch_main.yml"     , opatch_file : "p6880880_210000_Linux-x86-64.zip" }
+  - { id : "21.0.0.0" , patch_list : "list_21000" , main_file : "patch_main.yml"     , opatch_file : "p6880880_210000_Linux-x86-64.zip" }
+
+list_info_vbox:
+  - { id : "11.2.0.4" , vmachine : "Oracle Linux 6.8" , base_snap : "11.2.0.4 Ready" , ip : "xxx" }
+  - { id : "12.1.0.1" , vmachine : "Oracle Linux 6.8" , base_snap : "12.1.0.1 Ready" , ip : "xxx" }
+  - { id : "12.1.0.2" , vmachine : "Oracle Linux 6.8" , base_snap : "12.1.0.2 Ready" , ip : "xxx" }
+  - { id : "12.2.0.1" , vmachine : "Oracle Linux 6.8" , base_snap : "12.2.0.1 Ready" , ip : "xxx" }
+  - { id : "18.0.0.0" , vmachine : "Oracle Linux 6.8" , base_snap : "18.0.0.0 Ready" , ip : "xxx" }
+  - { id : "19.0.0.0" , vmachine : "Oracle Linux 7.6" , base_snap : "19.0.0.0 Ready" , ip : "xxx" }
+  - { id : "21.0.0.0" , vmachine : "Oracle Linux 8"   , base_snap : "21.0.0.0 Ready" , ip : "xxx" }
 
 list_info_oci:
   - { id : "11.2.0.4" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" }

@@ -2,14 +2,19 @@
 
 - name : Define version
   set_fact:
-    vm_machine:    "{{ item.vmachine }}"
-    vm_ip_address: "{{ item.ip }}"
-    patch_base:    "{{ item.base_snap }}"
     patch_file:    "{{ item.main_file }}"
     patch_list:    "{{ item.patch_list }}"
     opatch_file:   "{{ item.opatch_file }}"
   with_items: "{{ list_versions }}"
   when: item.id == db_version
+
+- name : Define VBox params
+  set_fact:
+    vm_machine:    "{{ item.vmachine }}"
+    vm_ip_address: "{{ item.ip }}"
+    patch_base:    "{{ item.base_snap }}"
+  with_items: "{{ list_info_vbox }}"
+  when: item.id == db_version and oci_mode == false
 
 - name : Define Cloud params
   set_fact:

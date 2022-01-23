@@ -2,12 +2,17 @@
 
 - name : Define version
   set_fact:
-    vm_machine:    "{{ item.vmachine }}"
     patch_base:    "{{ item.base_snap }}"
     patch_list:    "{{ item.patch_list }}"
+  with_items: "{{ list_versions }}"
+  when: item.id == db_version
+
+- name : Define VBox params
+  set_fact:
+    vm_machine:    "{{ item.vmachine }}"
     vm_snapshot:   "{{ item.base_snap }}"
     vm_ip_address: "{{ item.ip }}"
-  with_items: "{{ list_versions }}"
+  with_items: "{{ list_info_vbox }}"
   when: item.id == db_version
 
 # vm_reload is called before every patch is applied to rollback the VM to the snapshot image.
