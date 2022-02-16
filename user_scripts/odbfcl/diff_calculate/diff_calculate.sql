@@ -270,5 +270,3 @@ DROP TABLE DIFF_CONTENTS_LOAD PURGE;
 
 ! rm -f gen_diff.sh
 ! rm -f aaa.sql
-
-exit

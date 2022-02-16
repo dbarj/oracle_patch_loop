@@ -40,14 +40,13 @@ set verify off
 col code for a10000
 set termout off
 spo run_code.sql
-select '@&P_FOLDER./diff_calculate.sql ''&P_CRED.'' ''' || v1.display_name || ''' ''' || v1.display_name_prev || ''''
+select '@&P_FOLDER./diff_calculate.sql ''&P_CRED.'' ''' || v1.display_name_prev || ''' ''' || v1.display_name || ''''
 from   mv_versions v1, mv_versions v2
 where  v1.display_name_prev=v2.display_name
 and  ((v1.oraversion='&P_VERS.' and v1.oraseries='&P_SER.' and v1.orapatch=&P_PATCH.)
 or    (v2.oraversion='&P_VERS.' and v2.oraseries='&P_SER.' and v2.orapatch=&P_PATCH.));
 spool off
 
-set echo on term on
 @run_code.sql
 
 ! rm -f run_code.sql
