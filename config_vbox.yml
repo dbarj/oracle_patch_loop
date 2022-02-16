@@ -1,5 +1,6 @@
 # Folder where the database patches are placed. The patches can also be placed in sub-folders of the directory specified below.
-patch_folder : "/Volumes/Untitled/Rodrigo/ORACHKSUM/DB\ Install"
+patch_location_type : folder
+patch_location_path : "/Volumes/Untitled/Rodrigo/ORACHKSUM/DB\ Install"
 
 # Folder in RW mode on local compute and shared with the VM. It is used to process the files.
 shared_folder : "/Users/rodrigo.jorge/Desktop/extract"

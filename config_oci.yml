@@ -1,13 +1,16 @@
+# Patch location type: Can be "folder" or "bucket"
+# Patch location path: Can be the local folder path or the bucket name.
 # Folder where the database patches are placed. The patches can also be placed in sub-folders of the directory specified below.
-source_folder : "/u01/patch_automation/patches"
+patch_location_type : bucket
+patch_location_path : oradiff_patches
 
-# Folder in RW mode on local compute and shared with the VM. It is used to process the files.
+# Folder in RW mode on local compute and shared with the VM. It is used to move the patches to the VMs and also to copy back the expdp output.
 shared_folder : "/u02"
 
-# Path of the folder mounted within the VM.
+# Path of the folder mounted within the VM. This is the path of the "shared_folder" in the VM.
 VM_folder  : "/u02"
 
-# Oracle SID. Must be included in /etc/oratab for oraenv utility.
+# Oracle SID of the database that we are collecting data from. Must be included in /etc/oratab for oraenv utility.
 mysid : "orcl"
 
 # Folder to store the final generated files.
@@ -38,7 +41,7 @@ user_expdp_post :
 - { file : "update_table_keys_adb.yml" , folder : "user_scripts/odbfcl" , type : "yml", task_action : "Update table keys to reflect correct partition name" }
 - { file : "exchange_tables_adb.yml" , folder : "user_scripts/odbfcl" , type : "yml", task_action : "Exchange loaded table in the correct partition position" }
 
-# User that will hold your tables outputs and be exported after each execution. If the database is CDB, "C##" will be automatically inserted if not.
+# User that will hold your tables outputs and be exported after each execution. If the database is CDB, "C##" will be automatically inserted if not there.
 dump_user : hash
 
 # User pass
@@ -46,8 +49,6 @@ dump_pass : hash
 
 # OCI Information to deploy VM
 oci_compartment_id : ocid1.compartment.oc1..xxx
-oci_subnet_id : ocid1.subnet.oc1.iad.xxx
-oci_ad : ocid1.subnet.oc1.iad.xxx
 
 # OCI Information to upload objects to OS
 oci_namespace: xxx

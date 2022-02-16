@@ -7,48 +7,35 @@
     vars:
       object_action: "list"
       oci_list_bucket: "{{ patch_location_bucket }}"
+
+  # For debugging
+  # - name: Check if patch is in the bucket
+  #   debug: msg="{{ oci_action.objects | map(attribute='name') | select('search', my_query) | list }}"
+  #   vars:
+  #     my_query: "p{{ patch.patch_number }}"
   
-  - name: Download OPatch file from OCI Bucket
+  - name: Download file from OCI Bucket
     shell: |
         export LC_ALL=C.UTF-8
         export LANG=C.UTF-8
         oci os object get --bucket-name {{ patch_location_bucket }} --name {{ oci_download_file }} --file {{ patch_location_path }}/{{ oci_download_file | basename }}
     register: shoutput
     vars:
-      my_query: "{{ opatch_file }}"
+      my_query: "p{{ patch.patch_number }}"
       oci_download_file: "{{ oci_action.objects | map(attribute='name') | select('search', my_query) | list | first }}"
     when: oci_action.objects | map(attribute='name') | select('search', my_query) | list | length > 0
 
   when: patch_location_type == "bucket"
 
-- name: Finding OPatch File
+- name: Finding Patch File
   find:
-    paths:            "{{ patch_location_path }}"
-    patterns:         "{{ opatch_file }}"
-    recurse:          "yes"
-    file_type:        "file"
+    paths:     "{{ patch_location_path }}"
+    patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}0_Linux-x86-64.zip"
+    recurse:   "yes"
+    file_type: "file"
   register: find_result
 
-# If OPatch was not found
-- block:
-
-  - debug:
-      msg: "Could not find OPatch file. Skipping."
-  
-  - name : Define OPatch location to null
-    set_fact:
-      db_opatch: ""
-
-  when: find_result.files[0] is undefined
-
-# If OPatch was found
-- block:
-
-  - debug:
-      msg: "OPatch File: {{ find_result.files[0].path }}"
-
-  - name : Define OPatch location
-    set_fact:
-      db_opatch: "{{ find_result.files[0].path }}"
-  
+- name : Define patch_file_path
+  set_fact:
+    patch_file_path: "{{ find_result.files[0].path }}"
   when: find_result.files[0] is defined

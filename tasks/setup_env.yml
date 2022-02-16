@@ -41,3 +41,9 @@
 - name : Define latest processed as null
   set_fact:
     latest_processed: ""
+
+- name : Define patch_location_bucket
+  set_fact:
+    patch_location_bucket: "{{ patch_location_path }}"
+    patch_location_path: "{{ stage_folder }}"
+  when: patch_location_type == "bucket"

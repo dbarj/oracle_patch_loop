@@ -252,7 +252,7 @@ list_12102:
   - { type : "BP"   , id : 210420 , patch_number : 32518631 , patch_folder : 32328632 }
   - { type : "BP"   , id : 210720 , patch_number : 32917362 , patch_folder : 32768230 }
   - { type : "BP"   , id : 211019 , patch_number : 33248411 , patch_folder : 33114885 }
-  - { type : "BP"   , id : 220118 , patch_number : 33575286 , patch_folder : 00000000 }
+  - { type : "BP"   , id : 220118 , patch_number : 33575286 , patch_folder : 33465249 }
 
 
 ####################
@@ -336,7 +336,7 @@ list_12201:
 # No more updates on this one.
 
 list_18000:
-  - { type : "RU"   , id : 2  , patch_number : 27676517 , base_snap : "18.1.0" }
+#  - { type : "RU"   , id : 2  , patch_number : 27676517 , base_snap : "18.1.0" }
   - { type : "RU"   , id : 3  , patch_number : 28090523 , base_snap : "18.1.0" }
   - { type : "RU"   , id : 4  , patch_number : 28655784 }
   - { type : "RU"   , id : 5  , patch_number : 28822489 }
@@ -349,6 +349,7 @@ list_18000:
   - { type : "RU"   , id : 12 , patch_number : 31730250 }
   - { type : "RU"   , id : 13 , patch_number : 32204699 }
   - { type : "RU"   , id : 14 , patch_number : 32524155 }
+  - { type : "RU"   , id : 17 , patch_number : 33583960 }
   # - { type : "RUR"  , id : 1  , patch_number : 28346593 , base_ru : '18.2'  }
   # - { type : "RUR"  , id : 2  , patch_number : 28601267 , base_ru : '18.2'  }
   - { type : "RUR"  , id : 1  , patch_number : 28507480 , base_ru : '18.3'  }
@@ -385,6 +386,7 @@ list_18000:
   - { type : "OJVM" , id : 201020 , patch_number : 31668892 }
   - { type : "OJVM" , id : 210119 , patch_number : 32119939 }
   - { type : "OJVM" , id : 210420 , patch_number : 32552752 }
+  - { type : "OJVM" , id : 220118 , patch_number : 33549631 }
 
 # No more updates on this one.
 

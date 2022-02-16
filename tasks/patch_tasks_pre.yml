@@ -48,19 +48,9 @@
 
   # Place patch file on the shared folder
   - name: Finding Patch File
-    find:
-      paths:     "{{ patch_folder }}"
-      patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}0_Linux-x86-64.zip"
-      recurse:   "yes"
-      file_type: "file"
-    register: find_result
+    include: find_patch.yml
 
-  - name : Define patch_file_path
-    set_fact:
-      patch_file_path: "{{ find_result.files[0].path }}"
-    when: find_result.files[0] is defined
-
-  # Call downloader when download_patch is defined
+  # Call downloader when download_patch is defined and could not find the patch
   - block:
 
     - name: Call downloader
@@ -68,17 +58,7 @@
 
     # Try again after downloader was called
     - name: Finding Patch File Again
-      find:
-        paths:     "{{ patch_folder }}"
-        patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}0_Linux-x86-64.zip"
-        recurse:   "yes"
-        file_type: "file"
-      register: find_result
-
-    - name : Define patch_file_path
-      set_fact:
-        patch_file_path: "{{ find_result.files[0].path }}"
-      when: find_result.files[0] is defined
+      include: find_patch.yml
 
     when: (patch_file_path|length == 0) and download_patch
 

@@ -14,3 +14,8 @@
   fail:
     msg: "{{ downloader_tool }} must exist when download_patch is true."
   when: download_patch == true and downloader_tool_result.stat.exists == false
+
+- name: Check patch_location_type variable
+  fail:
+    msg: 'patch_location_type must be "folder" or "bucket".'
+  when: patch_location_type != "folder" and patch_location_type != "bucket"

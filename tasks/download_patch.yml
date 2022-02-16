@@ -12,9 +12,10 @@
 
   when: downloader_pass is undefined
 
-
 - name: "Calling {{ downloader_tool }}"
   shell: |
+    [ ! -d "{{ db_version }}/{{ patch.type }}" ] && mkdir -p "{{ db_version }}/{{ patch.type }}"
+    cd "{{ db_version }}/{{ patch.type }}"
     $ORACLE_HOME/jdk/bin/java -jar {{ downloader_tool }} \
     patch={{ patch.patch_number }} \
     platform=226P \
@@ -24,5 +25,27 @@
     MOSUser={{ downloader_user }} \
     MOSPass='{{ downloader_pass }}'
   args:
-    chdir: "{{ patch_folder }}"
+    chdir: "{{ patch_location_path }}"
   register: shell_output
+
+# If block storage:
+- block:
+
+  - name: Get patch file name to upload to OS
+    find:
+      paths:     "{{ patch_location_path }}"
+      patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}0_Linux-x86-64.zip"
+      file_type: "file"
+    register: get_name
+
+  - name: 
+    include_role:
+      name: oci_object_storage_object
+    vars:
+      oci_upload_file: "{{ get_name.files[0].path }}"
+      oci_object_name: "{{ db_version }}/{{ patch.type }}/{{ get_name.files[0].path | basename }}"
+      oci_upload_bucket: "{{ patch_location_bucket }}"
+      object_action: "create"
+    when: get_name.files[0] is defined
+
+  when: patch_location_type == "bucket"
