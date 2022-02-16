@@ -16,7 +16,3 @@
     state: absent
   register: oci_action
   when: object_action == "remove"
-
-- name: Set target oci_object_name when undefined
-  set_fact:
-    oci_object_name: ""

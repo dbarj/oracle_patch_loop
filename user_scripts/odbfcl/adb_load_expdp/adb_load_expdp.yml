@@ -77,20 +77,10 @@
                     params : "'{{ dump_file_prefix }}.dmp'"
                   }
 
-  - name: 
-    include_role:
-      name: oci_object_storage_object
-    vars:
-      oci_upload_file: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
-      oci_object_name: "{{ oci_upload_file | basename }}"
-      oci_upload_bucket: "{{ oci_adb_bucket }}"
-      object_action: "create"
-
   - name: Remove expdp from OCI Bucket
     include_role:
       name: oci_object_storage_object
     vars:
-      oci_upload_file: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
       oci_object_name: "{{ oci_upload_file | basename }}"
       oci_upload_bucket: "{{ oci_adb_bucket }}"
       object_action: "remove"
