@@ -16,6 +16,8 @@
       name: oci_object_storage_object
     vars:
       oci_upload_file: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+      oci_object_name: "{{ oci_upload_file | basename }}"
+      oci_upload_bucket: "{{ oci_adb_bucket }}"
       object_action: "create"
 
   - name : Define source schema
@@ -28,26 +30,69 @@
       dump_user_int: "c##{{ dump_user }}"
     when: db_version != "11.2.0.4"
 
+  # This is done because expdp/impdp still can't handle Credential using oracle native authentication (instance principal, tenancy id, etc), only swift.
+  - include: tasks/local_sqlplus.yml
+    vars:
+      sql_param : { task_action : "Copy file from Bucket to Oracle Directory" ,
+                    cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                    file : "adb_oradir_copy_file.sql" ,
+                    folder : "user_scripts/odbfcl/adb_load_expdp" ,
+                    params : "'{{ oci_adb_credential }}' '{{ oci_adb_os_url_prefix }}/{{ dump_file_prefix }}.dmp'"
+                  }
+
+  # This is done because expdp/impdp still can't handle Credential using oracle native authentication (instance principal, tenancy id, etc), only swift.
+  # - name: Import DB Tables
+  #   shell: |
+  #       impdp \
+  #       userid={{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} \
+  #       directory=data_pump_dir \
+  #       credential='{{ oci_adb_credential }}' \
+  #       remap_schema='{{ dump_user_int }}:{{ oci_adb_transient_user }}' \
+  #       parallel=16 \
+  #       table_exists_action=truncate \
+  #       dumpfile={{ oci_adb_os_url_prefix }}/{{ dump_file_prefix }}.dmp > "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.log" 2>&1
+  #   register: shell_output
+
   - name: Import DB Tables
     shell: |
         impdp \
         userid={{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} \
         directory=data_pump_dir \
-        credential='{{ oci_adb_credential }}' \
         remap_schema='{{ dump_user_int }}:{{ oci_adb_transient_user }}' \
         parallel=16 \
         table_exists_action=truncate \
-        dumpfile={{ oci_adb_os_url_prefix }}/{{ dump_file_prefix }}.dmp > "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.log" 2>&1
+        dumpfile={{ dump_file_prefix }}.dmp > "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.log" 2>&1
     register: shell_output
 
   - name: Import Output
     debug: msg="{{ shell_output.stderr_lines }}"
+
+  # This is done because expdp/impdp still can't handle Credential using oracle native authentication (instance principal, tenancy id, etc), only swift.
+  - include: tasks/local_sqlplus.yml
+    vars:
+      sql_param : { task_action : "Remove file from Oracle Directory" ,
+                    cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                    file : "adb_oradir_remove_file.sql" ,
+                    folder : "user_scripts/odbfcl/adb_load_expdp" ,
+                    params : "'{{ dump_file_prefix }}.dmp'"
+                  }
+
+  - name: 
+    include_role:
+      name: oci_object_storage_object
+    vars:
+      oci_upload_file: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+      oci_object_name: "{{ oci_upload_file | basename }}"
+      oci_upload_bucket: "{{ oci_adb_bucket }}"
+      object_action: "create"
 
   - name: Remove expdp from OCI Bucket
     include_role:
       name: oci_object_storage_object
     vars:
       oci_upload_file: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+      oci_object_name: "{{ oci_upload_file | basename }}"
+      oci_upload_bucket: "{{ oci_adb_bucket }}"
       object_action: "remove"
 
   when: dump_stat_result.stat.exists

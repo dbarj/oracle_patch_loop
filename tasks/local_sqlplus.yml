@@ -1,0 +1,23 @@
+# Will execute the provided SQL using sqlplus in the local server (not remote).
+
+# sql_param.file        : File to process.
+# sql_param.cred        : user/pass@tns or any other credential input.
+# sql_param.folder      : Folder on VM shared folder where file is. (Default: "user_scripts")
+# sql_param.params      : Eventual parameters that may be provided to SQL script.
+# sql_param.termout     : Boolean - print the SQL output. (Default: true)
+# sql_param.task_action : Task name to print.
+
+- name: "{{ sql_param.task_action }}"
+  shell: |
+       set -e
+       sqlplus -L -S "{{ sql_param.cred }}" @{{ VM_folder }}/{{ sql_param.folder | default('user_scripts') }}/{{ sql_param.file }} {{ sql_param.params | default('') }}
+  register: sqloutput
+
+- name: SQL Output
+  debug: msg="{{ sqloutput.stdout_lines }}"
+  when: (sql_param.termout | default(true)) == true
+
+- name: SQLPlus Error!
+  fail:
+    msg: "Found SP2 string in SQLPlus output."
+  when: '"SP2-" in sqloutput.stdout'

@@ -1,0 +1,24 @@
+# This must come after MV_VERSIONS is reloaded
+
+- name: "Load {{ oci_adb_transient_user }} diff code and contents"
+  shell: |
+       set -e
+       v_folder="{{ stage_folder }}/temp_diff_{{ oci_adb_transient_user }}"
+       rm -rf "${v_folder}"
+       mkdir "${v_folder}"
+       cd "${v_folder}"
+       sqlplus -L -S {{ oci_adb_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/diff_calculate/diff_main.sql '{{ oci_adb_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}' '@{{ shared_folder }}/user_scripts/odbfcl/diff_calculate' {{ db_version }} {{ patch.base_ru | default('') }}{{ patch.type }} {{ patch.id }}
+       #rm -rf "${v_folder}"
+  register: sqloutput
+
+#- include: tasks/local_sqlplus.yml
+#  vars:
+#    sql_param : { task_action : "Load {{ oci_adb_transient_user }} diff code and contents" ,
+#                  cred : "{{ oci_adb_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+#                  file : "diff_main.sql" ,
+#                  folder : "user_scripts/odbfcl/diff_calculate" ,
+#                  params : "'{{ oci_adb_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}' {{ db_version }} {{ patch.base_ru | default('') }}{{ patch.type }} {{ patch.id }}"
+#                }
+
+- name: SQL Output
+  debug: msg="{{ sqloutput.stdout_lines }}"

@@ -1,4 +1,4 @@
-# Skip the dump part if not expdp does not run
+# Skip the dump part if no expdp was executed
 - block:
 
   - name: "Copy {{ dump_file_prefix }}.dmp to repository"
@@ -28,6 +28,12 @@
     state: absent
     path: "{{ unzip_patch_folder }}"
   when: patch.patch_number != 0
+
+- name: Remove file downloaded from OCI Bucket
+  file:
+    state: absent
+    path: "{{ db_patch }}"
+  when: patch_location_type == "bucket" and db_patch is defined
 
 - name : Remove PatchSearch.xml
   file:

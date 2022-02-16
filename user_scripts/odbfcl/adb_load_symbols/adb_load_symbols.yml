@@ -11,14 +11,14 @@
 # Will skip all the rest if the symbols file does not exists
 - block:
 
-  - name: "Create sqlldr table"
-    shell: |
-        set -e
-        sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/adb_load_symbols/create_sqlldr_symbols_table.sql
-    register: sqloutput
-
-  - name: SQL Output
-    debug: msg="{{ sqloutput.stdout_lines }}"
+  - include: tasks/local_sqlplus.yml
+    vars:
+      sql_param : { task_action : "Create sqlldr table" ,
+                    cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                    file : "create_sqlldr_symbols_table.sql" ,
+                    folder : "user_scripts/odbfcl/adb_load_symbols" ,
+                    params : ""
+                  }
 
   - name: "Load {{ symbols_file }} in the database"
     shell: |
@@ -55,13 +55,13 @@
   - name: SQL Output
     debug: msg="{{ sqloutput.stdout_lines }}"
 
-  - name: "Load symbols table"
-    shell: |
-        set -e
-        sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/adb_load_symbols/load_symbols_table.sql
-    register: sqloutput
-
-  - name: SQL Output
-    debug: msg="{{ sqloutput.stdout_lines }}"
+  - include: tasks/local_sqlplus.yml
+    vars:
+      sql_param : { task_action : "Load symbols table" ,
+                    cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                    file : "load_symbols_table.sql" ,
+                    folder : "user_scripts/odbfcl/adb_load_symbols" ,
+                    params : ""
+                  }
 
   when: symbols_stat_result.stat.exists

@@ -2,11 +2,11 @@
   set_fact:
     oci_adb_transient_user: "{{ oci_adb_user }}_{{ db_version | replace('.', '') }}"
 
-- name: "Run tables recreate ADB SQL"
-  shell: |
-       set -e
-       sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/tables_recreate_adb.sql
-  register: sqloutput
-
-- name: SQL Output
-  debug: msg="{{ sqloutput.stdout_lines }}"
+- include: tasks/local_sqlplus.yml
+  vars:
+    sql_param : { task_action : "Run tables recreate ADB SQL" ,
+                  cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                  file : "tables_recreate_adb.sql" ,
+                  folder : "user_scripts/odbfcl" ,
+                  params : ""
+                }

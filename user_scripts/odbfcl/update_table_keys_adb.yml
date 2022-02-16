@@ -1,8 +1,8 @@
-- name: "Update {{ oci_adb_transient_user }} tables with new keys"
-  shell: |
-       set -e
-       sqlplus -L -S {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/update_table_keys_adb.sql {{ db_version }} {{ patch.base_ru | default('') }}{{ patch.type }} {{ patch.id }}
-  register: sqloutput
-
-- name: SQL Output
-  debug: msg="{{ sqloutput.stdout_lines }}"
+- include: tasks/local_sqlplus.yml
+  vars:
+    sql_param : { task_action : "Update {{ oci_adb_transient_user }} tables with new keys" ,
+                  cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                  file : "update_table_keys_adb.sql" ,
+                  folder : "user_scripts/odbfcl" ,
+                  params : "{{ db_version }} {{ patch.base_ru | default('') }}{{ patch.type }} {{ patch.id }}"
+                }
