@@ -29,7 +29,9 @@ v_output_full="${v_output_fdr}/${v_output_file}"
 echo "Generating sha256sum list. Please wait.." 
 
 cd "$ORACLE_HOME"
+set +e
 find -type f -exec sha256sum "{}" + > "${v_output_full}"
+set -eo pipefail
 cd - > /dev/null
 
 sed -i 's/$/  F/' "${v_output_full}"
@@ -45,7 +47,9 @@ do
   rm -rf "${v_ext_fold}"
   mkdir "${v_ext_fold}"
   cd "${v_ext_fold}"
+  set +e
   ar x "${v_lib}"
+  set -eo pipefail
   find -type f -exec sha256sum "{}" + > "${v_out_file}"
   cd - > /dev/null
   sed -i "s|  \.|  ${v_lib}|" "${v_out_file}"

@@ -27,7 +27,7 @@ v_output_file="$(basename "${v_output}")"
 
 v_output_full="${v_output_fdr}/${v_output_file}"
 
-v_user='c##hash'
+v_user='hash'
 v_pass='hash'
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
@@ -44,29 +44,36 @@ v_patch_version=`cut -d '_' -f 1 <<< "${v_output_file_noext}"`
 v_patch_type=`cut -d '_' -f 2 <<< "${v_output_file_noext}"`
 v_patch_id=`cut -d '_' -f 3 <<< "${v_output_file_noext}"`
 
-v_output_file_cnt=`awk -F"." '{print NF-1}' <<< "${v_patch_version}"`
-[ ${v_output_file_cnt} -ne 3 ] && exitError "Version \"${v_patch_version}\" must be in \"X.X.X.X\" format."
+re='^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'
+if ! [[ $v_patch_version =~ $re ]] ; then
+   exitError "Version \"${v_patch_version}\" must be in \"X.X.X.X\" format."
+fi
 
 re='^[0-9]+$'
 if ! [[ $v_patch_id =~ $re ]] ; then
    exitError "\"$v_patch_id\" must be a number."
 fi
 
-echo "Generating tables export. Please wait.." 
+echo "Check if common user. Please wait.." 
+v_common_user=$($ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" @get_user_prefix.sql)
+
+[ -n "${v_common_user}" ] && v_user="${v_common_user}${v_user}"
+
+echo "Generating table export. Please wait.." 
 
 cd "${v_thisdir}"/../
 $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
-@tables_recreate.sql
+@tables_recreate.sql "${v_user}" "${v_pass}"
 EOF
 
 cd ..
 $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
-@externalDir.sql ${v_output_fdr}
+@externalDir.sql "${v_output_fdr}" "${v_user}"
 EOF
 
 cd odbfcl/extract/
 $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
-@hashGet.sql ${v_patch_id} ${v_patch_type} ${v_patch_version}
+@hashGet.sql "${v_user}" "${v_patch_version}" "${v_patch_type}" "${v_patch_id}"
 EOF
 
 $ORACLE_HOME/bin/expdp \
@@ -80,7 +87,7 @@ schemas="${v_user}"
 
 cd ../extract/sh_extractor/
 $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
-@cleanUser.sql
+@cleanUser.sql "${v_user}"
 EOF
 
 exit 0

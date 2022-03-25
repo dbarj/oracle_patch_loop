@@ -29,6 +29,8 @@ v_output_full="${v_output_fdr}/${v_output_file}"
 echo "Generating ORACLE_HOME non-binary files list. Please wait.." 
 
 cd "$ORACLE_HOME"
+
+set +e # grep may return "Permission denied"
 find -type f -not -path "./.patch_storage/*" -not -name "tfa_setup" -print0 | xargs -0 grep -Il '.' | tar -czf "${v_output_full}" -T -
 
 exit 0
