@@ -30,7 +30,7 @@
     name: oci_object_storage_object_facts
   vars:
     object_action: "list"
-    oci_list_bucket: " {{ oci_manual_bucket }}"
+    oci_list_bucket: "{{ oci_manual_bucket }}"
 
 # Not working for whatever reason...
 
