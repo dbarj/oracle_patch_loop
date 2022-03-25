@@ -27,8 +27,9 @@ v_output_file="$(basename "${v_output}")"
 
 v_output_full="${v_output_fdr}/${v_output_file}"
 
-v_user='hash'
-v_pass='hash'
+v_dump_user='hash'
+v_dump_pass='HhAaSsHh..135'
+v_dump_dir_name='expdir_hash'
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
 
@@ -57,37 +58,37 @@ fi
 echo "Check if common user. Please wait.." 
 v_common_user=$($ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" @get_user_prefix.sql)
 
-[ -n "${v_common_user}" ] && v_user="${v_common_user}${v_user}"
+[ -n "${v_common_user}" ] && v_dump_user="${v_common_user}${v_dump_user}"
 
 echo "Generating table export. Please wait.." 
 
 cd "${v_thisdir}"/../
 $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
-@tables_recreate.sql "${v_user}" "${v_pass}"
+@tables_recreate.sql "${v_dump_user}" "${v_dump_pass}"
 EOF
 
 cd ..
 $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
-@externalDir.sql "${v_output_fdr}" "${v_user}"
+@externalDir.sql "${v_output_fdr}" "${v_dump_user}" "${v_dump_dir_name}"
 EOF
 
 cd odbfcl/extract/
 $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
-@hashGet.sql "${v_user}" "${v_patch_version}" "${v_patch_type}" "${v_patch_id}"
+@hashGet.sql "${v_dump_user}" "${v_patch_version}" "${v_patch_type}" "${v_patch_id}"
 EOF
 
 $ORACLE_HOME/bin/expdp \
-userid="${v_user}/${v_pass}" \
-directory=expdir \
+userid="${v_dump_user}/${v_dump_pass}" \
+directory=${v_dump_dir_name} \
 compression=all \
 dumpfile="${v_output_file}" \
 logfile="${v_output_file_noext}.log" \
 content=data_only \
-schemas="${v_user}"
+schemas="${v_dump_user}"
 
 cd ../extract/sh_extractor/
 $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
-@cleanUser.sql "${v_user}"
+@cleanUser.sql "${v_dump_user}" "${v_dump_dir_name}"
 EOF
 
 exit 0

@@ -21,7 +21,7 @@
 
 - name: Import Database Tables
   shell: |
-       {{ dbhome_locl }}/bin/impdp userid={{ dump_user_int }}/{{ dump_pass }} directory=expdir dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log table_exists_action=append remap_schema={{ dump_user }}:{{ dump_user_int }}
+       {{ dbhome_locl }}/bin/impdp userid={{ dump_user_int }}/{{ dump_pass }} directory={{ dump_dir_name }} dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log table_exists_action=append remap_schema={{ dump_user }}:{{ dump_user_int }}
   environment:
     ORACLE_HOME: "{{ dbhome_locl }}"
     ORACLE_SID: "{{ mysid }}"
@@ -33,7 +33,7 @@
 
 - name: Import Database Tables
   shell: |
-       {{ dbhome_locl }}/bin/impdp userid={{ dump_user_int }}/{{ dump_pass }} directory=expdir dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log table_exists_action=append
+       {{ dbhome_locl }}/bin/impdp userid={{ dump_user_int }}/{{ dump_pass }} directory={{ dump_dir_name }} dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log table_exists_action=append
   environment:
     ORACLE_HOME: "{{ dbhome_locl }}"
     ORACLE_SID: "{{ mysid }}"

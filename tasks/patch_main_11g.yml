@@ -115,7 +115,7 @@
 
     - name: Export Database Tables
       shell: |
-          {{ dbhome_locl }}/bin/expdp userid={{ dump_user_int }}/{{ dump_pass }} directory=expdir compression=all dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log content=data_only schemas={{ dump_user_int }}
+          {{ dbhome_locl }}/bin/expdp userid={{ dump_user_int }}/{{ dump_pass }} directory={{ dump_dir_name }} compression=all dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log content=data_only schemas={{ dump_user_int }}
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
         ORACLE_SID: "{{ mysid }}"
