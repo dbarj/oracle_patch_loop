@@ -1,15 +1,10 @@
 WHENEVER SQLERROR EXIT SQL.SQLCODE
 
-col v_username new_v v_username nopri
+def v_username='&1.'
+def v_password='&2.'
 
-select case when version >= 12 then 'C##' end || 'HASH' v_username
-from  (select to_number(substr(version,1,instr(version,'.')-1)) version
-         from v$instance);
+@@createUser.sql '&v_username.' '&v_password.' 
 
-col v_username clear
-
-@@createUser.sql &v_username.
-
-conn &v_username./hash;
+conn &v_username./&v_password.
 
 @@tables_create.sql
