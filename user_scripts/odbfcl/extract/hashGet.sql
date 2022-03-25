@@ -5,17 +5,16 @@ set verify off
 set tab off
 set serverout on
 
+DEF V_USERNAME = '&1'
+
+DEF P_VERS  = '&2'
+DEF P_SER   = '&3'
+DEF P_PATCH = '&4'
+
+-- Convert to uppercase
 col v_username new_v v_username nopri
-
-select case when version >= 12 then 'C##' end || 'HASH' v_username
-from  (select to_number(substr(version,1,instr(version,'.')-1)) version
-         from v$instance);
-
+SELECT UPPER('&V_USERNAME.') V_USERNAME FROM DUAL;
 col v_username clear
-
-DEF P_PATCH = '&1'
-DEF P_SER   = '&2'
-DEF P_VERS  = '&3'
 
 DECLARE
   V_ORA_VER_MAJOR NUMBER;

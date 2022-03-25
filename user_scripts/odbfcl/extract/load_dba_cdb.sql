@@ -2,7 +2,7 @@ DECLARE
   VVERS  VARCHAR2(20) := '&P_VERS.';
   VSER   VARCHAR2(10) := '&P_SER.';
   VPATCH NUMBER := &P_PATCH.;
-  VUSER  VARCHAR2(30) := '&v_username.';
+  VUSER  VARCHAR2(30) := '&V_USERNAME.';
 
   PROCEDURE RUN_INSERT (IN_TAB_NAME VARCHAR2,
                         IN_WHERE_CLAUSE_12 VARCHAR2 DEFAULT NULL,
@@ -70,20 +70,20 @@ BEGIN
   DBMS_OUTPUT.ENABLE(NULL);
 
   RUN_INSERT ('TAB_PRIVS',
-  q'[GRANTEE != 'C##HASH' AND NOT(TABLE_NAME LIKE 'C##HASH' AND PRIVILEGE='INHERIT PRIVILEGES')]',
-  q'[GRANTEE != 'HASH']'
+  q'[GRANTEE != '&V_USERNAME.' AND NOT(TABLE_NAME LIKE '&V_USERNAME.' AND PRIVILEGE='INHERIT PRIVILEGES')]',
+  q'[GRANTEE != '&V_USERNAME.']'
   );
   RUN_INSERT ('COL_PRIVS',
-  q'[GRANTEE != 'C##HASH']',
-  q'[GRANTEE != 'HASH']'
+  q'[GRANTEE != '&V_USERNAME.']',
+  q'[GRANTEE != '&V_USERNAME.']'
   );
   RUN_INSERT ('SYS_PRIVS',
-  q'[GRANTEE != 'C##HASH']',
-  q'[GRANTEE != 'HASH']'
+  q'[GRANTEE != '&V_USERNAME.']',
+  q'[GRANTEE != '&V_USERNAME.']'
   );
   RUN_INSERT ('ROLE_PRIVS',
-  q'[GRANTEE != 'C##HASH']',
-  q'[GRANTEE != 'HASH']'
+  q'[GRANTEE != '&V_USERNAME.']',
+  q'[GRANTEE != '&V_USERNAME.']'
   );
 
   RUN_INSERT ('JAVA_POLICY');
@@ -91,8 +91,8 @@ BEGIN
   RUN_INSERT ('JOBS');
 
   RUN_INSERT ('TS_QUOTAS',
-  q'[USERNAME != 'C##HASH']',
-  q'[USERNAME != 'HASH']'
+  q'[USERNAME != '&V_USERNAME.']',
+  q'[USERNAME != '&V_USERNAME.']'
   );
 
   RUN_INSERT ('POLICIES');
@@ -123,20 +123,20 @@ BEGIN
   );
 
   RUN_INSERT ('USERS',
-  q'[USERNAME != 'C##HASH']',
-  q'[USERNAME != 'HASH']'
+  q'[USERNAME != '&V_USERNAME.']',
+  q'[USERNAME != '&V_USERNAME.']'
   );
 
   RUN_INSERT ('ROLES');
 
   RUN_INSERT ('OBJECTS',
-  q'[OWNER != 'C##HASH']',
-  q'[OWNER != 'HASH']'
+  q'[OWNER != '&V_USERNAME.']',
+  q'[OWNER != '&V_USERNAME.']'
   );
 
   RUN_INSERT ('TAB_COLUMNS',
-  q'[OWNER != 'C##HASH']',
-  q'[OWNER != 'HASH']'
+  q'[OWNER != '&V_USERNAME.']',
+  q'[OWNER != '&V_USERNAME.']'
   );
 
   RUN_INSERT ('REGISTRY');
