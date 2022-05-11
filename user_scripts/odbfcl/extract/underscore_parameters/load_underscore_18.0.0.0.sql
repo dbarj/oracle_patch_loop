@@ -14,10 +14,7 @@ INSERT INTO &v_username..T_PARAMETER
   "ISDEPRECATED",
   "ISBASIC",
   "DESCRIPTION",
-  "CON_ID",
-  "ORAVERSION",
-  "ORASERIES",
-  "ORAPATCH"
+  "CON_ID"
 )
 WITH T1 AS (
 SELECT /*+ use_hash(x y) */
@@ -66,8 +63,5 @@ SELECT "NAME",
        "ISDEPRECATED",
        "ISBASIC",
        "DESCRIPTION",
-       "CON_ID",
-       '&P_VERS.' "ORAVERSION",
-       '&P_SER.' "ORASERIES",
-       &P_PATCH. "ORAPATCH"
+       "CON_ID"
 FROM T1;

@@ -8,10 +8,7 @@ INSERT INTO &v_username..T_PARAMETER_VALID_VALUES
   "ORDINAL",
   "VALUE",
   "ISDEFAULT",
-  "CON_ID",
-  "ORAVERSION",
-  "ORASERIES",
-  "ORAPATCH"
+  "CON_ID"
 )
 WITH T1 AS (
 SELECT
@@ -31,10 +28,7 @@ SELECT "NAME",
        "ORDINAL",
        "VALUE",
        "ISDEFAULT",
-       "CON_ID",
-       '&P_VERS.' "ORAVERSION",
-       '&P_SER.' "ORASERIES",
-       &P_PATCH. "ORAPATCH"
+       "CON_ID"
 FROM T1;
 
 -- Add Default Value info into T_PARAMETER

@@ -32,3 +32,19 @@ BEGIN
   END LOOP;
 END;
 /
+
+-- As the datapump dump tables does not contain ORAVERSION / ORASERIES / ORAPATCH fields, keep it as null.
+DECLARE
+  V_CMD CLOB;
+BEGIN
+  FOR I IN (SELECT TABLE_NAME FROM SYS.USER_TABLES WHERE TABLE_NAME LIKE 'T_\%' ESCAPE '\')
+  LOOP
+    V_CMD := 'ALTER TABLE ' || DBMS_ASSERT.SQL_OBJECT_NAME(I.TABLE_NAME) || '
+              MODIFY ( "ORAVERSION" NULL,
+                       "ORASERIES"  NULL,
+                       "ORAPATCH"   NULL )';
+    DBMS_OUTPUT.PUT_LINE(V_CMD || ';');
+    EXECUTE IMMEDIATE V_CMD;
+  END LOOP;
+END;
+/

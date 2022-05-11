@@ -1,7 +1,5 @@
 DECLARE
   VVERS VARCHAR2(20) := '&P_VERS.';
-  VSER  VARCHAR2(10) := '&P_SER.';
-  VPSU  NUMBER := &P_PSU.;
   VUSER VARCHAR2(30) := '&v_username.';
 
   PROCEDURE RUN_INSERT (IN_TAB_NAME VARCHAR2,
@@ -28,11 +26,11 @@ DECLARE
     and    c1.owner = VUSER
     and    c2.owner(+) = 'DVSYS'
     and    c1.column_name = c2.column_name (+)
-    and    c1.column_name not in ('CON_ID', 'SERIES', 'ORAVERSION', 'PSU');
+    and    c1.column_name not in ('CON_ID');
 
-    V_SQL := 'INSERT /*+ APPEND */ INTO ' || VUSER || '.' || OUT_TAB_NAME || '(' || V_TAB_COLS || V_CDB_CLAUSE || ', ORAVERSION, ORASERIES, ORAPATCH) SELECT ';
+    V_SQL := 'INSERT /*+ APPEND */ INTO ' || VUSER || '.' || OUT_TAB_NAME || '(' || V_TAB_COLS || V_CDB_CLAUSE || ') SELECT ';
 
-    V_SQL := V_SQL || V_INS_COLS || V_CDB_CLAUSE || ', ' || SYS.DBMS_ASSERT.enquote_literal(VSER) || ', ' || SYS.DBMS_ASSERT.enquote_literal(VVERS) || ', ' || SYS.DBMS_ASSERT.enquote_literal(VPSU);
+    V_SQL := V_SQL || V_INS_COLS || V_CDB_CLAUSE;
 
     IF VVERS = '11.2.0.4' THEN
       V_SQL := V_SQL || ' FROM DVSYS.' || IN_TAB_NAME;

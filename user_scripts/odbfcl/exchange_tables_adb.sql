@@ -26,6 +26,24 @@ END;
 /
 
 SET SERVEROUT ON
+
+-- BRING PARTITION COLUMNS BACK TO NOT NULL
+DECLARE
+  V_CMD CLOB;
+BEGIN
+  FOR I IN (select table_name from sys.user_tables where table_name like 'T_\%' escape '\')
+  LOOP
+    V_CMD := 'ALTER TABLE ' || DBMS_ASSERT.SQL_OBJECT_NAME(I.TABLE_NAME) || '
+              MODIFY ( "ORAVERSION" NOT NULL,
+                       "ORASERIES"  NOT NULL,
+                       "ORAPATCH"   NOT NULL )';
+    DBMS_OUTPUT.PUT_LINE(V_CMD || ';');
+    EXECUTE IMMEDIATE V_CMD;
+  END LOOP;
+END;
+/
+
+-- EXCHANGE TABLES
 DECLARE
   V_OWNER VARCHAR2(30) := UPPER('&P_OWNER');
   V_ORAVERSION T_PARAMETER.ORAVERSION%TYPE := '&P_VERS.';
@@ -156,6 +174,8 @@ BEGIN
   THEN
     -- Add here any optional code to do after the exchange.
     NULL;
+    &P_OWNER..X_ORAERR.RELOAD_PARTITION_INT (V_ORAVERSION, V_ORASERIES, V_ORAPATCH);
+    &P_OWNER..X_REFRESH_MVS;
   ELSE
     DBMS_OUTPUT.PUT_LINE('---');
     DBMS_OUTPUT.PUT_LINE('--- ATTENTION: ALL TABLES ARE EMPTY');

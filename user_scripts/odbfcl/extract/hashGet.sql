@@ -7,14 +7,15 @@ set serverout on
 
 DEF V_USERNAME = '&1'
 
-DEF P_VERS  = '&2'
-DEF P_SER   = '&3'
-DEF P_PATCH = '&4'
-
 -- Convert to uppercase
 col v_username new_v v_username nopri
 SELECT UPPER('&V_USERNAME.') V_USERNAME FROM DUAL;
 col v_username clear
+
+col p_vers new_v p_vers nopri
+select substr(version,1,instr(version,'.',1,4)-1) p_vers
+from (select version from v$instance);
+col p_vers clear
 
 DECLARE
   V_ORA_VER_MAJOR NUMBER;

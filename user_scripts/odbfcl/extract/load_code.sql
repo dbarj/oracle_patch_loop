@@ -21,17 +21,14 @@ from (
 where col_ind=1;
 
 insert /*+ append */
-  into &v_username..T_HASH (OWNER, NAME, TYPE, ORIGIN_CON_ID, CON_ID, MD5_HASH, SHA1_HASH, ORAVERSION, ORASERIES, ORAPATCH)
+  into &v_username..T_HASH (OWNER, NAME, TYPE, ORIGIN_CON_ID, CON_ID, MD5_HASH, SHA1_HASH)
 select OWNER,
        NAME,
        TYPE,
        ORIGIN_CON_ID,
        CON_ID,
        MD5_HASH,
-       SHA1_HASH,
-       '&P_VERS.' oraversion,
-       '&P_SER.'  oraseries,
-       &P_PATCH.  orapatch
+       SHA1_HASH
 from &v_username..T_HASH_LOAD;
 
 commit;

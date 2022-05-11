@@ -14,17 +14,11 @@ INSERT INTO &v_username..T_XTABCOLS
 (
     "TABLE_NAME",
     "COLUMN_NAME",
-    "COLUMN_TYPE",
-    "ORAVERSION",
-    "ORASERIES",
-    "ORAPATCH"
+    "COLUMN_TYPE"
 )
 select t.kqftanam table_name,
        c.kqfconam column_name,
-       c.kqfcodty column_type,
-       '&P_VERS.',
-       '&P_SER.',
-       &P_PATCH.
+       c.kqfcodty column_type
 from x$kqfta t, x$kqfco c, x$kqfta divider
 where divider.kqftanam = 'X$KSXPTESTTBL'
 and t.indx < divider.indx
@@ -32,10 +26,7 @@ and t.indx = c.kqfcotab
 union all
 select t.kqftanam table_name,
        c.kqfconam column_name,
-       c.kqfcodty column_type,
-       '&P_VERS.',
-       '&P_SER.',
-       &P_PATCH.
+       c.kqfcodty column_type
 from x$kqfta t, x$kqfco c, x$kqfta divider
 where divider.kqftanam = 'X$KSXPTESTTBL'
 and t.indx >= divider.indx

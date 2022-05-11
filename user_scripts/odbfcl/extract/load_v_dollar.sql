@@ -1,7 +1,5 @@
 DECLARE
   VVERS VARCHAR2(20) := '&P_VERS.';
-  VSER VARCHAR2(10) := '&P_SER.';
-  VPATCH NUMBER := &P_PATCH.;
 
   PROCEDURE RUN_INSERT (OUT_TAB_NAME VARCHAR2,
                         IN_TAB_NAME VARCHAR2,
@@ -21,12 +19,11 @@ DECLARE
     and    c2.table_name (+) = IN_TAB_NAME
     and    c1.owner = '&v_username.'
     and    c2.owner(+) = 'SYS'
-    and    c1.column_name = c2.column_name (+)
-    and    c1.column_name not in ('ORASERIES', 'ORAVERSION', 'ORAPATCH');
+    and    c1.column_name = c2.column_name (+);
 
-    V_SQL := 'INSERT /*+ APPEND */ INTO &v_username..' || OUT_TAB_NAME || '(' || V_TAB_COLS || ', ORAVERSION, ORASERIES, ORAPATCH) SELECT ';
+    V_SQL := 'INSERT /*+ APPEND */ INTO &v_username..' || OUT_TAB_NAME || '(' || V_TAB_COLS || ') SELECT ';
 
-    V_SQL := V_SQL || V_INS_COLS || ', ' || SYS.DBMS_ASSERT.enquote_literal(VVERS) || ', ' || SYS.DBMS_ASSERT.enquote_literal(VSER) || ', ' || SYS.DBMS_ASSERT.enquote_literal(VPATCH);
+    V_SQL := V_SQL || V_INS_COLS;
 
     V_SQL := V_SQL || ' FROM ' || IN_TAB_NAME;
 
