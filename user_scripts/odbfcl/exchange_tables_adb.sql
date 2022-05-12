@@ -31,7 +31,7 @@ SET SERVEROUT ON
 DECLARE
   V_CMD CLOB;
 BEGIN
-  FOR I IN (select table_name from sys.user_tables where table_name like 'T_\%' escape '\')
+  FOR I IN (select table_name from sys.user_tables where table_name like 'T\_%' escape '\')
   LOOP
     V_CMD := 'ALTER TABLE ' || DBMS_ASSERT.SQL_OBJECT_NAME(I.TABLE_NAME) || '
               MODIFY ( "ORAVERSION" NOT NULL,

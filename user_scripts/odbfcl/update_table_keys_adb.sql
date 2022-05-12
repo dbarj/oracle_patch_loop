@@ -27,7 +27,7 @@ DECLARE
         WHERE NOT ( ORAVERSION = ''&P_VERSION.'' AND
                     ORASERIES  = ''&P_SERIES.'' AND
                     ORAPATCH   = &P_PATCH.
-                  )
+                  ) OR ORAVERSION IS NULL OR ORASERIES IS NULL OR ORAPATCH IS NULL
       )';
     -- DBMS_OUTPUT.PUT_LINE(V_CMD || ';');
     EXECUTE IMMEDIATE  V_CMD
