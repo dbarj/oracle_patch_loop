@@ -14,7 +14,7 @@
   - include: tasks/local_sqlplus.yml
     vars:
       sql_param : { task_action : "Create sqlldr table" ,
-                    cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                    cred : "{{ oci_adb_connection_tns }}" ,
                     file : "create_sqlldr_chksum_table.sql" ,
                     folder : "user_scripts/odbfcl/adb_load_filechksum" ,
                     params : ""
@@ -37,7 +37,7 @@
 
         cd "{{ chksum_folder }}"
 
-        sqlldr {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} \
+        sqlldr {{ oci_adb_connection_tns }} \
         control="${v_outpref}_load.ctl" \
         errors=0 \
         discardmax=0 \
@@ -55,7 +55,7 @@
   - include: tasks/local_sqlplus.yml
     vars:
       sql_param : { task_action : "Load chksum table" ,
-                    cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                    cred : "{{ oci_adb_connection_tns }}" ,
                     file : "load_chksum_table.sql" ,
                     folder : "user_scripts/odbfcl/adb_load_filechksum" ,
                     params : ""

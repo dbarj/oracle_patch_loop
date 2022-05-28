@@ -14,7 +14,7 @@
   - include: tasks/local_sqlplus.yml
     vars:
       sql_param : { task_action : "Create sqlldr table" ,
-                    cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                    cred : "{{ oci_adb_connection_tns }}" ,
                     file : "create_sqlldr_txtcollection_table.sql" ,
                     folder : "user_scripts/odbfcl/adb_load_txtcollection_files" ,
                     params : ""
@@ -46,7 +46,7 @@
 
         cd "${v_outpref}_unzip"
 
-        sqlldr {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} \
+        sqlldr {{ oci_adb_connection_tns }} \
         control="${v_outpref}_load.ctl" \
         errors=0 \
         discardmax=0 \
@@ -65,7 +65,7 @@
   - include: tasks/local_sqlplus.yml
     vars:
       sql_param : { task_action : "Load txtcollection table" ,
-                    cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                    cred : "{{ oci_adb_connection_tns }}" ,
                     file : "load_txtcollection_table.sql" ,
                     folder : "user_scripts/odbfcl/adb_load_txtcollection_files" ,
                     params : ""

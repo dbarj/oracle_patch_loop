@@ -40,7 +40,7 @@ set verify off
 col code for a10000
 set termout off
 spo run_code.sql
-select '@&P_FOLDER./diff_calculate.sql ''&P_CRED.'' ''' || v1.display_name_prev || ''' ''' || v1.display_name || ''''
+select '@&P_FOLDER./diff_calculate.sql ''&P_CRED.'' ''' || v1.display_name_prev || ''' ''' || v1.display_name || ''' ''' || REPLACE('&P_VERS.','.','') || ''''
 from   mv_versions v1, mv_versions v2
 where  v1.display_name_prev=v2.display_name
 and  ((v1.oraversion='&P_VERS.' and v1.oraseries='&P_SER.' and v1.orapatch=&P_PATCH.)

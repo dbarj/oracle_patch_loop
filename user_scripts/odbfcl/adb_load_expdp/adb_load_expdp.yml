@@ -34,7 +34,7 @@
   - include: tasks/local_sqlplus.yml
     vars:
       sql_param : { task_action : "Copy file from Bucket to Oracle Directory" ,
-                    cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                    cred : "{{ oci_adb_connection_tns }}" ,
                     file : "adb_oradir_copy_file.sql" ,
                     folder : "user_scripts/odbfcl/adb_load_expdp" ,
                     params : "'{{ oci_adb_credential }}' '{{ oci_adb_os_url_prefix }}/{{ dump_file_prefix }}.dmp'"
@@ -44,7 +44,7 @@
   # - name: Import DB Tables
   #   shell: |
   #       impdp \
-  #       userid={{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} \
+  #       userid={{ oci_adb_connection_tns }} \
   #       directory=data_pump_dir \
   #       credential='{{ oci_adb_credential }}' \
   #       remap_schema='{{ dump_user_int }}:{{ oci_adb_transient_user }}' \
@@ -56,7 +56,7 @@
   - name: Import DB Tables
     shell: |
         impdp \
-        userid={{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} \
+        userid={{ oci_adb_connection_tns }} \
         directory=data_pump_dir \
         remap_schema='{{ dump_user_int }}:{{ oci_adb_transient_user }}' \
         parallel=16 \
@@ -71,7 +71,7 @@
   - include: tasks/local_sqlplus.yml
     vars:
       sql_param : { task_action : "Remove file from Oracle Directory" ,
-                    cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                    cred : "{{ oci_adb_connection_tns }}" ,
                     file : "adb_oradir_remove_file.sql" ,
                     folder : "user_scripts/odbfcl/adb_load_expdp" ,
                     params : "'{{ dump_file_prefix }}.dmp'"

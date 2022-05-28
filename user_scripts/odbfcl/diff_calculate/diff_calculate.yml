@@ -1,5 +1,15 @@
 # This must come after MV_VERSIONS is reloaded
 
+- name: Define oci_adb_main_tns
+  set_fact:
+    oci_adb_main_tns: "{{ oci_adb_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}"
+  when: oci_adb_use_wallet == false
+
+- name: Define oci_adb_main_tns
+  set_fact:
+    oci_adb_main_tns: "/@{{ oci_adb_user }}"
+  when: oci_adb_use_wallet == true
+
 - name: "Load {{ oci_adb_transient_user }} diff code and contents"
   shell: |
        set -e
@@ -7,7 +17,7 @@
        rm -rf "${v_folder}"
        mkdir "${v_folder}"
        cd "${v_folder}"
-       sqlplus -L -S {{ oci_adb_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} @{{ shared_folder }}/user_scripts/odbfcl/diff_calculate/diff_main.sql '{{ oci_adb_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}' '@{{ shared_folder }}/user_scripts/odbfcl/diff_calculate' {{ db_version }} {{ patch.base_ru | default('') }}{{ patch.type }} {{ patch.id }}
+       sqlplus -L -S {{ oci_adb_main_tns }} @{{ shared_folder }}/user_scripts/odbfcl/diff_calculate/diff_main.sql '{{ oci_adb_main_tns }}' '@{{ shared_folder }}/user_scripts/odbfcl/diff_calculate' {{ db_version }} {{ patch.base_ru | default('') }}{{ patch.type }} {{ patch.id }}
        #rm -rf "${v_folder}"
   register: sqloutput
 

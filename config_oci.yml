@@ -60,6 +60,7 @@ oci_adb_pass: xxx
 oci_adb_tns:  xxx_tp
 oci_adb_credential: XXX
 oci_adb_os_url_prefix: https://objectstorage.us-ashburn-1.oraclecloud.com/n/xxx/b/xxx/o
+oci_adb_use_wallet: true
 
 ###########################
 ### For loader.yml only ###

@@ -14,7 +14,7 @@
   - include: tasks/local_sqlplus.yml
     vars:
       sql_param : { task_action : "Create sqlldr table" ,
-                    cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                    cred : "{{ oci_adb_connection_tns }}" ,
                     file : "create_sqlldr_symbols_table.sql" ,
                     folder : "user_scripts/odbfcl/adb_load_symbols" ,
                     params : ""
@@ -40,7 +40,7 @@
         # Remove empty lines or sqlldr will fail due to constant.
         sed -i '/^$/d' "${v_file}"
 
-        sqlldr {{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }} \
+        sqlldr {{ oci_adb_connection_tns }} \
         control="${v_outpref}_load.ctl" \
         errors=0 \
         discardmax=0 \
@@ -58,7 +58,7 @@
   - include: tasks/local_sqlplus.yml
     vars:
       sql_param : { task_action : "Load symbols table" ,
-                    cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                    cred : "{{ oci_adb_connection_tns }}" ,
                     file : "load_symbols_table.sql" ,
                     folder : "user_scripts/odbfcl/adb_load_symbols" ,
                     params : ""

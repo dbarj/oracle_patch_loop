@@ -19,3 +19,8 @@
   fail:
     msg: 'patch_location_type must be "folder" or "bucket".'
   when: patch_location_type != "folder" and patch_location_type != "bucket"
+
+- name: Check oci_adb_use_wallet variable
+  fail:
+    msg: 'oci_adb_use_wallet must be "true" or "false".'
+  when: oci_adb_use_wallet != true and oci_adb_use_wallet != false

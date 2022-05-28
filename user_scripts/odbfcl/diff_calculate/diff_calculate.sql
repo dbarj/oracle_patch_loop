@@ -3,6 +3,10 @@ WHENEVER SQLERROR EXIT SQL.SQLCODE
 DEF V_CONN      = '&1'
 DEF V_VERS_FROM = '&2'
 DEF V_VERS_TO   = '&3'
+DEF V_BRELEASE   = '&4'
+
+DEF V_TABLE_NAME_CODES    = 'DIFF_CODES_LOAD_&&V_BRELEASE.'
+DEF V_TABLE_NAME_CONTENTS = 'DIFF_CONTENTS_LOAD_&&V_BRELEASE.'
 
 SET TERMOUT OFF ECHO OFF
 
@@ -77,7 +81,7 @@ PRO ls -1 *_*.txt > "${v_file}"
 PRO
 PRO cat << EOF > "${v_outpref}_load.ctl"
 PRO LOAD
-PRO INTO TABLE DIFF_CODES_LOAD
+PRO INTO TABLE &&V_TABLE_NAME_CODES.
 PRO APPEND
 PRO FIELDS TERMINATED BY ','
 PRO (file_name,
@@ -111,7 +115,7 @@ PRO ls -1 *_*.txt > "${v_file}"
 PRO
 PRO cat << EOF > "${v_outpref}_load.ctl"
 PRO LOAD
-PRO INTO TABLE DIFF_CONTENTS_LOAD
+PRO INTO TABLE &&V_TABLE_NAME_CONTENTS.
 PRO APPEND
 PRO FIELDS TERMINATED BY ','
 PRO (file_name,
@@ -136,11 +140,11 @@ SPO OFF
 ! rm -f *_*.txt
 
 -- For Labels
-BEGIN
-  ADMIN.INITAPEXFROMOUTSIDE(100,2,'XYZ') ;
-  APEX_UTIL.SET_SESSION_STATE('ALLOW_LABELS','Y');
-END;
-/
+-- BEGIN
+--   ADMIN.INITAPEXFROMOUTSIDE(100,2,'XYZ') ;
+--   APEX_UTIL.SET_SESSION_STATE('ALLOW_LABELS','Y');
+-- END;
+-- /
 
 ROLLBACK;
 EXEC L_HASH('&V_VERS_FROM','&V_VERS_TO');
@@ -171,7 +175,7 @@ SPOOL OFF
 @aaa.sql
 
 BEGIN
-   EXECUTE IMMEDIATE 'DROP TABLE DIFF_CODES_LOAD PURGE';
+   EXECUTE IMMEDIATE 'DROP TABLE &&V_TABLE_NAME_CODES. PURGE';
 EXCEPTION
    WHEN OTHERS THEN
       IF SQLCODE != -942 THEN
@@ -180,7 +184,7 @@ EXCEPTION
 END;
 /
 
-CREATE TABLE DIFF_CODES_LOAD
+CREATE TABLE &&V_TABLE_NAME_CODES.
 (
   FILE_NAME   VARCHAR2(100) NOT NULL,
   CONTENTS    CLOB NOT NULL
@@ -194,11 +198,11 @@ insert /*+ append */
 select substr(file_name,1,instr(file_name,'_',1,1)-1),
        substr(file_name,instr(file_name,'_',1,1)+1,instr(file_name,'.',1,1)-instr(file_name,'_',1,1)-1),
        CONTENTS
-from DIFF_CODES_LOAD;
+from &&V_TABLE_NAME_CODES.;
 
 commit;
 
-DROP TABLE DIFF_CODES_LOAD PURGE;
+DROP TABLE &&V_TABLE_NAME_CODES. PURGE;
 
 ! rm -f *_*.txt
 ! rm -f load_codes.sh
@@ -235,7 +239,7 @@ SPOOL OFF
 @aaa.sql
 
 BEGIN
-   EXECUTE IMMEDIATE 'DROP TABLE DIFF_CONTENTS_LOAD PURGE';
+   EXECUTE IMMEDIATE 'DROP TABLE &&V_TABLE_NAME_CONTENTS. PURGE';
 EXCEPTION
    WHEN OTHERS THEN
       IF SQLCODE != -942 THEN
@@ -244,7 +248,7 @@ EXCEPTION
 END;
 /
 
-CREATE TABLE DIFF_CONTENTS_LOAD
+CREATE TABLE &&V_TABLE_NAME_CONTENTS.
 (
   FILE_NAME   VARCHAR2(100) NOT NULL,
   CONTENTS    CLOB NOT NULL
@@ -258,11 +262,11 @@ insert /*+ append */
 select substr(file_name,1,instr(file_name,'_',1,1)-1),
        substr(file_name,instr(file_name,'_',1,1)+1,instr(file_name,'.',1,1)-instr(file_name,'_',1,1)-1),
        CONTENTS
-from DIFF_CONTENTS_LOAD;
+from &&V_TABLE_NAME_CONTENTS.;
 
 commit;
 
-DROP TABLE DIFF_CONTENTS_LOAD PURGE;
+DROP TABLE &&V_TABLE_NAME_CONTENTS. PURGE;
 
 ! rm -f *_*.txt
 ! rm -f load_contents.sh

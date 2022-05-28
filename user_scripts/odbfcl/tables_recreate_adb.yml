@@ -2,10 +2,20 @@
   set_fact:
     oci_adb_transient_user: "{{ oci_adb_user }}_{{ db_version | replace('.', '') }}"
 
+- name: Define oci_adb_connection_tns
+  set_fact:
+    oci_adb_connection_tns: "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}"
+  when: oci_adb_use_wallet == false
+
+- name: Define oci_adb_connection_tns
+  set_fact:
+    oci_adb_connection_tns: "/@{{ oci_adb_transient_user }}"
+  when: oci_adb_use_wallet == true
+
 - include: tasks/local_sqlplus.yml
   vars:
     sql_param : { task_action : "Run tables recreate ADB SQL" ,
-                  cred : "{{ oci_adb_transient_user }}/{{ oci_adb_pass }}@{{ oci_adb_tns }}" ,
+                  cred : "{{ oci_adb_connection_tns }}" ,
                   file : "tables_recreate_adb.sql" ,
                   folder : "user_scripts/odbfcl" ,
                   params : ""
