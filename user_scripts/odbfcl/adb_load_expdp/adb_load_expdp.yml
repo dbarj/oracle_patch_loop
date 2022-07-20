@@ -61,6 +61,7 @@
         remap_schema='{{ dump_user_int }}:{{ oci_adb_transient_user }}' \
         parallel=16 \
         table_exists_action=truncate \
+        content=data_only \
         dumpfile={{ dump_file_prefix }}.dmp > "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.log" 2>&1
     register: shell_output
 

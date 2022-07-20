@@ -18,7 +18,7 @@
        mkdir "${v_folder}"
        cd "${v_folder}"
        sqlplus -L -S {{ oci_adb_main_tns }} @{{ shared_folder }}/user_scripts/odbfcl/diff_calculate/diff_main.sql '{{ oci_adb_main_tns }}' '@{{ shared_folder }}/user_scripts/odbfcl/diff_calculate' {{ db_version }} {{ patch.base_ru | default('') }}{{ patch.type }} {{ patch.id }}
-       #rm -rf "${v_folder}"
+       rm -rf "${v_folder}"
   register: sqloutput
 
 #- include: tasks/local_sqlplus.yml

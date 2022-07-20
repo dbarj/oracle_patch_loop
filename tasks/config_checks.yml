@@ -1,8 +1,17 @@
-- name: Variables not provided
+- name: Variable downloader_tool not provided
   fail:
-    msg: "Variables downloader_tool / downloader_user / downloader_pass must be defined when download_patch is true."
-  when: ( downloader_tool is undefined or downloader_user is undefined
-   or (downloader_tool|length == 0) or (downloader_user|length == 0)) and download_patch == true
+    msg: "Variable downloader_tool must be defined when download_patch is true."
+  when: download_patch == true and ( downloader_tool is undefined or (downloader_tool|length == 0))
+
+- name: Variable downloader_user not provided
+  fail:
+    msg: "Variable downloader_user must be defined when download_patch is true."
+  when: download_patch == true and ( downloader_user is undefined or (downloader_user|length == 0))
+
+- name: Variable downloader_pass not provided
+  fail:
+    msg: "Variable downloader_pass must be defined when download_patch is true."
+  when: download_patch == true and ( downloader_pass is undefined or (downloader_pass|length == 0))
 
 - name: "Check if {{ downloader_tool }} exists"
   stat:

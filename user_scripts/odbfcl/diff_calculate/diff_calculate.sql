@@ -193,6 +193,8 @@ COMPRESS NOLOGGING;
 
 ! sh load_codes.sh
 
+SET TERMOUT ON ECHO ON
+
 insert /*+ append */
   into DIFF_CODES (MD5_HASH_FROM, MD5_HASH_TO, DIFF_CODE)
 select substr(file_name,1,instr(file_name,'_',1,1)-1),
@@ -203,6 +205,8 @@ from &&V_TABLE_NAME_CODES.;
 commit;
 
 DROP TABLE &&V_TABLE_NAME_CODES. PURGE;
+
+SET TERMOUT OFF ECHO OFF
 
 ! rm -f *_*.txt
 ! rm -f load_codes.sh
@@ -257,6 +261,8 @@ COMPRESS NOLOGGING;
 
 ! sh load_contents.sh
 
+SET TERMOUT ON ECHO ON
+
 insert /*+ append */
   into DIFF_CONTENTS (MD5_HASH_FROM, MD5_HASH_TO, DIFF_CODE)
 select substr(file_name,1,instr(file_name,'_',1,1)-1),
@@ -267,6 +273,8 @@ from &&V_TABLE_NAME_CONTENTS.;
 commit;
 
 DROP TABLE &&V_TABLE_NAME_CONTENTS. PURGE;
+
+SET TERMOUT OFF ECHO OFF
 
 ! rm -f *_*.txt
 ! rm -f load_contents.sh

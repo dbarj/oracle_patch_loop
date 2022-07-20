@@ -1,32 +1,25 @@
-# Skip processing only if param_patch and param_type filters are defined
-- block:
+- name: "Processing {{ db_version }} {{ patch.type }} {{ patch.id }}"
+  debug: msg="Processing {{ db_version }} {{ patch.type }} {{ patch.id }}"
 
-  - name: "Processing {{ db_version }} {{ patch.type }} {{ patch.id }}"
-    debug: msg="Processing {{ db_version }} {{ patch.type }} {{ patch.id }}"
+# User custom pre-scripts
+- include: run_script.yml
+  loop: "{{ user_impdp_pre | flatten(levels=1) }}"
+  loop_control:
+    loop_var: script_param
+  when: user_impdp_pre is defined
 
-  # User custom pre-scripts
-  - include: run_script.yml
-    loop: "{{ user_impdp_pre | flatten(levels=1) }}"
-    loop_control:
-      loop_var: script_param
-    when: user_impdp_pre is defined
+# The impdp loader are the same steps executed after the expdp
+- include: run_script.yml
+  loop: "{{ user_expdp_post | flatten(levels=1) }}"
+  loop_control:
+    loop_var: script_param
+  when: user_expdp_post is defined
 
-  # The impdp loader are the same steps executed after the expdp
-  - include: run_script.yml
-    loop: "{{ user_expdp_post | flatten(levels=1) }}"
-    loop_control:
-      loop_var: script_param
-    when: user_expdp_post is defined
-
-  # User custom post-scripts
-  - include: run_script.yml
-    loop: "{{ user_impdp_post | flatten(levels=1) }}"
-    loop_control:
-      loop_var: script_param
-    when: user_impdp_post is defined
-
-  when:
-    - param_type is undefined or param_type == patch.type
-    - param_patch == -1 or (param_patch | int) == (patch.id | int)
+# User custom post-scripts
+- include: run_script.yml
+  loop: "{{ user_impdp_post | flatten(levels=1) }}"
+  loop_control:
+    loop_var: script_param
+  when: user_impdp_post is defined
 
 # Skip all is true when dump file is already generated and skip_dump_exists is true at config.

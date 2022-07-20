@@ -18,44 +18,19 @@ function exitError ()
 
 v_pattern="$1"
 
-v_example='19.0.0.0_LRU14_20220101'
+v_example='19.0.0.0_RU14_20220101'
 
 [ -z "$v_pattern" -o "$#" -ne 1 ] && exitError "Usage: $0 <pattern>
 
-First parameter is the file name pattern and cannot be null.
-
-The pattern is composed by 3 parts, divided by \"_\":
-1st - Version, in the X.X.X.X format.
-2nd - Type. Can be any string.
-3rd - ID. Must be a number.
+First parameter is the output file name and cannot be null.
 
 Eg: $0 ${v_example}
 
 The output is a zip file.
 "
 
-v_pattern_cnt=`awk -F"_" '{print NF-1}' <<< "${v_pattern}"`
-[ ${v_pattern_cnt} -ne 2 ] && exitError "Pattern \"${v_output}\" must have 2 \"_\" on it. Eg: ${v_example}"
-
 v_pattern_cnt=`awk -F" " '{print NF-1}' <<< "${v_pattern}"`
 [ ${v_pattern_cnt} -ne 0 ] && exitError "Pattern \"${v_output}\" must not have any spaces. Eg: ${v_example}"
-
-v_patch_version=`cut -d '_' -f 1 <<< "${v_pattern}"`
-v_patch_type=`cut -d '_' -f 2 <<< "${v_pattern}"`
-v_patch_id=`cut -d '_' -f 3 <<< "${v_pattern}"`
-
-# v_pattern_cnt=`awk -F"." '{print NF-1}' <<< "${v_patch_version}"`
-# [ ${v_pattern_cnt} -ne 3 ] && exitError "Version \"${v_patch_version}\" must be in \"X.X.X.X\" format. Eg: ${v_example}"
-
-re='^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'
-if ! [[ $v_patch_version =~ $re ]] ; then
-   exitError "Version \"${v_patch_version}\" must be in \"X.X.X.X\" format. Eg: ${v_example}"
-fi
-
-re='^[0-9]+$'
-if ! [[ $v_patch_id =~ $re ]] ; then
-   exitError "\"$v_patch_id\" must be a number. Eg: ${v_example}"
-fi
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
 
