@@ -3,7 +3,11 @@ main.retry
 *.txt
 *.log
 /user_scripts/report/*
-user_scripts/odbfcl/sh_extractor/exporter.zip
-loader_labels.yml
-tasks/main_loader_labels.yml
-loader_labels.sh
+user_scripts/odbfcl/sh_extractor/*.zip
+config_oci_stg.yml
+config_oci_prd.yml
+config_oci_leg.yml
+config_oci_dev.yml
+tasks/main_loader_uploads.yml
+tasks/main_loader_uploads.yml.old
+loader_uploads.yml
