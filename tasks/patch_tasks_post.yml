@@ -21,6 +21,11 @@
       state: absent
       path: "{{ shared_folder }}/{{ dump_file_prefix }}.log"
 
+  # This task will mark file as loaded
+  - include: run_script.yml
+    vars:
+      script_param: { file : "mark_dump_file_loaded.yml" , folder : "user_scripts/odbfcl/adb_load_expdp" , type : "yml", task_action : "Mark dpfile as loaded." }
+
   when: not only_deploy_patch
 
 - name : Remove unzipped patch folder

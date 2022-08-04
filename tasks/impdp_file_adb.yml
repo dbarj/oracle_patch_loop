@@ -1,25 +1,33 @@
 - name: "Processing {{ db_version }} {{ patch.type }} {{ patch.id }}"
   debug: msg="Processing {{ db_version }} {{ patch.type }} {{ patch.id }}"
 
-# User custom pre-scripts
+# This task will populate loaded_stat_result
 - include: run_script.yml
-  loop: "{{ user_impdp_pre | flatten(levels=1) }}"
-  loop_control:
-    loop_var: script_param
-  when: user_impdp_pre is defined
+  vars:
+    script_param: { file : "check_dump_file_loaded.yml" , folder : "user_scripts/odbfcl/adb_load_expdp" , type : "yml", task_action : "Check if file was already loaded" }
 
-# The impdp loader are the same steps executed after the expdp
-- include: run_script.yml
-  loop: "{{ user_expdp_post | flatten(levels=1) }}"
-  loop_control:
-    loop_var: script_param
-  when: user_expdp_post is defined
+- block:
 
-# User custom post-scripts
-- include: run_script.yml
-  loop: "{{ user_impdp_post | flatten(levels=1) }}"
-  loop_control:
-    loop_var: script_param
-  when: user_impdp_post is defined
+  # User custom pre-scripts
+  - include: run_script.yml
+    loop: "{{ user_impdp_pre | flatten(levels=1) }}"
+    loop_control:
+      loop_var: script_param
+    when: user_impdp_pre is defined
 
-# Skip all is true when dump file is already generated and skip_dump_exists is true at config.
+  # The impdp loader are the same steps executed after the expdp
+  - include: run_script.yml
+    loop: "{{ user_expdp_post | flatten(levels=1) }}"
+    loop_control:
+      loop_var: script_param
+    when: user_expdp_post is defined
+
+  # User custom post-scripts
+  - include: run_script.yml
+    loop: "{{ user_impdp_post | flatten(levels=1) }}"
+    loop_control:
+      loop_var: script_param
+    when: user_impdp_post is defined
+
+  when: not loaded_stat_result.stat.exists
+  # Skip all is true when dump file is already generated and skip_dump_exists is true at config.
