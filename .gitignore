@@ -4,3 +4,6 @@ main.retry
 *.log
 /user_scripts/report/*
 user_scripts/odbfcl/sh_extractor/exporter.zip
+loader_labels.yml
+tasks/main_loader_labels.yml
+loader_labels.sh

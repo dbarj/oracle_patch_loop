@@ -15,9 +15,9 @@
     include_role:
       name: oci_object_storage_object
     vars:
-      oci_upload_file: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
-      oci_object_name: "{{ oci_upload_file | basename }}"
       oci_upload_bucket: "{{ oci_adb_bucket }}"
+      oci_object_name: "{{ oci_upload_file | basename }}"
+      oci_upload_file: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
       object_action: "create"
 
   - name : Define source schema
@@ -40,6 +40,14 @@
                     params : "'{{ oci_adb_credential }}' '{{ oci_adb_os_url_prefix }}/{{ dump_file_prefix }}.dmp'"
                   }
 
+  - name: Remove expdp from OCI Bucket
+    include_role:
+      name: oci_object_storage_object
+    vars:
+      oci_upload_bucket: "{{ oci_adb_bucket }}"
+      oci_object_name: "{{ dump_file_prefix }}.dmp"
+      object_action: "remove"
+
   # This is done because expdp/impdp still can't handle Credential using oracle native authentication (instance principal, tenancy id, etc), only swift.
   # - name: Import DB Tables
   #   shell: |
@@ -58,33 +66,52 @@
         impdp \
         userid={{ oci_adb_connection_tns }} \
         directory=data_pump_dir \
-        remap_schema='{{ dump_user_int }}:{{ oci_adb_transient_user }}' \
+        remap_schema='{{ dump_user }}:{{ oci_adb_transient_user }},c##{{ dump_user }}:{{ oci_adb_transient_user }}' \
         parallel=16 \
         table_exists_action=truncate \
         content=data_only \
+        logfile={{ dump_file_prefix }}.log \
         dumpfile={{ dump_file_prefix }}.dmp > "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.log" 2>&1
     register: shell_output
+    ignore_errors: yes
 
-  - name: Import Output
-    debug: msg="{{ shell_output.stderr_lines }}"
-
-  # This is done because expdp/impdp still can't handle Credential using oracle native authentication (instance principal, tenancy id, etc), only swift.
   - include: tasks/local_sqlplus.yml
     vars:
-      sql_param : { task_action : "Remove file from Oracle Directory" ,
+      sql_param : { task_action : "Remove dumpfile from Oracle Directory" ,
                     cred : "{{ oci_adb_connection_tns }}" ,
                     file : "adb_oradir_remove_file.sql" ,
                     folder : "user_scripts/odbfcl/adb_load_expdp" ,
                     params : "'{{ dump_file_prefix }}.dmp'"
                   }
-
-  - name: Remove expdp from OCI Bucket
-    include_role:
-      name: oci_object_storage_object
+  
+  - include: tasks/local_sqlplus.yml
     vars:
-      oci_upload_file: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
-      oci_object_name: "{{ oci_upload_file | basename }}"
-      oci_upload_bucket: "{{ oci_adb_bucket }}"
-      object_action: "remove"
+      sql_param : { task_action : "Remove logfile from Oracle Directory" ,
+                    cred : "{{ oci_adb_connection_tns }}" ,
+                    file : "adb_oradir_remove_file.sql" ,
+                    folder : "user_scripts/odbfcl/adb_load_expdp" ,
+                    params : "'{{ dump_file_prefix }}.log'"
+                  }
+
+  - name: Import error output
+    debug: msg="{{ shell_output.stderr_lines }}"
+    when: shell_output.rc != 0
+
+  - name: impdp error
+    fail:
+      msg: "Check {{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.log."
+    when: shell_output.rc != 0 and shell_output.rc != 5
+
+  - name: Check impdp error
+    shell: |
+        set -e +o pipefail
+        v_tot=$(cat "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.log" | grep 'ORA-' | grep -v 'ORA-39146' | wc -l)
+        if [ $v_tot -ne 0 ]
+        then
+          exit 1
+        else
+          exit 0
+        fi
+    when: shell_output.rc == 5
 
   when: dump_stat_result.stat.exists

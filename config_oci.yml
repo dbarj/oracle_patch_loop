@@ -5,6 +5,7 @@ patch_location_type : bucket
 patch_location_path : oradiff_patches
 
 # Folder in RW mode on local compute and shared with the VM. It is used to move the patches to the VMs and also to copy back the expdp output.
+stage_folder : "/u01/patch_automation/stage"
 shared_folder : "/u02"
 
 # Path of the folder mounted within the VM. This is the path of the "shared_folder" in the VM.
@@ -18,7 +19,7 @@ output_folder : "/u01/patch_automation/output"
 
 # Download utility info, if you are using one.
 # wget https://github.com/MarisElsins/getMOSPatch/raw/master/getMOSPatch.jar
-downloader_tool : "/u01/patch_automation/patches/getMOSPatch.jar"
+downloader_tool : "/u01/patch_automation/getMOSPatch.jar"
 downloader_user : ""
 downloader_pass : ""
 # Files in "user_scripts" folder that will run before and after the final expdp. script_types can be "shell", "sql" or "yml".

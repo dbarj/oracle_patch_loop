@@ -1,25 +1,26 @@
 set -eo pipefail
 
-mkdir exporter
-cp -a ../extract/ exporter/
-cp -a ../createUser.sql exporter/
-cp -a ../tables_recreate.sql exporter/
-cp -a ../tables_create.sql exporter/
-cp -a ../../externalDir.sql exporter/
-cp -a *.sh *.sql exporter/
-# mv exporter/dumpCreate_forzip.sh exporter/dumpCreate.sh
-sed '/^cd /d' exporter/dumpCreate.sh > exporter/dumpCreate.sh.tmp
-mv exporter/dumpCreate.sh.tmp exporter/dumpCreate.sh
-find exporter/ -name "*.yml" -delete
-find exporter/ -name ".DS_Store" -delete
-rm -f exporter/build_zip.sh
-rm -f exporter.zip
+v_folder_name="oradiff_exporter"
+mkdir ${v_folder_name}
+cp -a ../extract/ ${v_folder_name}
+cp -a ../createUser.sql ${v_folder_name}
+cp -a ../tables_recreate.sql ${v_folder_name}
+cp -a ../tables_create.sql ${v_folder_name}
+cp -a ../../externalDir.sql ${v_folder_name}
+cp -a *.sh *.sql *.txt ${v_folder_name}
+# mv ${v_folder_name}/dumpCreate_forzip.sh ${v_folder_name}/dumpCreate.sh
+sed '/^cd /d' ${v_folder_name}/dumpCreate.sh > ${v_folder_name}/dumpCreate.sh.tmp
+mv ${v_folder_name}/dumpCreate.sh.tmp ${v_folder_name}/dumpCreate.sh
+find ${v_folder_name} -name "*.yml" -delete
+find ${v_folder_name} -name ".DS_Store" -delete
+rm -f ${v_folder_name}/build_zip.sh
+rm -f ${v_folder_name}.zip
 
 # Put all files at the same stamp to create a deterministic zip.
-find exporter/ -exec touch -t 202201010000 {} +
+find ${v_folder_name} -exec touch -t 202201010000 {} +
 
-zip -rmXD exporter.zip exporter/
-rmdir exporter/*
-rmdir exporter/
+zip -rmXD ${v_folder_name}.zip ${v_folder_name}
+rmdir ${v_folder_name}/*
+rmdir ${v_folder_name}
 
 exit 0

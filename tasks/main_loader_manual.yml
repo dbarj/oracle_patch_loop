@@ -10,10 +10,11 @@
 
 - name : Define db_version
   set_fact:
-    db_version:    "{{ input_version }}"
-    param_type:    "{{ input_series }}" 
-    param_patch:   "{{ input_patch }}"
-    output_folder: "{{ stage_folder }}/temp_load"
+    db_version:      "{{ input_version }}"
+    param_type:      "{{ input_series }}" 
+    param_patch:     "{{ input_patch }}"
+    output_folder:   "{{ stage_folder }}/temp_load"
+    input_file_name: "{{ input_file | basename }}"
 
 - name: Delete content & directory
   file:
@@ -30,7 +31,8 @@
     name: oci_object_storage_object_facts
   vars:
     object_action: "list"
-    oci_list_bucket: "{{ oci_manual_bucket }}"
+    oci_list_bucket: "{{ input_bucket }}"
+  when: not (input_bucket is undefined or (input_bucket|length == 0))
 
 # Not working for whatever reason...
 
@@ -38,24 +40,30 @@
 #   include_role:
 #     name: oci_object_storage_object_facts
 #   vars:
-#     oci_download_file: "{{ input_file }}"
-#     oci_dest_file: "{{ output_folder }}/{{ input_file }}"
+#     oci_download_file: "{{ input_file_name }}"
+#     oci_download_bucket: "{{ input_bucket }}"
+#     oci_dest_file: "{{ output_folder }}/{{ input_file_name }}"
 #     object_action: "download"
 
 - name: Download file from OCI Bucket
   shell: |
        export LC_ALL=C.UTF-8
        export LANG=C.UTF-8
-       oci os object get --bucket-name {{ oci_manual_bucket }} --name {{ input_file }} --file {{ output_folder }}/{{ input_file }}
+       oci os object get --bucket-name {{ input_bucket }} --name {{ input_file }} --file {{ output_folder }}/{{ input_file_name }}
   register: shoutput
+  when: not (input_bucket is undefined or (input_bucket|length == 0))
 
-- name: "Check if {{ output_folder }}/{{ input_file }} exists"
+- name: Move file to folder
+  command: mv "{{ input_file }}" "{{ output_folder }}/{{ input_file_name }}"
+  when: input_bucket is undefined or (input_bucket|length == 0)
+
+- name: "Check if {{ output_folder }}/{{ input_file_name }} exists"
   stat:
-    path: "{{ output_folder }}/{{ input_file }}"
+    path: "{{ output_folder }}/{{ input_file_name }}"
   register: ifile_stat_result
 
 - fail:
-    msg: "Could not find {{ output_folder }}/{{ input_file }} file."
+    msg: "Could not find {{ output_folder }}/{{ input_file_name }} file."
   when: ifile_stat_result.stat.exists == false
 
 - name: Creates directory
@@ -70,9 +78,9 @@
     - "{{ output_folder }}/symbols"
     - "{{ output_folder }}/expdp"
 
-- name: "Extract {{ output_folder }}/{{ input_file }} into {{ output_folder }}"
+- name: "Extract {{ output_folder }}/{{ input_file_name }} into {{ output_folder }}"
   unarchive:
-    src: "{{ output_folder }}/{{ input_file }}"
+    src: "{{ output_folder }}/{{ input_file_name }}"
     dest: "{{ output_folder }}"
 
 #####################################################################
