@@ -58,7 +58,7 @@
   #       remap_schema='{{ dump_user_int }}:{{ oci_adb_transient_user }}' \
   #       parallel=16 \
   #       table_exists_action=truncate \
-  #       dumpfile={{ oci_adb_os_url_prefix }}/{{ dump_file_prefix }}.dmp > "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.log" 2>&1
+  #       dumpfile={{ oci_adb_os_url_prefix }}/{{ dump_file_prefix }}.dmp > "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.{{ oci_adb_tns }}.log" 2>&1
   #   register: shell_output
 
   - name: Import DB Tables
@@ -71,7 +71,7 @@
         table_exists_action=truncate \
         content=data_only \
         logfile={{ dump_file_prefix }}.log \
-        dumpfile={{ dump_file_prefix }}.dmp > "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.log" 2>&1
+        dumpfile={{ dump_file_prefix }}.dmp > "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.{{ oci_adb_tns }}.log" 2>&1
     register: shell_output
     ignore_errors: yes
 
@@ -99,13 +99,13 @@
 
   - name: impdp error
     fail:
-      msg: "Check {{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.log."
+      msg: "Check {{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.{{ oci_adb_tns }}.log."
     when: shell_output.rc != 0 and shell_output.rc != 5
 
   - name: Check impdp error
     shell: |
         set -e +o pipefail
-        v_tot=$(cat "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.log" | grep 'ORA-' | grep -v 'ORA-39146' | wc -l)
+        v_tot=$(cat "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.{{ oci_adb_tns }}.log" | grep 'ORA-' | grep -v 'ORA-39146' | wc -l)
         if [ $v_tot -ne 0 ]
         then
           exit 1

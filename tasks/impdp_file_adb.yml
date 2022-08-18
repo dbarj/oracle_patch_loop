@@ -27,7 +27,8 @@
     loop: "{{ user_impdp_post | flatten(levels=1) }}"
     loop_control:
       loop_var: script_param
-    when: user_impdp_post is defined
+    when: user_impdp_post is defined and dump_stat_result.stat.exists
+  # Won't execute user_impdp_post when no dumpfile to avoid marking file as processed.
 
   when: not loaded_stat_result.stat.exists
   # Skip all is true when dump file is already generated and skip_dump_exists is true at config.
