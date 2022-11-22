@@ -50,7 +50,6 @@
        export LC_ALL=C.UTF-8
        export LANG=C.UTF-8
        oci os object get --bucket-name {{ input_bucket }} --name {{ input_file }} --file {{ output_folder }}/{{ input_file_name }}
-  register: shoutput
   when: not (input_bucket is undefined or (input_bucket|length == 0))
 
 - name: Move file to folder

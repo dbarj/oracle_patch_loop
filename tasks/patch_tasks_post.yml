@@ -32,19 +32,20 @@
   file:
     state: absent
     path: "{{ unzip_patch_folder }}"
-  when: patch.patch_number != 0
+  when: perform_patch_actions
 
+# Here I don't check for perform_patch_actions as in some cases (like for LVM image usage) the patch will still be downloaded.
 - name: Remove file downloaded from OCI Bucket
   file:
     state: absent
     path: "{{ db_patch }}"
-  when: patch_location_type == "bucket" and db_patch is defined
+  when: patch_location_type == "bucket" and db_patch != ""
 
 - name : Remove PatchSearch.xml
   file:
     state: absent
     path: "{{ shared_folder }}/PatchSearch.xml"
-  when: patch.patch_number != 0
+  when: perform_patch_actions
 
 - name : Define latest processed
   set_fact:

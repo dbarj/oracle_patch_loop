@@ -32,7 +32,7 @@
         INTO TABLE T_SYMBOLS_LOAD
         APPEND
         FIELDS TERMINATED BY '|'
-        (source_file constant "${v_file}",file_name,symbol_type,symbol_name)
+        (source_file constant "${v_file}",file_name,symbol_type,symbol_name char(4000))
         EOF
 
         cd "{{ symbols_folder }}"

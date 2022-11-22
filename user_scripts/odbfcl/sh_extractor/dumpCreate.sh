@@ -57,7 +57,7 @@ EOF
 
 cd odbfcl/extract/
 $ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
-@hashGet.sql "${v_dump_user}"
+@hashGet.sql "${v_dump_user}" "${v_dump_dir_name}"
 EOF
 
 $ORACLE_HOME/bin/expdp \

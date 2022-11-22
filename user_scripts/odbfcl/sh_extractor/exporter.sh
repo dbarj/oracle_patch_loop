@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script to collect all info needed for ORAdiff
 # Created by Rodrigo Jorge <http://www.dbarj.com.br/>
-# v1.0.0.3
+# v1.0.0.4
 
 set -eo pipefail
 

@@ -1,0 +1,49 @@
+- name : Cascade dependencies not supported 
+  fail:
+    msg: "Cascade dependencies not supported."
+  when: bkp_patch is defined and bkp_patch != None
+
+- name : Backup Variables
+  set_fact:
+    bkp_patch: "{{ patch }}"
+    bkp_skip_dump_exists: "{{ skip_dump_exists }}"
+    bkp_only_deploy_patch: "{{ only_deploy_patch }}"
+    bkp_dump_file_prefix: "{{ dump_file_prefix }}"
+    bkp_skip_all: "{{ skip_all }}"
+    bkp_fix_datapatch_retries: "{{ fix_datapatch_retries }}"
+    bkp_expdp_version: "{{ expdp_version }}"
+    bkp_db_patch: "{{ db_patch }}"
+    bkp_unzip_patch_folder: "{{ unzip_patch_folder }}"
+    bkp_perform_patch_actions: "{{ perform_patch_actions }}"
+
+- name : Replace settings
+  set_fact:
+    skip_dump_exists: false
+    only_deploy_patch: true
+
+# Execute dependency
+- include: "{{ patch_file }}"
+  loop: "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
+  loop_control:
+    loop_var: patch
+    label: "{{ patch.id }}"
+  when:
+    - patch.type == bkp_patch.dep_type
+    - patch.id == bkp_patch.dep_id
+
+- name : Restore Variables
+  set_fact:
+    skip_dump_exists: "{{ bkp_skip_dump_exists }}"
+    only_deploy_patch: "{{ bkp_only_deploy_patch }}"
+    patch: "{{ bkp_patch }}"
+    dump_file_prefix: "{{ bkp_dump_file_prefix }}"
+    skip_all: "{{ bkp_skip_all }}"
+    fix_datapatch_retries: "{{ bkp_fix_datapatch_retries }}"
+    expdp_version: "{{ bkp_expdp_version }}"
+    db_patch: "{{ bkp_db_patch }}"
+    unzip_patch_folder: "{{ bkp_unzip_patch_folder }}"
+    perform_patch_actions: "{{ bkp_perform_patch_actions }}"
+
+- name : Clean bkp_patch
+  set_fact:
+    bkp_patch:

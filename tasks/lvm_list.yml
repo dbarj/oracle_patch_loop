@@ -1,0 +1,9 @@
+## This code will list all the logical volumes on the VM.
+
+- name: "Get LVM list."
+  shell: |
+       lvs --noheadings -o lv_name
+  become: true
+  become_user: root
+  delegate_to: "{{ vm_ip_address }}"
+  register: lvs_output

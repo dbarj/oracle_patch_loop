@@ -70,7 +70,7 @@
 
 ###############################
 
-# Execute for every PSU / BP / OJVM / RU / RUR
+# Execute for every PSU / BP / OJVM / RU / RUR / MRP
 - include: "impdp_file_adb.yml"
   loop: "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
   loop_control:

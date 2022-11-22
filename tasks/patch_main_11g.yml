@@ -34,11 +34,10 @@
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
         ORACLE_SID: "{{ mysid }}"
-      register: shell_output
       become: true
       become_user: oracle
       delegate_to: "{{ vm_ip_address }}"
-      when: dbvault_enabled == true
+      when: dbvault_enabled
     
     # Start the database
     - include: run_sql.yml
@@ -81,7 +80,7 @@
     - include: run_sql.yml
       vars:
         sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database to re-enable DB Vault" }
-      when: dbvault_enabled == true
+      when: dbvault_enabled
 
     - name: Enable Database Vault
       shell: |
@@ -89,19 +88,18 @@
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
         ORACLE_SID: "{{ mysid }}"
-      register: shell_output
       become: true
       become_user: oracle
       delegate_to: "{{ vm_ip_address }}"
-      when: dbvault_enabled == true
+      when: dbvault_enabled
 
-    when: patch.patch_number != 0
+    when: perform_patch_actions
 
   # This start is only required if database was never stopped.
   - include: run_sql.yml
     vars:
       sql_param : { file : "startup.sql" , folder : "patch_sql" , task_action : "Start Database" }
-    when: patch.patch_number == 0 or (patch.patch_number != 0 and dbvault_enabled == true)
+    when: not perform_patch_actions or (perform_patch_actions and dbvault_enabled)
 
   # When only_deploy_patch is false (most common case)
   - block:
@@ -119,7 +117,6 @@
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
         ORACLE_SID: "{{ mysid }}"
-      register: shell_output
       become: true
       become_user: oracle
       delegate_to: "{{ vm_ip_address }}"

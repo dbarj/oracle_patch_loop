@@ -33,10 +33,10 @@
   tasks:
 
   - include_vars: config_vbox.yml
-    when: oci_mode == false
+    when: not oci_mode
 
   - include_vars: config_oci.yml
-    when: oci_mode == true
+    when: oci_mode
 
   - import_tasks: tasks/config_checks.yml
   - import_tasks: tasks/setup_env.yml
@@ -61,3 +61,6 @@
 
   - include: tasks/main_RU_RUR.yml db_version="21.0.0.0"
     when: param_version is undefined or param_version == "21.0.0.0"
+
+  - include: tasks/main_RU_RUR.yml db_version="23.0.0.0"
+    when: param_version is undefined or param_version == "23.0.0.0"

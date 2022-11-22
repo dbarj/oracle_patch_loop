@@ -21,7 +21,6 @@
         find -type f -exec sha256sum "{}" + > {{ VM_folder }}/{{ sha256_file }}
     args:
       chdir: "{{ dbhome_locl }}"
-    register: sqloutput
     become: true
     become_user: root
     delegate_to: "{{ vm_ip_address }}"
@@ -47,7 +46,6 @@
         done
     args:
       chdir: "{{ dbhome_locl }}"
-    register: sqloutput
     become: true
     become_user: root
     delegate_to: "{{ vm_ip_address }}"

@@ -5,8 +5,12 @@
     object_name: "{{ oci_object_name }}"
     src: "{{ oci_upload_file }}"
     state: present
-  register: oci_action
+  register: tmp_oci_action_result
   when: object_action == "create"
+
+# Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+- set_fact: oci_action="{{tmp_oci_action_result}}"
+  when: tmp_oci_action_result is not skipped
 
 - name: Remove file from object storage
   oci_object_storage_object:
@@ -14,5 +18,9 @@
     bucket_name: "{{ oci_upload_bucket }}"
     object_name: "{{ oci_object_name }}"
     state: absent
-  register: oci_action
+  register: tmp_oci_action_result
   when: object_action == "remove"
+
+# Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+- set_fact: oci_action="{{tmp_oci_action_result}}"
+  when: tmp_oci_action_result is not skipped

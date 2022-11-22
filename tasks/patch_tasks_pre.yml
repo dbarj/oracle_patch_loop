@@ -8,79 +8,156 @@
     fix_datapatch_retries: 0
     expdp_version: ""
     patch_file_path: ""
+    db_patch: ""
+    perform_patch_actions: true # If opatch / datapatch / patch download / etc are needed or not.
 
-# Ignore dumpfile checks when only_deploy_patch is true
+# Immediatly stop when skip_all becomes true
 - block:
 
-  - name: "Check if {{ output_folder }}/expdp/{{ dump_file_prefix }}.dmp exists"
-    stat:
-      path: "{{ output_folder }}/expdp/{{ dump_file_prefix }}.dmp"
-    register: dump_stat_result
-
-  # Will skip all the rest if the dump file exists
-  - name : Define skip_all
+  # Skip patch actions
+  - name: Base Release will skip patch actions
     set_fact:
-      skip_all: "{{ dump_stat_result.stat.exists }}"
-    when: skip_dump_exists
+      perform_patch_actions: false
+    when: patch.patch_number == 0
 
-  - name : Remove dump file if exists
-    file:
-      state: absent
-      path: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
-    when: not skip_all
-
-  when: not only_deploy_patch
-
-# Check if patch will need to reexecute datapatch
-- name : Check datapatch reexecution
-  set_fact:
-    fix_datapatch_retries: "{{ err_list.retries }}"
-  loop: "{{ list_retry_datapatch | flatten(levels=1) }}"
-  loop_control:
-    loop_var: err_list
-  when:
-    - err_list.version == db_version
-    - err_list.type == patch.type
-    - err_list.id == patch.id
-
-# When not processing base release. i.e patch.patch_number != 0
-- block:
-
-  # Place patch file on the shared folder
-  - name: Finding Patch File
-    include: find_patch.yml
-
-  # Call downloader when download_patch is defined and could not find the patch
+  # Ignore dumpfile checks when only_deploy_patch is true
   - block:
 
-    - name: Call downloader
-      include: download_patch.yml
+    - name: "Check if {{ output_folder }}/expdp/{{ dump_file_prefix }}.dmp exists"
+      stat:
+        path: "{{ output_folder }}/expdp/{{ dump_file_prefix }}.dmp"
+      register: dump_stat_result
 
-    # Try again after downloader was called
-    - name: Finding Patch File Again
+    # Will skip all the rest if the dump file exists
+    - name : Define skip_all
+      set_fact:
+        skip_all: "{{ dump_stat_result.stat.exists }}"
+      when: skip_dump_exists
+
+    - name : Remove dump file if exists
+      file:
+        state: absent
+        path: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+
+    when: not only_deploy_patch
+
+  # Check if patch will need to reexecute datapatch
+  - name : Check datapatch reexecution
+    set_fact:
+      fix_datapatch_retries: "{{ err_list.retries }}"
+    loop: "{{ list_retry_datapatch | flatten(levels=1) }}"
+    loop_control:
+      loop_var: err_list
+    when:
+      - err_list.version == db_version
+      - err_list.type == patch.type
+      - err_list.id == patch.id
+
+  # When processing processing something, or perform_patch_actions = true
+  - block:
+
+    # Place patch file on the shared folder
+    - name: Finding Patch File
       include: find_patch.yml
 
-    when: (patch_file_path|length == 0) and download_patch
+    # Call downloader when download_patch is defined and could not find the patch (patch_file_path|length == 0)
+    - block:
 
-  # If still can't find the patch but ignore flag is set, jump to the next.
-  - name : Patch is not there, but ignoring...
-    set_fact:
-      skip_all: true
-    when: (patch_file_path|length == 0) and error_on_no_patch == false
+      - name: Call downloader
+        include: download_patch.yml
 
-  - block:
+      # Try again after downloader was called
+      - name: Finding Patch File Again
+        include: find_patch.yml
 
-    - fail:
-        msg: "Could not find patch file. Check if patch folder is correct."
-      when: (patch_file_path|length == 0)
+      when: (patch_file_path|length == 0) and download_patch
 
-    - name: "Patch File"
-      debug: msg="{{ patch_file_path }}"
+    # If still can't find the patch but ignore flag is set, jump to the next.
+    - name : Patch is not there, but ignoring...
+      set_fact:
+        skip_all: true
+      when: (patch_file_path|length == 0) and error_on_no_patch == false
+
+    - name : Check Patch File
+      assert:
+        that: (patch_file_path|length > 0)
+        fail_msg: "Could not find patch file. Check if patch folder is correct."
+        success_msg: "Patch File: {{ patch_file_path }}"
 
     - name : Define Patch file name
       set_fact:
         db_patch: "{{ patch_file_path }}"
         unzip_patch_folder: "{{ shared_folder }}/{{ patch.patch_number }}"
+
+    when: perform_patch_actions
+
+  # Trigger database start command for the first time if never started
+  - block:
+
+    - name: Call role to start OCI VM
+      include_role:
+        name: oci_compute_instance_actions
+      vars:
+        compute_action: start
+      when: oci_mode
+
+    - include: vbox_reload.yml
+      when: not oci_mode
+
+# Changed to see if peforms better
+#    - include: lvm_reload.yml
+#      when: oci_mode
+
+    - include: setup_opatch.yml
+    - include: setup_database.yml
+
+    - name : Define database_started variable to true.
+      set_fact:
+        database_started: true
+
+    when: not database_started
+
+  # Check if there is an image of the requested patch.
+  # If this is the case, we can skip the patch operations (set perform_patch_actions to false).
+  - block:
+
+    - name: Get LVM list
+      include: lvm_list.yml
+
+    - name: Check output
+      set_fact:
+        found_lvm_entry: "{{ lvm_search }}"
+      vars:
+        my_query: "lv_u01_{{ patch.type }}_{{ patch.id }}"
+        lvm_search: "{{ lvs_output.stdout_lines | select('search', my_query) | list | length > 0 }}"
+
+    - block:
+
+      # Skip patch actions
+      - name: LVM image found. Will skip patch actions.
+        set_fact:
+          perform_patch_actions: false
+
+      - name : Save old VM Snap
+        set_fact:
+          prev_vm_snapshot: "{{ vm_snapshot }}"
+
+      - name : Set new VM Snap
+        set_fact:
+          vm_snapshot: "{{ patch.type }}_{{ patch.id }}"
+
+      when: found_lvm_entry
+
+# DEBUG:
+#    - name: Stop
+#      fail:
+#        msg: "Stop."
+
+    when: oci_mode
+
+  # This part was together with the block before the lvm_check.
+  # It was put here together as we don't need to unzip the patch if using the VM.
+  - block:
 
     - name: Remove unzipped patch folder
       file:
@@ -108,66 +185,46 @@
 
       when: patch.patch_folder is defined
 
-    # This is required as skip_all may be set by error_on_no_patch == false
-    when: not skip_all
+    when: perform_patch_actions
 
-  when: patch.patch_number != 0 and not skip_all
-
-# Trigger database start command for the first time if never started
-- block:
-
-  - name: Call role to start OCI VM
-    include_role:
-      name: oci_compute_instance_actions
-    vars:
-      compute_action: start
-    when: oci_mode
+  # Trigger database refresh command.
+  # This must be executed even if the "not database_started" block was just executed because of setup_database.yml script.
 
   - include: vbox_reload.yml
     when: not oci_mode
 
   - include: lvm_reload.yml
-    when: oci_mode
+    when: oci_mode and patch.dep_type is not defined
 
-  - include: setup_opatch.yml
-  - include: setup_database.yml
-
-  - name : Define database_started variable to true.
+  - name : Restore old VM Snap
     set_fact:
-      database_started: true
+      vm_snapshot: "{{ prev_vm_snapshot }}"
+    when: oci_mode and found_lvm_entry
 
-  when: not database_started and not skip_all
+  # When patch has a pre-req, call the prepare_dependency script to setup.
+  - include: prepare_dependency.yml
+    when: patch.dep_type is defined
 
-# Trigger database refresh command.
-# This must be executed even if the "not database_started" block was just executed because of setup_database.yml script. 
-- block:
+  # Replace opatch with latest version, when perform_patch_actions
+  - block:
 
-  - include: vbox_reload.yml
-    when: not oci_mode
+    - name: Remove OPatch folder
+      file:
+        state: absent
+        path: "{{ dbhome_locl }}/OPatch"
+      become: true
+      become_user: oracle
+      delegate_to: "{{ vm_ip_address }}"
 
-  - include: lvm_reload.yml
-    when: oci_mode
+    - name : Unzip OPatch from VM shared folder
+      unarchive:
+        src: "{{ db_opatch }}"
+        dest: "{{ dbhome_locl }}"
+      become: true
+      become_user: oracle
+      delegate_to: "{{ vm_ip_address }}"
+
+    # skip_all must come first as db_opatch may not yet be declared
+    when: db_opatch|length > 0 and perform_patch_actions
 
   when: not skip_all
-
-# Replace opatch with latest version, when not processing base release. i.e patch.patch_number != 0
-- block:
-
-  - name: Remove OPatch folder
-    file:
-      state: absent
-      path: "{{ dbhome_locl }}/OPatch"
-    become: true
-    become_user: oracle
-    delegate_to: "{{ vm_ip_address }}"
-
-  - name : Unzip OPatch from VM shared folder
-    unarchive:
-      src: "{{ db_opatch }}"
-      dest: "{{ dbhome_locl }}"
-    become: true
-    become_user: oracle
-    delegate_to: "{{ vm_ip_address }}"
-  
-  # skip_all must come first as db_opatch may not yet be declared
-  when: not skip_all and db_opatch|length > 0 and patch.patch_number != 0

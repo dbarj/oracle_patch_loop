@@ -16,6 +16,7 @@
     oci_network_vnic_facts:
       id: "{{ result.vnic_attachments[0].vnic_id }}"
     register: result
+
   - set_fact:
       vm_ip_address: "{{result.vnic.private_ip}}"
 

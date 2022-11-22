@@ -1,6 +1,12 @@
-- name: Define oci_adb_transient_user
+- name: Generate oci_adb_transient_user
   set_fact:
     oci_adb_transient_user: "{{ oci_adb_user }}_{{ db_version | replace('.', '') }}"
+  when: oci_adb_force_transient_user is undefined or (oci_adb_force_transient_user|length == 0)
+
+- name: Force oci_adb_transient_user
+  set_fact:
+    oci_adb_transient_user: "{{ oci_adb_force_transient_user }}"
+  when: not (oci_adb_force_transient_user is undefined or (oci_adb_force_transient_user|length == 0))
 
 - name: Define oci_adb_connection_tns
   set_fact:

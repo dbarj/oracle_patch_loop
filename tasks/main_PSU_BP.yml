@@ -14,14 +14,14 @@
     vm_ip_address: "{{ item.ip }}"
     patch_base:    "{{ item.base_snap }}"
   with_items: "{{ list_info_vbox }}"
-  when: item.id == db_version and oci_mode == false
+  when: item.id == db_version and not oci_mode
 
 - name : Define Cloud params
   set_fact:
     oci_instance_id: "{{ item.oci_instance_id }}"
     patch_base:    "{{ item.base_snap }}"
   with_items: "{{ list_info_oci }}"
-  when: item.id == db_version and oci_mode == true
+  when: item.id == db_version and oci_mode
 
 # reload is called before every patch is applied to rollback the VM to the snapshot image.
 - name : Define snapshot base version to rollback when reload is called.
@@ -72,23 +72,23 @@
     set_fact:
       vm_snapshot: "{{ db_version }} PSU {{ latest_psu_id }}"
       latest_psu_line: "{{ db_version }}.PSU.{{ latest_psu_id }}"
-    when: oci_mode == false
+    when: not oci_mode
 
   - name : Generate Snapshot Name - LVM Mode
     set_fact:
       vm_snapshot: "PSU_{{ latest_psu_id }}"
       latest_psu_line: "{{ db_version }}.PSU.{{ latest_psu_id }}"
-    when: oci_mode == true
+    when: oci_mode
 
   - name: "Latest PSU"
     debug: msg="Latest PSU ID - {{ latest_psu_line }}"
 
   # Save lastest PSU as a new snapshot - Also changes vm_snapshot variable to it (for OJVM).
   - include: vbox_savestate.yml
-    when: latest_psu_line == latest_processed and oci_mode == false
+    when: latest_psu_line == latest_processed and not oci_mode
 
   - include: lvm_savestate.yml
-    when: latest_psu_line == latest_processed and oci_mode == true
+    when: latest_psu_line == latest_processed and oci_mode
 
   - include: clean_ojvm_dumps.yml base_id="PSU_{{ latest_psu_id }}"
 
@@ -107,12 +107,12 @@
   - name : Generate Snapshot Name - VBox Mode
     set_fact:
       vm_snapshot: "{{ db_version }} PSU {{ latest_psu_id }}"
-    when: oci_mode == false
+    when: not oci_mode
 
   - name : Generate Snapshot Name - LVM Mode
     set_fact:
       vm_snapshot: "PSU_{{ latest_psu_id }}"
-    when: oci_mode == true
+    when: oci_mode
 
   - name: "Base Snapshot will be {{ vm_snapshot }}"
     debug: msg="Base Snapshot will be {{ vm_snapshot }}"
@@ -179,4 +179,4 @@
     name: oci_compute_instance_actions
   vars:
     compute_action: stop
-  when: oci_mode == true and not only_deploy_patch and database_started
+  when: oci_mode and not only_deploy_patch and database_started

@@ -20,4 +20,3 @@
          # rm -f ${v_ojvm_path}/${v_ojvm_pref}_*
          echo "{{ base_id }}" > "${v_ojvm_base_file}"
        fi
-  register: shell_output

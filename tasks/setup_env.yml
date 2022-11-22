@@ -9,7 +9,7 @@
     fi
   become: true
   become_user: root
-  when: oci_mode == true
+  when: oci_mode
 
 - name: Copy patch SQL to shared folder
   synchronize:

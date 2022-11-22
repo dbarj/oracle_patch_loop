@@ -3,65 +3,98 @@
 
 - block:
 
-  # Stop the database
-  - include: run_sql.yml
-    vars:
-      sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database for OPatch" }
-    when: oci_mode == false
+  # If needs to perform patch actions
+  - block:
 
-  - name: Run OPatch
-    shell: |
-         export ORACLE_HOME ORACLE_SID
-         ./opatch apply -silent {{ VM_folder }}/{{ patch.patch_number }}
-    environment:
-      ORACLE_HOME: "{{ dbhome_locl }}"
-      ORACLE_SID: "{{ mysid }}"
-    args:
-      chdir: "{{ dbhome_locl }}/OPatch"
-    register: shell_output
-    become: true
-    become_user: oracle
-    when: patch.patch_number != 0
-    delegate_to: "{{ vm_ip_address }}"
+    # Stop the database
+    - include: run_sql.yml
+      vars:
+        sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database for OPatch" }
+      when: not oci_mode
 
-  - name: Opatch Output
-    debug: msg="{{ shell_output.stdout_lines }}"
-    when: shell_output.stdout_lines is defined
+    - name: Run OPatch/opatch
+      shell: |
+          export ORACLE_HOME ORACLE_SID
+          ./opatch apply -silent {{ VM_folder }}/{{ patch.patch_number }} OPatch.SKIP_VERIFY_SPACE=true
+      environment:
+        ORACLE_HOME: "{{ dbhome_locl }}"
+        ORACLE_SID: "{{ mysid }}"
+      args:
+        chdir: "{{ dbhome_locl }}/OPatch"
+      register: tmp_shell_output
+      become: true
+      become_user: oracle
+      when: patch.apply_method is not defined or patch.apply_method != "opatchauto"
+      delegate_to: "{{ vm_ip_address }}"
+
+    # Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+    - set_fact: shell_output="{{tmp_shell_output}}"
+      when: tmp_shell_output is not skipped
+
+    - name: Run OPatch/opatchauto
+      shell: |
+          export ORACLE_HOME ORACLE_SID
+          ./opatchauto apply -binary {{ VM_folder }}/{{ patch.patch_number }} -oh $ORACLE_HOME -target_type oracle_database
+      environment:
+        ORACLE_HOME: "{{ dbhome_locl }}"
+        ORACLE_SID: "{{ mysid }}"
+      args:
+        chdir: "{{ dbhome_locl }}/OPatch"
+      register: tmp_shell_output
+      become: true
+      become_user: oracle
+      when: patch.apply_method is defined and patch.apply_method == "opatchauto"
+      delegate_to: "{{ vm_ip_address }}"
+
+    # Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+    - set_fact: shell_output="{{tmp_shell_output}}"
+      when: tmp_shell_output is not skipped
+
+    - name: Opatch Output
+      debug: msg="{{ shell_output.stdout_lines }}"
+      when: shell_output.stdout_lines is defined
+
+    # Start the database
+    - include: run_sql.yml
+      vars:
+        sql_param : { file : "startupCDB.sql" , folder : "patch_sql" , task_action : "Start Database for sqlpatch" }
+      when: patch.type != "OJVM"
+
+    # Start the database (in OJVM, it must be in upgrade mode)
+    - include: run_sql.yml
+      vars:
+        sql_param : { file : "startupCDBOJVM.sql" , folder : "patch_sql" , task_action : "Start Database for OJVM sqlpatch" }
+      when: patch.type == "OJVM"
+
+    # Run Datapatch
+    - name: Set datapatch try variable
+      set_fact: datapatch_try=0
+
+    - name: Run Datapatch
+      include: datapatch.yml
+
+    # Evaluate if it's needed to reexecute datapatch on 12.1.1 due to bug.
+
+    # Bounce instance on OJVM to remove "upgrade" mode
+    - block:
+
+      - include: run_sql.yml
+        vars:
+          sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database" }
+
+      - include: run_sql.yml
+        vars:
+          sql_param : { file : "startupCDB.sql" , folder : "patch_sql" , task_action : "Start Database" }
+
+      when: patch.type == "OJVM"
+  
+    when: perform_patch_actions
 
   # Start the database
   - include: run_sql.yml
     vars:
-      sql_param : { file : "startupCDB.sql" , folder : "patch_sql" , task_action : "Start Database for sqlpatch" }
-    when: patch.type != "OJVM"
-
-  # Start the database (in OJVM, it must be in upgrade mode)
-  - include: run_sql.yml
-    vars:
-      sql_param : { file : "startupCDBOJVM.sql" , folder : "patch_sql" , task_action : "Start Database for OJVM sqlpatch" }
-    when: patch.type == "OJVM"
-
-  # Run Datapatch
-  - name: Set datapatch try variable
-    set_fact: datapatch_try=0
-
-  - name: Run Datapatch
-    include: datapatch.yml
-    when: patch.patch_number != 0
-
-  # Evaluate if it's needed to reexecute datapatch on 12.1.1 due to bug.
-
-  # Bounce instance on OJVM to remove "upgrade" mode
-  - block:
-
-    - include: run_sql.yml
-      vars:
-        sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database" }
-
-    - include: run_sql.yml
-      vars:
-        sql_param : { file : "startupCDB.sql" , folder : "patch_sql" , task_action : "Start Database" }
-
-    when: patch.type == "OJVM"
+      sql_param : { file : "startupCDB.sql" , folder : "patch_sql" , task_action : "Start Database for expdp" }
+    when: not only_deploy_patch and not perform_patch_actions # We only start the DB if not started on prev the block and needed for the next.
 
   # When only_deploy_patch is false (most common case)
   - block:
@@ -83,7 +116,6 @@
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
         ORACLE_SID: "{{ mysid }}"
-      register: shell_output
       become: true
       become_user: oracle
       delegate_to: "{{ vm_ip_address }}"

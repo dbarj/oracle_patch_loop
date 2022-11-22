@@ -5,12 +5,20 @@
     object_name: "{{ oci_download_file }}"
     auth_type: instance_principal
     dest: "{{ oci_dest_file }}"
-  register: oci_action
+  register: tmp_oci_action_result
   when: object_action == "download"
+
+# Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+- set_fact: oci_action="{{tmp_oci_action_result}}"
+  when: tmp_oci_action_result is not skipped
 
 - name: List files from object storage
   oci_object_storage_object_facts:
     namespace_name: "{{ oci_namespace }}"
     bucket_name: "{{ oci_list_bucket }}"
-  register: oci_action
+  register: tmp_oci_action_result
   when: object_action == "list"
+
+# Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+- set_fact: oci_action="{{tmp_oci_action_result}}"
+  when: tmp_oci_action_result is not skipped

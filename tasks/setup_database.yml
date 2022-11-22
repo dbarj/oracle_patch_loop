@@ -1,5 +1,5 @@
 - name: Find the location of DB Home from the SID
-  shell: 'grep {{ mysid }} /etc/oratab |grep -v ^[#] | cut -d: -f2|head -1'
+  shell: 'grep {{ mysid }} /etc/oratab | grep -v ^[#] | cut -d: -f2 | head -1'
   register: dbhomeoutput
   delegate_to: "{{ vm_ip_address }}"
 
@@ -45,7 +45,7 @@
     include: run_sql.yml
     vars:
       sql_param : { file : "startup.sql" , folder : "patch_sql" , task_action : "Start Database" }
-    when: oci_mode == true
+    when: oci_mode
 
   - name: "Check if CDB is enabled"
     shell: |
@@ -72,7 +72,34 @@
     set_fact:
       db_iscdb: "{{ shell_output.stdout | bool }}"
 
+  # If any error happens in this block, will trigger a LVM refresh and try again.
+  rescue:
+
+  - name: Already tried that before error. No other chance.
+    fail:
+      msg: "Failed to get some database information."
+    when: db_start_retried is defined and db_start_retried
+
+  - name: Print when errors
+    debug:
+      msg: 'I caught an error. Trying to lvm reload..'
+
+  - name : Set db_start_retried variable
+    set_fact:
+      db_start_retried: true
+
+  - include: lvm_reload.yml
+    when: oci_mode
+
+  - include: setup_database.yml
+
+  # If the previous include succeeded, reset variable.
+  - name : Clean db_start_retried variable
+    set_fact:
+      db_start_retried: false
+
   when: db_version != "11.2.0.4"
+
 
 - name : Define CDB variable
   set_fact:

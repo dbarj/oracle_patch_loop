@@ -25,7 +25,6 @@
   environment:
     ORACLE_HOME: "{{ dbhome_locl }}"
     ORACLE_SID: "{{ mysid }}"
-  register: sqloutput
   become: true
   become_user: oracle
   delegate_to: "{{ vm_ip_address }}"
@@ -37,7 +36,6 @@
   environment:
     ORACLE_HOME: "{{ dbhome_locl }}"
     ORACLE_SID: "{{ mysid }}"
-  register: sqloutput
   become: true
   become_user: oracle
   delegate_to: "{{ vm_ip_address }}"

@@ -33,10 +33,10 @@
   tasks:
 
   - include_vars: config_vbox.yml
-    when: oci_mode == false
+    when: not oci_mode
 
   - include_vars: config_oci.yml
-    when: oci_mode == true
+    when: oci_mode
 
   - import_tasks: tasks/setup_env.yml
 
@@ -54,4 +54,4 @@
     when: param_version == "11.2.0.4" or param_version == "12.1.0.1" or param_version == "12.1.0.2"
 
   - include: tasks/main_RU_RUR.yml db_version="{{ param_version }}"
-    when: param_version == "12.2.0.1" or param_version == "18.0.0.0" or param_version == "19.0.0.0"
+    when: not(param_version == "11.2.0.4" or param_version == "12.1.0.1" or param_version == "12.1.0.2")

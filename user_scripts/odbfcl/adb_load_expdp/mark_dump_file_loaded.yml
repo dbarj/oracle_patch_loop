@@ -6,4 +6,3 @@
   shell: |
        set -eo pipefail
        touch {{ output_folder }}/expdp/{{ loaded_file_prefix }}
-  register: shell_output

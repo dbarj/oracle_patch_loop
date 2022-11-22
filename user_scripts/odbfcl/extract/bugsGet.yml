@@ -44,7 +44,6 @@
       ORACLE_SID: "{{ mysid }}"
     args:
       chdir: "{{ dbhome_locl }}/OPatch"
-    register: shell_output
     become: true
     become_user: oracle
     delegate_to: "{{ vm_ip_address }}"

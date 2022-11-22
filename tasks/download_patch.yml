@@ -26,7 +26,6 @@
     MOSPass='{{ downloader_pass }}'
   args:
     chdir: "{{ patch_location_path }}"
-  register: shell_output
 
 # If block storage:
 - block:

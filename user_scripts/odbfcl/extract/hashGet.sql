@@ -6,11 +6,14 @@ set tab off
 set serverout on
 
 DEF V_USERNAME = '&1'
+DEF V_DIRECTORY = '&2'
 
 -- Convert to uppercase
 col v_username new_v v_username nopri
-SELECT UPPER('&V_USERNAME.') V_USERNAME FROM DUAL;
+col v_directory new_v v_directory nopri
+SELECT UPPER('&V_USERNAME.') V_USERNAME, UPPER('&V_DIRECTORY.') V_DIRECTORY FROM DUAL;
 col v_username clear
+col v_directory clear
 
 col p_vers new_v p_vers nopri
 select substr(version,1,instr(version,'.',1,4)-1) p_vers
