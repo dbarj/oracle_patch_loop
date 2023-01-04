@@ -174,8 +174,6 @@ BEGIN
   THEN
     -- Add here any optional code to do after the exchange.
     NULL;
-    &P_OWNER..X_ORAERR.RELOAD_PARTITION_INT (V_ORAVERSION, V_ORASERIES, V_ORAPATCH);
-    &P_OWNER..X_REFRESH_MVS;
   ELSE
     DBMS_OUTPUT.PUT_LINE('---');
     DBMS_OUTPUT.PUT_LINE('--- ATTENTION: ALL TABLES ARE EMPTY');
