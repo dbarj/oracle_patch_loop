@@ -49,4 +49,4 @@
 
 - name : Define latest processed
   set_fact:
-    latest_processed: "{{ db_version }}.{{ patch.type }}.{{ patch.id }}"
+    latest_processed: "{{ db_version }}|{{ patch.type }}|{{ patch.id }}"

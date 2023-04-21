@@ -42,9 +42,9 @@
     vars:
       patch : { type : RU , id : "{{ out_of_box_ru }}" , patch_number : 0 }
     when:
-      - (out_of_box_ru | int) == (param_patch | int)      or param_patch == -1
-      - (out_of_box_ru | int) >= (param_patch_from | int) or param_patch_from == -1
-      - (out_of_box_ru | int) <= (param_patch_to | int)   or param_patch_to == -1
+      - (out_of_box_ru | float) == (param_patch | float)      or param_patch == -1
+      - (out_of_box_ru | float) >= (param_patch_from | float) or param_patch_from == -1
+      - (out_of_box_ru | float) <= (param_patch_to | float)   or param_patch_to == -1
 
   # Execute for every RU
   - include: "{{ patch_file }}"
@@ -54,10 +54,10 @@
       label: "{{ patch.id }}"
     when:
       - patch.type == "RU"
-      - patch.id == (param_patch | int)      or param_patch == -1
-      - patch.id >= (param_patch_from | int) or param_patch_from == -1
-      - patch.id <= (param_patch_to | int)   or param_patch_to == -1
-      - patch.id > (out_of_box_ru | int)
+      - patch.id == (param_patch | float)      or param_patch == -1
+      - patch.id >= (param_patch_from | float) or param_patch_from == -1
+      - patch.id <= (param_patch_to | float)   or param_patch_to == -1
+      - patch.id > (out_of_box_ru | float)
 
   when: param_type is undefined or param_type == "RU"
 
@@ -73,13 +73,13 @@
   - name : Generate Snapshot Name - VBox Mode
     set_fact:
       vm_snapshot: "{{ db_version }} RU {{ latest_RU_id }}"
-      latest_RU_line: "{{ db_version }}.RU.{{ latest_RU_id }}"
+      latest_RU_line: "{{ db_version }}|RU|{{ latest_RU_id }}"
     when: not oci_mode
 
   - name : Generate Snapshot Name - LVM Mode
     set_fact:
       vm_snapshot: "RU_{{ latest_RU_id }}"
-      latest_RU_line: "{{ db_version }}.RU.{{ latest_RU_id }}"
+      latest_RU_line: "{{ db_version }}|RU|{{ latest_RU_id }}"
     when: oci_mode
 
   - name: "Latest RU"
@@ -132,9 +132,9 @@
       label: "{{ patch.id }}"
     when:
       - patch.type == "OJVM"
-      - patch.id == (param_patch | int)      or param_patch == -1
-      - patch.id >= (param_patch_from | int) or param_patch_from == -1
-      - patch.id <= (param_patch_to | int)   or param_patch_to == -1
+      - patch.id == (param_patch | float)      or param_patch == -1
+      - patch.id >= (param_patch_from | float) or param_patch_from == -1
+      - patch.id <= (param_patch_to | float)   or param_patch_to == -1
 
   when: param_type is undefined or param_type == "OJVM"
 
@@ -153,9 +153,9 @@
       label: "{{ patch.id }}"
     when:
       - patch.type == "RUR"
-      - patch.id == (param_patch | int)      or param_patch == -1
-      - patch.id >= (param_patch_from | int) or param_patch_from == -1
-      - patch.id <= (param_patch_to | int)   or param_patch_to == -1
+      - patch.id == (param_patch | float)      or param_patch == -1
+      - patch.id >= (param_patch_from | float) or param_patch_from == -1
+      - patch.id <= (param_patch_to | float)   or param_patch_to == -1
 
   when: param_type is undefined or param_type == "RUR"
 
@@ -174,9 +174,9 @@
       label: "{{ patch.id }}"
     when:
       - patch.type == "MRP"
-      - patch.id == (param_patch | int)      or param_patch == -1
-      - patch.id >= (param_patch_from | int) or param_patch_from == -1
-      - patch.id <= (param_patch_to | int)   or param_patch_to == -1
+      - patch.id == (param_patch | float)      or param_patch == -1
+      - patch.id >= (param_patch_from | float) or param_patch_from == -1
+      - patch.id <= (param_patch_to | float)   or param_patch_to == -1
 
   when: param_type is undefined or param_type == "MRP"
 
