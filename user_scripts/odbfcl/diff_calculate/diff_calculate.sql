@@ -1,9 +1,13 @@
 WHENEVER SQLERROR EXIT SQL.SQLCODE
 
-DEF V_CONN      = '&1'
-DEF V_VERS_FROM = '&2'
-DEF V_VERS_TO   = '&3'
-DEF V_BRELEASE   = '&4'
+DEF V_CONN            = '&1'
+DEF V_ORAVERSION_FROM = '&2'
+DEF V_ORASERIES_FROM  = '&3'
+DEF V_ORAPATCH_FROM   = '&4'
+DEF V_ORAVERSION_TO   = '&5'
+DEF V_ORASERIES_TO    = '&6'
+DEF V_ORAPATCH_TO     = '&7'
+DEF V_BRELEASE        = '&8'
 
 DEF V_TABLE_NAME_CODES    = 'DIFF_CODES_LOAD_&&V_BRELEASE.'
 DEF V_TABLE_NAME_CONTENTS = 'DIFF_CONTENTS_LOAD_&&V_BRELEASE.'
@@ -134,27 +138,24 @@ PRO rm -f "${v_outpref}_load.log" "${v_outpref}_load.ctl" "${v_file}"
 SPO OFF
 
 --------------------------
-------- LOAD CODES -------
+-------- PREPARE ---------
 --------------------------
 
 ! rm -f *_*.txt
 
--- For Labels
--- BEGIN
---   ADMIN.INITAPEXFROMOUTSIDE(100,2,'XYZ') ;
---   APEX_UTIL.SET_SESSION_STATE('ALLOW_LABELS','Y');
--- END;
--- /
+--------------------------
+------- LOAD CODES -------
+--------------------------
 
 ROLLBACK;
-EXEC L_HASH('&V_VERS_FROM','&V_VERS_TO');
+EXEC R_HASH.L('&&V_ORAVERSION_FROM.','&&V_ORASERIES_FROM.',&&V_ORAPATCH_FROM.,'&&V_ORAVERSION_TO.','&&V_ORASERIES_TO.',&&V_ORAPATCH_TO.);
 
 set serverout on lines 10000 trims on verify off feed off
 SPOOL aaa.sql
 BEGIN
   FOR I IN (SELECT NVL(D1.MD5_HASH_UNWRAPPED,D1.MD5_HASH) OLD_VALUE,
                    NVL(D2.MD5_HASH_UNWRAPPED,D2.MD5_HASH) NEW_VALUE
-              FROM P_HASH.F('&V_VERS_TO') D0, DM_CODES D1, DM_CODES D2
+              FROM R_HASH.F('&&V_ORAVERSION_TO.','&&V_ORASERIES_TO.',&&V_ORAPATCH_TO.) D0, DM_CODES D1, DM_CODES D2
              WHERE D0.COMPARE_COLUMN_NAME='MD5_HASH'
                AND D1.MD5_HASH = D0.OLD_VALUE
                AND D2.MD5_HASH = D0.NEW_VALUE
@@ -217,14 +218,14 @@ SET TERMOUT OFF ECHO OFF
 -----------------------------
 
 ROLLBACK;
-EXEC L_TXTCOLLECTION('&V_VERS_FROM','&V_VERS_TO');
+EXEC R_TXTCOLLECTION.L('&&V_ORAVERSION_FROM.','&&V_ORASERIES_FROM.',&&V_ORAPATCH_FROM.,'&&V_ORAVERSION_TO.','&&V_ORASERIES_TO.',&&V_ORAPATCH_TO.);
 
 set serverout on lines 10000 trims on verify off feed off
 SPOOL aaa.sql
 BEGIN
   FOR I IN (SELECT HEXTORAW(D0.OLD_VALUE) OLD_VALUE,
                    HEXTORAW(D0.NEW_VALUE) NEW_VALUE
-              FROM P_TXTCOLLECTION.F('&V_VERS_TO') D0
+              FROM R_TXTCOLLECTION.F('&&V_ORAVERSION_TO.','&&V_ORASERIES_TO.',&&V_ORAPATCH_TO.) D0
              WHERE D0.COMPARE_COLUMN_NAME='MD5_HASH'
              MINUS
             SELECT MD5_HASH_FROM, MD5_HASH_TO
