@@ -1,6 +1,6 @@
 - name : Define check filename
   set_fact:
-    loaded_file_prefix: "tables_{{ db_version }}_{{ patch.base_ru | default('')}}{{ patch.type }}_{{ patch.id }}_loaded_{{ oci_adb_tns }}"
+    loaded_file_prefix: "tables_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}_loaded_{{ oci_adb_tns }}"
 
 - name: "Create {{ output_folder }}/expdp/{{ loaded_file_prefix }}."
   shell: |

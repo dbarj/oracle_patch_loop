@@ -5,7 +5,7 @@
 
 - name : Define txtcollect file names
   set_fact:
-    txtcollect_file: "txtcol_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}.tar.gz"
+    txtcollect_file: "txtcol_{{ file_suffix }}.tar.gz"
 
 - name: "Check if {{ txtcollect_folder }}/{{ txtcollect_file }} exists"
   stat:

@@ -1,6 +1,6 @@
 - name : Define bugs_fixed filename and folder
   set_fact:
-    bugs_fixed_file: "bugs_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}.txt"
+    bugs_fixed_file: "bugs_{{ file_suffix }}.txt"
     bugs_fixed_folder: "{{ output_folder }}/bugsfixed"
 
 - name: "Check if {{ bugs_fixed_folder }}/{{ bugs_fixed_file }} exists"

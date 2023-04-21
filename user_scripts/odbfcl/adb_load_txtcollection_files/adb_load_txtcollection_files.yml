@@ -1,6 +1,6 @@
 - name : Define txtcollection filename and folder
   set_fact:
-    txtcollection_file: "txtcol_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}.tar.gz"
+    txtcollection_file: "txtcol_{{ file_suffix }}.tar.gz"
     txtcollection_folder: "{{ output_folder }}/txtcollect"
 
 - name: "Check if {{ txtcollection_folder }}/{{ txtcollection_file }} exists"

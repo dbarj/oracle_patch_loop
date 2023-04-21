@@ -3,7 +3,8 @@
 
 - name : Define dump file name and parameters
   set_fact:
-    dump_file_prefix: "tables_{{ db_version }}_{{ patch.base_ru | default('')}}{{ patch.type }}_{{ patch.id }}"
+    file_suffix: "{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}"
+    dump_file_prefix: "tables_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}"
     skip_all: false
     fix_datapatch_retries: 0
     expdp_version: ""

@@ -1,6 +1,6 @@
 - name : Define symbols filename and folder
   set_fact:
-    symbols_file: "symbols_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}.csv"
+    symbols_file: "symbols_{{ file_suffix }}.csv"
     symbols_folder: "{{ output_folder }}/symbols"
 
 - name: "Check if {{ symbols_folder }}/{{ symbols_file }} exists"

@@ -5,7 +5,7 @@
 
 - name : Define chksum file names
   set_fact:
-    sha256_file: "sha256sum_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}.chk"
+    sha256_file: "sha256sum_{{ file_suffix }}.chk"
 
 - name: "Check if {{ chksum_folder }}/{{ sha256_file }} exists"
   stat:
