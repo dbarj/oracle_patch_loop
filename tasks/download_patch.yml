@@ -17,7 +17,7 @@
     [ ! -d "{{ db_version }}/{{ patch.type }}" ] && mkdir -p "{{ db_version }}/{{ patch.type }}"
     cd "{{ db_version }}/{{ patch.type }}"
     $ORACLE_HOME/jdk/bin/java -jar {{ downloader_tool }} \
-    patch={{ patch.patch_number }} \
+    patch={{ patch.patch_number }}{{ patch.file_suf | default('') }} \
     platform=226P \
     download=all \
     silent=yes \
@@ -33,7 +33,7 @@
   - name: Get patch file name to upload to OS
     find:
       paths:     "{{ patch_location_path }}"
-      patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}0_Linux-x86-64.zip"
+      patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}0_Linux-x86-64{{ patch.file_suf | default('') }}.zip"
       file_type: "file"
     register: get_name
 

@@ -21,7 +21,7 @@
         oci os object get --bucket-name {{ patch_location_bucket }} --name {{ oci_download_file }} --file {{ patch_location_path }}/{{ oci_download_file | basename }}
     vars:
       my_query: "p{{ patch.patch_number }}"
-      oci_download_file: "{{ oci_action.objects | map(attribute='name') | select('search', my_query) | list | first }}"
+      oci_download_file: "{{ oci_action.objects | map(attribute='name') | select('search',(patch.file_suf | default('')) ~ '.zip') | select('search', my_query) | list | first }}"
     when: oci_action.objects | map(attribute='name') | select('search', my_query) | list | length > 0
 
   when: patch_location_type == "bucket"
@@ -29,7 +29,7 @@
 - name: Finding Patch File
   find:
     paths:     "{{ patch_location_path }}"
-    patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}0_Linux-x86-64.zip"
+    patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}0_Linux-x86-64{{ patch.file_suf | default('') }}.zip"
     recurse:   "yes"
     file_type: "file"
   register: tmp_find_result
@@ -42,7 +42,7 @@
 - name: Finding Patch File
   find:
     paths:     "{{ patch_location_path }}"
-    patterns:  "p{{ patch.patch_number }}_*DBRU_Linux-x86-64.zip"
+    patterns:  "p{{ patch.patch_number }}_*DBRU_Linux-x86-64{{ patch.file_suf | default('') }}.zip"
     recurse:   "yes"
     file_type: "file"
   register: tmp_find_result
