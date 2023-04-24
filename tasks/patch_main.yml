@@ -10,7 +10,10 @@
     - include: run_sql.yml
       vars:
         sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database for OPatch" }
-      when: not oci_mode
+      when: not oci_mode or patch.dep_type is defined
+      # When patch has a dependency, if the dependency is loaded running the full patch process instead of loading from lvm, the DB will be left online.
+
+    ## APPLY ##
 
     - name: Run OPatch/opatch
       shell: |
@@ -24,12 +27,35 @@
       register: tmp_shell_output
       become: true
       become_user: oracle
-      when: patch.apply_method is not defined or patch.apply_method != "opatchauto"
+      when: patch.apply_method is not defined or patch.apply_method == "opatch"
       delegate_to: "{{ vm_ip_address }}"
 
     # Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
     - set_fact: shell_output="{{tmp_shell_output}}"
       when: tmp_shell_output is not skipped
+
+    ## NAPPLY ##
+
+    - name: Run OPatch/opatch NAPPLY
+      shell: |
+          export ORACLE_HOME ORACLE_SID
+          ./opatch napply -silent {{ VM_folder }}/{{ patch.patch_number }} OPatch.SKIP_VERIFY_SPACE=true
+      environment:
+        ORACLE_HOME: "{{ dbhome_locl }}"
+        ORACLE_SID: "{{ mysid }}"
+      args:
+        chdir: "{{ dbhome_locl }}/OPatch"
+      register: tmp_shell_output
+      become: true
+      become_user: oracle
+      when: patch.apply_method is defined and patch.apply_method == "napply"
+      delegate_to: "{{ vm_ip_address }}"
+
+    # Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+    - set_fact: shell_output="{{tmp_shell_output}}"
+      when: tmp_shell_output is not skipped
+
+    ## OPATCHAUTO ##
 
     - name: Run OPatch/opatchauto
       shell: |

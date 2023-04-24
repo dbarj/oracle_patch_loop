@@ -16,6 +16,8 @@
 
 - block :
 
+  # TODO: Fix: tar: ./rdbms/log/stout_orcl_17338.txt: Cannot stat: No such file or directory
+  # SOLUTION: Stop DB before collection, or add flag to make tar ignore missing files
   - name: Collect text files from ORACLE_HOME
     shell: |
         find -type f -not -path "./.patch_storage/*" -not -name "tfa_setup" -print0 | xargs -0 grep -Il '.' | tar -czf {{ VM_folder }}/{{ txtcollect_file }} -T -
