@@ -54,18 +54,18 @@ SPO gen_diff.sh
 PRO set -e
 PRO v_file_1="$1"
 PRO v_file_2="$2"
-PRO 
+PRO
 PRO v_size=$(diff -t -bB "${v_file_1}.sql" "${v_file_2}.sql" | awk '{ print length }' | sort -n | tail -1)
-PRO 
+PRO
 PRO # -2 to remove '> ' or '< '
 PRO # +3 to include ' | '
-PRO if [ -z ${v_size} ] 
+PRO if [ -z ${v_size} ]
 PRO then
 PRO   touch "${v_file_1}_${v_file_2}.txt"
 PRO   exit 0
 PRO fi
 PRO v_size=$(((v_size-2)*2+3))
-PRO 
+PRO
 PRO sdiff -w ${v_size} -bB -t -l "${v_file_1}.sql" "${v_file_2}.sql" | cat -n | grep -v -e '($' > "${v_file_1}_${v_file_2}.txt"
 SPO OFF
 
@@ -196,14 +196,21 @@ COMPRESS NOLOGGING;
 
 SET TERMOUT ON ECHO ON
 
-insert /*+ append */
-  into DIFF_CODES (MD5_HASH_FROM, MD5_HASH_TO, DIFF_CODE)
-select substr(file_name,1,instr(file_name,'_',1,1)-1),
-       substr(file_name,instr(file_name,'_',1,1)+1,instr(file_name,'.',1,1)-instr(file_name,'_',1,1)-1),
-       CONTENTS
-from &&V_TABLE_NAME_CODES.;
+INSERT /*+ APPEND */
+  INTO DIFF_CODES (MD5_HASH_FROM, MD5_HASH_TO, DIFF_CODE)
+SELECT T1.HASH_FROM,
+       T1.HASH_TO,
+       T1.CONTENTS
+FROM   ( SELECT SUBSTR(FILE_NAME,1,INSTR(FILE_NAME,'_',1,1)-1) HASH_FROM,
+                SUBSTR(FILE_NAME,INSTR(FILE_NAME,'_',1,1)+1,INSTR(FILE_NAME,'.',1,1)-INSTR(FILE_NAME,'_',1,1)-1) HASH_TO,
+                CONTENTS
+           FROM &&V_TABLE_NAME_CODES. ) T1
+-- We need this as some other sessions in parallel can end up inserting the same row.
+WHERE  NOT EXISTS (SELECT 1
+                     FROM DIFF_CODES D
+                    WHERE D.MD5_HASH_FROM = T1.HASH_FROM AND D.MD5_HASH_TO = T1.HASH_TO);
 
-commit;
+COMMIT;
 
 DROP TABLE &&V_TABLE_NAME_CODES. PURGE;
 
@@ -264,14 +271,21 @@ COMPRESS NOLOGGING;
 
 SET TERMOUT ON ECHO ON
 
-insert /*+ append */
-  into DIFF_CONTENTS (MD5_HASH_FROM, MD5_HASH_TO, DIFF_CODE)
-select substr(file_name,1,instr(file_name,'_',1,1)-1),
-       substr(file_name,instr(file_name,'_',1,1)+1,instr(file_name,'.',1,1)-instr(file_name,'_',1,1)-1),
-       CONTENTS
-from &&V_TABLE_NAME_CONTENTS.;
+INSERT /*+ APPEND */
+  INTO DIFF_CONTENTS (MD5_HASH_FROM, MD5_HASH_TO, DIFF_CODE)
+SELECT T1.HASH_FROM,
+       T1.HASH_TO,
+       T1.CONTENTS
+FROM   ( SELECT SUBSTR(FILE_NAME,1,INSTR(FILE_NAME,'_',1,1)-1) HASH_FROM,
+                SUBSTR(FILE_NAME,INSTR(FILE_NAME,'_',1,1)+1,INSTR(FILE_NAME,'.',1,1)-INSTR(FILE_NAME,'_',1,1)-1) HASH_TO,
+                CONTENTS
+           FROM &&V_TABLE_NAME_CONTENTS. ) T1
+-- We need this as some other sessions in parallel can end up inserting the same row.
+WHERE  NOT EXISTS (SELECT 1
+                     FROM DIFF_CONTENTS D
+                    WHERE D.MD5_HASH_FROM = T1.HASH_FROM AND D.MD5_HASH_TO = T1.HASH_TO);
 
-commit;
+COMMIT;
 
 DROP TABLE &&V_TABLE_NAME_CONTENTS. PURGE;
 
