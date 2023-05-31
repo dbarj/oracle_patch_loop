@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to get the sha256sum of all ORACLE_HOME files and libraries
+# Script to get all non-binary files in ORACLE_HOME
 # Created by Rodrigo Jorge <http://www.dbarj.com.br/>
 
 set -eo pipefail
@@ -26,36 +26,11 @@ v_output_file="$(basename "${v_output}")"
 
 v_output_full="${v_output_fdr}/${v_output_file}"
 
-echo "Generating sha256sum list. Please wait.." 
+echo "Generating ORACLE_HOME non-binary files list. Please wait.." 
 
 cd "$ORACLE_HOME"
-set +e
-find -type f -exec sha256sum "{}" + > "${v_output_full}"
-set -eo pipefail
-cd - > /dev/null
 
-sed -i 's/$/  F/' "${v_output_full}"
-
-v_libs=$(find "$ORACLE_HOME" -type f -name "*.a")
-
-v_ext_fold=`mktemp -d`
-v_out_file=`mktemp`
-
-IFS=$'\n'
-for v_lib in ${v_libs}
-do
-  rm -rf "${v_ext_fold}"
-  mkdir "${v_ext_fold}"
-  cd "${v_ext_fold}"
-  set +e
-  ar x "${v_lib}"
-  set -eo pipefail
-  find -type f -exec sha256sum "{}" + > "${v_out_file}"
-  cd - > /dev/null
-  sed -i "s|  \.|  ${v_lib}|" "${v_out_file}"
-  sed -i 's/$/  L/' "${v_out_file}"
-  cat "${v_out_file}" >> "${v_output}"
-  rm -rf "${v_ext_fold}" "${v_out_file}"
-done
+set +e # grep may return "Permission denied"
+find -type f -not -path "./.patch_storage/*" -not -name "tfa_setup" -print0 | xargs -0 grep -Il '.' | tar -czf "${v_output_full}" -T -
 
 exit 0

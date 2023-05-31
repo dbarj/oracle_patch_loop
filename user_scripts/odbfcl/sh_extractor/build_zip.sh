@@ -19,7 +19,7 @@ rm -f ${v_folder_name}.zip
 # Put all files at the same stamp to create a deterministic zip.
 find ${v_folder_name} -exec touch -t 202201010000 {} +
 
-zip -rmXD ${v_folder_name}.zip ${v_folder_name}
+zip -qrmXD ${v_folder_name}.zip ${v_folder_name} -x "*/.*"
 rmdir ${v_folder_name}/*
 rmdir ${v_folder_name}
 

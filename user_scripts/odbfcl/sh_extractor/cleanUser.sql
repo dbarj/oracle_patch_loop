@@ -1,5 +1,5 @@
 -- This code will clean the created objects.
-WHENEVER SQLERROR EXIT SQL.SQLCODE
+WHENEVER SQLERROR EXIT FAILURE ROLLBACK
 
 def v_username='&1.'
 def v_directory='&2.'
