@@ -2,7 +2,7 @@
 # Patch location path: Can be the local folder path or the bucket name.
 # Folder where the database patches are placed. The patches can also be placed in sub-folders of the directory specified below.
 patch_location_type : bucket
-patch_location_path : oradiff_patches
+patch_location_path : patches
 
 # Folder in RW mode on local compute and shared with the VM. It is used to move the patches to the VMs and also to copy back the expdp output.
 stage_folder : "/u01/patch_automation/stage"
