@@ -50,10 +50,21 @@ $ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" <<EOF
 @hashGet.sql "${v_dump_user}" "${v_dump_dir_name}"
 EOF
 
+# Get DB Version
+v_version=$($ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" @get_db_version.sql)
+[ -z "${v_version}" ] && v_version=0
+
+if [ $v_version -lt 12 ]
+then
+  v_compress_alg=''
+else
+  v_compress_alg='compression_algorithm=high'
+fi
+
 $ORACLE_HOME/bin/expdp \
 userid="${v_dump_user}/${v_dump_pass}" \
 directory=${v_dump_dir_name} \
-compression=all \
+compression=all "${v_compress_alg}" \
 dumpfile="${v_output_file}" \
 logfile="${v_output_file_noext}.log" \
 content=data_only \

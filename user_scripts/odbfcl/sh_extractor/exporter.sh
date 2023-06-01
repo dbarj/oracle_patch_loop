@@ -29,9 +29,6 @@ Eg: $0 ${v_example}
 The output is a zip file.
 "
 
-# Check if ORADIFF_ONE_DUMP was exported
-[ "$ORADIFF_ONE_DUMP" == "0" ] && v_one_dump=0 || v_one_dump=1
-
 v_pattern_cnt=`awk -F" " '{print NF-1}' <<< "${v_pattern}"`
 [ ${v_pattern_cnt} -ne 0 ] && exitError "Pattern \"${v_output}\" must not have any spaces. Eg: ${v_example}"
 
@@ -46,10 +43,13 @@ v_dump_user='hash'
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
-echo "Check if common user. Please wait.."
+echo "Checking if common user. Please wait.."
 v_common_user=$($ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" @get_user_prefix.sql)
 [ -n "${v_common_user}" ] && v_dump_user="${v_common_user}${v_dump_user}"
 ##################
+
+# Check if ORADIFF_ONE_DUMP was exported
+[ "$ORADIFF_ONE_DUMP" == "0" ] && v_one_dump=0 || v_one_dump=1
 
 v_file=bugs_${v_pattern}.txt
 sh "${v_thisdir}/bugsGet.sh" ${v_file}

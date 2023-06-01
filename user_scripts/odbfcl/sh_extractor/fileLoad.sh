@@ -35,7 +35,9 @@ cd "${v_outpref}_unzip"
 
 $ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" <<EOF
 whenever sqlerror exit failure rollback
-create table ${v_dump_user}.t_txtcollection_load ( path varchar2(500) not null, contents clob not null, md5_hash raw(16) ) compress nologging;
+create table ${v_dump_user}.t_txtcollection_load
+( path varchar2(500) not null, contents clob not null, md5_hash raw(16) )
+compress nologging;
 EOF
 
 cat << EOF > "${v_outpref}_load.ctl"
@@ -60,7 +62,8 @@ rm -rf "${v_outpref}_unzip"
 
 $ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" <<EOF
 whenever sqlerror exit failure rollback
-update ${v_dump_user}.t_txtcollection_load set md5_hash=sys.dbms_crypto.hash(contents,2);
+update ${v_dump_user}.t_txtcollection_load
+set md5_hash=sys.dbms_crypto.hash(contents,2);
 
 insert /*+ append */ into ${v_dump_user}.dm_contents (md5_hash, contents)
 select md5_hash, contents
