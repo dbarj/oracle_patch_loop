@@ -15,35 +15,11 @@
     shell: |
         set -eo pipefail
 
-        export ORACLE_HOME ORACLE_SID
+        export ORACLE_HOME
 
-        ./opatch lsinv -bugs_fixed |
-        # Remove lines before this entry (inclusive)
-        sed '1,/^List of Bugs fixed by Installed Patches/d' |
-        # Remove lines before this entry (inclusive)
-        sed '1,/^---/d' |
-        # Remove lines after this entry (inclusive)
-        sed '/^---/Q' |
-        # Remove empty lines
-        sed '/^$/d' |
-        # Remove breaks from lines not starting with number
-        sed ':a $!{N; ba}; s/\n\+/\n/g; s/\n\([^0-9]\)/\1/g' |
-        # Remove double spaces
-        sed -E 's/[[:space:]]+/ /g' |
-        # Remove date columns
-        awk '{$3=$4=$5=$6=$7=$8=""; print $0}' |
-        # Remove double spaces again after column removal
-        sed -E 's/[[:space:]]+/ /g' |
-        # Replace first space per tab
-        sed 's/ /'$'\t''/' |
-        # Replace first space per tab (that was the second)
-        sed 's/ /'$'\t''/' > {{ VM_folder }}/{{ bugs_fixed_file }}
-
+        {{ VM_folder }}/user_scripts/odbfcl/adb_load_bugs_fixed/bugsGet.sh "{{ VM_folder }}/{{ bugs_fixed_file }}"
     environment:
       ORACLE_HOME: "{{ dbhome_locl }}"
-      ORACLE_SID: "{{ mysid }}"
-    args:
-      chdir: "{{ dbhome_locl }}/OPatch"
     become: true
     become_user: oracle
     delegate_to: "{{ vm_ip_address }}"

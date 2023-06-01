@@ -1,0 +1,37 @@
+- name : Define chksum filename and folder
+  set_fact:
+    sha256_file: "sha256sum_{{ file_suffix }}.chk"
+    chksum_folder: "{{ output_folder }}/binsum"
+
+- name: "Check if {{ chksum_folder }}/{{ sha256_file }} exists"
+  stat:
+    path: "{{ chksum_folder }}/{{ sha256_file }}"
+  register: chksum_stat_result
+
+# Will skip all the rest if the chksum file exists
+- block :
+
+  - name: Generate files checksum
+    shell: |
+        set -eo pipefail
+
+        export ORACLE_HOME
+
+        {{ VM_folder }}/user_scripts/odbfcl/adb_load_filechksum/chksumLoad.sh "{{ VM_folder }}/{{ sha256_file }}"
+    environment:
+      ORACLE_HOME: "{{ dbhome_locl }}"
+    become: true
+    become_user: root
+    delegate_to: "{{ vm_ip_address }}"
+
+  - name: Copy {{ sha256_file }} to repository
+    copy:
+      src: "{{ shared_folder }}/{{ sha256_file }}"
+      dest: "{{ chksum_folder }}"
+
+  - name : "Remove file {{ sha256_file }}"
+    file:
+      state: absent
+      path: "{{ shared_folder }}/{{ sha256_file }}"
+
+  when: not chksum_stat_result.stat.exists

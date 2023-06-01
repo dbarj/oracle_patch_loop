@@ -1,11 +1,7 @@
-# Folder to store the collected ORACLE_HOME text files
-- name : Define symbols folder name
-  set_fact:
-    symbols_folder: "{{ output_folder }}/symbols"
-
-- name : Define symbols file names
+- name : Define symbols filename and folder
   set_fact:
     symbols_file: "symbols_{{ file_suffix }}.csv"
+    symbols_folder: "{{ output_folder }}/symbols"
 
 - name: "Check if {{ symbols_folder }}/{{ symbols_file }} exists"
   stat:
@@ -13,32 +9,15 @@
   register: symbols_stat_result
 
 # Will skip the rest if the symbols file exists
-
 - block :
 
-  # Thanks Frits Hooglang
   - name: Collect symbols from ORACLE_HOME
     shell: |
-        echo > "{{ VM_folder }}/{{ symbols_file }}"
+        set -eo pipefail
 
-        # Extract Symbols from Oracle archives (.a)
-        for ARCHIVE in $(ls $ORACLE_HOME/lib/*.a $ORACLE_HOME/rdbms/lib/*.a); do
-          nm -A $ARCHIVE | grep ' [Tt] ' | tr ':' ' ' | cut -d" " -f1,2,4,5 | sort -u | awk '{ if ( $4 != "" ) { file=$1; sub(".*/","", file); printf "%s/%s|%s|%s\n", file, $2, $3, $4 } }' >> "{{ VM_folder }}/{{ symbols_file }}"
-        done
+        export ORACLE_HOME
 
-        # Extract Symbols from Oracle objects (.o)
-        for OBJECT in $(ls $ORACLE_HOME/lib/*.o $ORACLE_HOME/rdbms/lib/*.o); do
-          nm -A $OBJECT | grep ' [Tt] ' | tr ':' ' ' | cut -d" " -f1,3,4 | sort -u | awk '{ if ( $3 != "" ) { file=$1; sub(".*/","", file); printf "%s|%s|%s\n", file, $2, $3 } }' >> "{{ VM_folder }}/{{ symbols_file }}"
-        done
-
-        # Extract Symbols from Oracle executable
-        nm -A -C $ORACLE_HOME/bin/oracle | grep ' [TtDdRrVv] ' | tr ':' ' ' | cut -d" " -f1,3,4 | sort -u | awk '{ if ( $3 != "" ) { file=$1; sub(".*/","", file); printf "%s|%s|%s\n", file, $2, $3 } }' >> "{{ VM_folder }}/{{ symbols_file }}"
-
-        # Remove empty lines or sqlldr will fail due to constant.
-        sed -i '/^$/d' "{{ VM_folder }}/{{ symbols_file }}"
-
-    args:
-      chdir: "{{ dbhome_locl }}"
+        {{ VM_folder }}/user_scripts/odbfcl/adb_load_symbols/symbolGet.sh "{{ VM_folder }}/{{ symbols_file }}"
     environment:
       ORACLE_HOME: "{{ dbhome_locl }}"
     become: true

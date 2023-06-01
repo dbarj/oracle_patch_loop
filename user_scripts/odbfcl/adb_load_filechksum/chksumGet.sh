@@ -18,8 +18,9 @@ function exitError ()
 v_output="$1"
 
 [ -z "$v_output" ] && exitError "First parameter is the target file and cannot be null."
-[ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -f "${v_output}" ] && exitError "File \"${v_output}\" already exists. Remove it before rerunning."
+
+[ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 
 v_output_fdr="$(cd "$(dirname "${v_output}")"; pwd)"
 v_output_file="$(basename "${v_output}")"
@@ -40,6 +41,8 @@ v_libs=$(find "$ORACLE_HOME" -type f -name "*.a")
 
 v_ext_fold=`mktemp -d`
 v_out_file=`mktemp`
+
+echo "Generate files checksum for static libs. Please wait.." 
 
 IFS=$'\n'
 for v_lib in ${v_libs}

@@ -2,6 +2,9 @@
 # Script to get all non-binary files in ORACLE_HOME
 # Created by Rodrigo Jorge <http://www.dbarj.com.br/>
 
+# TODO: Fix: tar: ./rdbms/log/stout_orcl_17338.txt: Cannot stat: No such file or directory
+# SOLUTION: Stop DB before collection, or add flag to make tar ignore missing files
+
 set -eo pipefail
 
 function echoError ()
@@ -18,8 +21,9 @@ function exitError ()
 v_output="$1"
 
 [ -z "$v_output" ] && exitError "First parameter is the target file and cannot be null."
-[ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -f "${v_output}" ] && exitError "File \"${v_output}\" already exists. Remove it before rerunning."
+
+[ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 
 v_output_fdr="$(cd "$(dirname "${v_output}")"; pwd)"
 v_output_file="$(basename "${v_output}")"

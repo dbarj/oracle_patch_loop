@@ -1,11 +1,8 @@
 # Folder to store the collected ORACLE_HOME text files
-- name : Define txtcollect folder name
-  set_fact:
-    txtcollect_folder: "{{ output_folder }}/txtcollect"
-
-- name : Define txtcollect file names
+- name : Define txtcollect filename and folder
   set_fact:
     txtcollect_file: "txtcol_{{ file_suffix }}.tar.gz"
+    txtcollect_folder: "{{ output_folder }}/txtcollect"
 
 - name: "Check if {{ txtcollect_folder }}/{{ txtcollect_file }} exists"
   stat:
@@ -13,16 +10,17 @@
   register: txtcollect_stat_result
 
 # Will skip the rest if the txtcollect file exists
-
 - block :
 
-  # TODO: Fix: tar: ./rdbms/log/stout_orcl_17338.txt: Cannot stat: No such file or directory
-  # SOLUTION: Stop DB before collection, or add flag to make tar ignore missing files
   - name: Collect text files from ORACLE_HOME
     shell: |
-        find -type f -not -path "./.patch_storage/*" -not -name "tfa_setup" -print0 | xargs -0 grep -Il '.' | tar -czf {{ VM_folder }}/{{ txtcollect_file }} -T -
-    args:
-      chdir: "{{ dbhome_locl }}"
+        set -eo pipefail
+
+        export ORACLE_HOME
+
+        {{ VM_folder }}/user_scripts/odbfcl/adb_load_txtcollection_files/fileGet.sh "{{ VM_folder }}/{{ txtcollect_file }}"
+    environment:
+      ORACLE_HOME: "{{ dbhome_locl }}"
     become: true
     become_user: root
     delegate_to: "{{ vm_ip_address }}"

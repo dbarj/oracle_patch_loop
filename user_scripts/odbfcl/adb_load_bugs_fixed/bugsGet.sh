@@ -18,8 +18,9 @@ function exitError ()
 v_output="$1"
 
 [ -z "$v_output" ] && exitError "First parameter is the target file and cannot be null."
-[ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -f "${v_output}" ] && exitError "File \"${v_output}\" already exists. Remove it before rerunning."
+
+[ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 
 echo "Generating bugs list. Please wait.." 
 
