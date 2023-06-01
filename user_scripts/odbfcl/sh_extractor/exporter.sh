@@ -48,8 +48,9 @@ v_common_user=$($ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" @get_user_prefix.sq
 [ -n "${v_common_user}" ] && v_dump_user="${v_common_user}${v_dump_user}"
 ##################
 
-# Check if EXPORT_ONLY_DUMP was exported
-[ "$EXPORT_ONLY_DUMP" == "0" ] && v_only_dump=0 || v_only_dump=1
+# Check if EXPORT_MERGE_DUMP was exported.
+# If EXPORT_MERGE_DUMP=0, then the generated ORACLE_HOME related files (bugs, symbols, chksum, etc) won't be loaded on a table, but added to zip as separate files.
+[ "$EXPORT_MERGE_DUMP" == "0" ] && v_only_dump=0 || v_only_dump=1
 
 v_file=bugs_${v_pattern}.txt
 sh "${v_thisdir}/bugsGet.sh" ${v_file}
