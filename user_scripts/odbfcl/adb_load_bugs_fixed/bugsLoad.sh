@@ -21,6 +21,7 @@ v_outpref="${v_file}"
 
 [ -z "$v_file" ] && exitError "First parameter is the source file and cannot be null."
 [ ! -f "${v_file}" -o ! -r "${v_file}" ] && exitError "File '${v_file}' does not exist."
+
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
@@ -34,7 +35,7 @@ FIELDS TERMINATED BY x'09'
 (bug_id, patch_id, bug_desc)
 EOF
 
-sqlldr \
+$ORACLE_HOME/bin/sqlldr \
 userid=\'/ as sysdba\' \
 control="${v_outpref}_load.ctl" \
 errors=0 \

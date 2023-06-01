@@ -1,0 +1,15 @@
+## This code will call the extractor process.
+
+- name: "Run database extractor"
+  shell: |
+    set -eo pipefail
+    export ORACLE_HOME
+    export ORACLE_SID
+    export DB_EXP_GEN_DUMP=0
+    sh "{{ VM_folder }}/user_scripts/odbfcl/sh_extractor/exporter.sh" db
+  environment:
+    ORACLE_HOME: "{{ dbhome_locl }}"
+    ORACLE_SID: "{{ mysid }}"
+  become: true
+  become_user: oracle
+  delegate_to: "{{ vm_ip_address }}"

@@ -27,7 +27,7 @@ v_output_file="$(basename "${v_output}")"
 
 v_output_full="${v_output_fdr}/${v_output_file}"
 
-echo "Generating sha256sum list. Please wait.." 
+echo "Generating sha256sum for \$ORACLE_HOME files. Please wait.." 
 
 cd "$ORACLE_HOME"
 set +e
@@ -42,7 +42,7 @@ v_libs=$(find "$ORACLE_HOME" -type f -name "*.a")
 v_ext_fold=`mktemp -d`
 v_out_file=`mktemp`
 
-echo "Generate files checksum for static libs. Please wait.." 
+echo "Generating sha256sum for static libs. Please wait.." 
 
 IFS=$'\n'
 for v_lib in ${v_libs}

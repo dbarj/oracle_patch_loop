@@ -24,7 +24,7 @@ v_output="$1"
 
 echo "Generating bugs list. Please wait.." 
 
-"${ORACLE_HOME}"/OPatch/opatch lsinv -bugs_fixed |
+"$ORACLE_HOME"/OPatch/opatch lsinv -bugs_fixed |
 # Remove lines before this entry (inclusive)
 sed '1,/^List of Bugs fixed by Installed Patches/d' |
 # Remove lines before this entry (inclusive)
