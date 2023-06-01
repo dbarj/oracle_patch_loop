@@ -1,6 +1,6 @@
 set -eo pipefail
 
-v_folder_name="oradiff_exporter"
+v_folder_name="db_exporter"
 mkdir ${v_folder_name}
 cp -a ../extract/ ${v_folder_name}
 cp -a ../createUser.sql ${v_folder_name}
