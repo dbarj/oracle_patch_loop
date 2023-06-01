@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to collect all info needed for ORAdiff
+# Script to collect all info needed from the DB
 # Created by Rodrigo Jorge <http://www.dbarj.com.br/>
 # v1.0.0.5
 
@@ -48,28 +48,28 @@ v_common_user=$($ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" @get_user_prefix.sq
 [ -n "${v_common_user}" ] && v_dump_user="${v_common_user}${v_dump_user}"
 ##################
 
-# Check if ORADIFF_ONE_DUMP was exported
-[ "$ORADIFF_ONE_DUMP" == "0" ] && v_one_dump=0 || v_one_dump=1
+# Check if EXPORT_ONLY_DUMP was exported
+[ "$EXPORT_ONLY_DUMP" == "0" ] && v_only_dump=0 || v_only_dump=1
 
 v_file=bugs_${v_pattern}.txt
 sh "${v_thisdir}/bugsGet.sh" ${v_file}
-[ ${v_one_dump} -eq 0 ] && zip -m ${v_zip} ${v_file}
+[ ${v_only_dump} -eq 0 ] && zip -m ${v_zip} ${v_file}
 
 v_file=sha256sum_${v_pattern}.chk
 sh "${v_thisdir}/chksumGet.sh" ${v_file}
-[ ${v_one_dump} -eq 0 ] && zip -m ${v_zip} ${v_file}
+[ ${v_only_dump} -eq 0 ] && zip -m ${v_zip} ${v_file}
 
 v_file=txtcol_${v_pattern}.tar.gz
 sh "${v_thisdir}/fileGet.sh" ${v_file}
-[ ${v_one_dump} -eq 0 ] && zip -m ${v_zip} ${v_file}
+[ ${v_only_dump} -eq 0 ] && zip -m ${v_zip} ${v_file}
 
 v_file=symbols_${v_pattern}.csv
 sh "${v_thisdir}/symbolGet.sh" ${v_file}
-[ ${v_one_dump} -eq 0 ] && zip -m ${v_zip} ${v_file}
+[ ${v_only_dump} -eq 0 ] && zip -m ${v_zip} ${v_file}
 
 sh "${v_thisdir}/schemaCreate.sh" ${v_dump_user}
 
-if [ ${v_one_dump} -eq 1 ]
+if [ ${v_only_dump} -eq 1 ]
 then
   v_file=bugs_${v_pattern}.txt
   sh "${v_thisdir}/bugsLoad.sh" ${v_dump_user} ${v_file}
