@@ -40,18 +40,13 @@ v_output_file_cnt=`awk -F" " '{print NF-1}' <<< "${v_output_file_noext}"`
 
 echo "Generating table export. Please wait.." 
 
-cd "${v_thisdir}"/../
+cd "${v_thisdir}"/../../
 $ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" <<EOF
 @externalDir.sql "${v_output_fdr}" "${v_dump_user}" "${v_dump_dir_name}"
 EOF
 
-cd odbfcl/extract/
-$ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" <<EOF
-@hashGet.sql "${v_dump_user}" "${v_dump_dir_name}"
-EOF
-
 # Get DB Version
-v_version=$($ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" @get_db_version.sql)
+v_version=$($ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" @${v_thisdir}/get_db_version.sql)
 [ -z "${v_version}" ] && v_version=0
 
 if [ $v_version -lt 12 ]
@@ -70,7 +65,7 @@ logfile="${v_output_file_noext}.log" \
 content=data_only \
 schemas="${v_dump_user}"
 
-cd ../extract/sh_extractor/
+cd odbfcl/sh_extractor/
 $ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" <<EOF
 set verify off
 @cleanUser.sql "${v_dump_user}" "${v_dump_dir_name}"
