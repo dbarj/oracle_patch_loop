@@ -28,7 +28,9 @@ v_output_file="$(basename "${v_output}")"
 
 v_output_full="${v_output_fdr}/${v_output_file}"
 
-v_dump_pass='HhAaSsHh..135'
+# If DB_EXP_DUMP_PASS is exported, use it as the password.
+[ -n "$DB_EXP_DUMP_PASS" ] && v_dump_pass="$DB_EXP_DUMP_PASS" || v_dump_pass='HhAaSsHh..135'
+
 v_dump_dir_name='expdir_hash'
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"

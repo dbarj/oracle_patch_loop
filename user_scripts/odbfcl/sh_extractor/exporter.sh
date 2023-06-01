@@ -58,22 +58,22 @@ v_common_user=$($ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" @${v_thisdir}/get_u
 v_thisdir_bkp="${v_thisdir}" # REMOVE_IF_ZIP
 [ -f "${v_thisdir}/bugsGet.sh" ] && v_sh_from_zip=1 || v_sh_from_zip=0 # REMOVE_IF_ZIP
 
-[ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir}/../adb_load_bugs_fixed" # REMOVE_IF_ZIP
+[ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_bugs_fixed" # REMOVE_IF_ZIP
 v_file=bugs_${v_pattern}.txt
 sh "${v_thisdir}/bugsGet.sh" ${v_file}
 [ ${v_load_file} -eq 0 ] && zip -m ${v_zip} ${v_file}
 
-[ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir}/../adb_load_filechksum" # REMOVE_IF_ZIP
+[ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_filechksum" # REMOVE_IF_ZIP
 v_file=sha256sum_${v_pattern}.chk
 sh "${v_thisdir}/chksumGet.sh" ${v_file}
 [ ${v_load_file} -eq 0 ] && zip -m ${v_zip} ${v_file}
 
-[ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir}/../adb_load_txtcollection_files" # REMOVE_IF_ZIP
+[ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_txtcollection_files" # REMOVE_IF_ZIP
 v_file=txtcol_${v_pattern}.tar.gz
 sh "${v_thisdir}/fileGet.sh" ${v_file}
 [ ${v_load_file} -eq 0 ] && zip -m ${v_zip} ${v_file}
 
-[ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir}/../adb_load_symbols" # REMOVE_IF_ZIP
+[ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_symbols" # REMOVE_IF_ZIP
 v_file=symbols_${v_pattern}.csv
 sh "${v_thisdir}/symbolGet.sh" ${v_file}
 [ ${v_load_file} -eq 0 ] && zip -m ${v_zip} ${v_file}
@@ -83,22 +83,22 @@ sh "${v_thisdir}/schemaCreate.sh" ${v_dump_user}
 
 if [ ${v_load_file} -eq 1 ]
 then
-  [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir}/../adb_load_bugs_fixed" # REMOVE_IF_ZIP
+  [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_bugs_fixed" # REMOVE_IF_ZIP
   v_file=bugs_${v_pattern}.txt
   sh "${v_thisdir}/bugsLoad.sh" ${v_dump_user} ${v_file}
   rm -f ${v_file}
 
-  [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir}/../adb_load_filechksum" # REMOVE_IF_ZIP
+  [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_filechksum" # REMOVE_IF_ZIP
   v_file=sha256sum_${v_pattern}.chk
   sh "${v_thisdir}/chksumLoad.sh" ${v_dump_user} ${v_file}
   rm -f ${v_file}
 
-  [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir}/../adb_load_txtcollection_files" # REMOVE_IF_ZIP
+  [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_txtcollection_files" # REMOVE_IF_ZIP
   v_file=txtcol_${v_pattern}.tar.gz
   sh "${v_thisdir}/fileLoad.sh" ${v_dump_user} ${v_file}
   rm -f ${v_file}
 
-  [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir}/../adb_load_symbols" # REMOVE_IF_ZIP
+  [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_symbols" # REMOVE_IF_ZIP
   v_file=symbols_${v_pattern}.csv
   sh "${v_thisdir}/symbolLoad.sh" ${v_dump_user} ${v_file}
   rm -f ${v_file}

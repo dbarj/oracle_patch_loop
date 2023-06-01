@@ -6,6 +6,7 @@
     export ORACLE_HOME
     export ORACLE_SID
     export DB_EXP_GEN_DUMP=0
+    export DB_EXP_DUMP_PASS="{{ dump_pass }}"
     sh "{{ VM_folder }}/user_scripts/odbfcl/sh_extractor/exporter.sh" db
   environment:
     ORACLE_HOME: "{{ dbhome_locl }}"

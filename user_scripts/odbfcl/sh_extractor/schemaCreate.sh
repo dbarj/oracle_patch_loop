@@ -20,7 +20,8 @@ v_dump_user="$1"
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
-v_dump_pass='HhAaSsHh..135'
+# If DB_EXP_DUMP_PASS is exported, use it as the password.
+[ -n "$DB_EXP_DUMP_PASS" ] && v_dump_pass="$DB_EXP_DUMP_PASS" || v_dump_pass='HhAaSsHh..135'
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
 
