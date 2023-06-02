@@ -105,7 +105,7 @@
   - name: Check impdp error
     shell: |
         set -e +o pipefail
-        v_tot=$(cat "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.{{ oci_adb_tns }}.log" | grep 'ORA-' | grep -v 'ORA-39146' | wc -l)
+        v_tot=$(cat "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.{{ oci_adb_tns }}.log" | grep 'ORA-' | grep -v -E 'ORA-39146|ORA-28002' | wc -l)
         if [ $v_tot -ne 0 ]
         then
           exit 1
