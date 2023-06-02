@@ -14,9 +14,7 @@
   - name: Collect bugs from ORACLE_HOME
     shell: |
         set -eo pipefail
-
         export ORACLE_HOME
-
         {{ VM_folder }}/user_scripts/odbfcl/adb_load_bugs_fixed/bugsGet.sh "{{ VM_folder }}/{{ bugs_fixed_file }}"
     environment:
       ORACLE_HOME: "{{ dbhome_locl }}"
