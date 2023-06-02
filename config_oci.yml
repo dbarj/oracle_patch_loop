@@ -31,12 +31,12 @@ user_expdp_pre  :
 # - { file : "symbolGet.yml" , folder : "user_scripts/odbfcl/adb_load_symbols" , type : "yml", task_action : "Get all symbols on ORACLE_HOME binaries and libs" }
 # - { file : "tables_recreate.yml" , folder : "user_scripts/odbfcl" , type : "yml" , task_action : "Recreate tables" }
 # - { file : "hashGet.yml" , folder : "user_scripts/odbfcl/extract" , type : "yml", task_action : "Collect Database Info" }
-# - { file : "externalDir.yml" , type : "yml" , task_action : "Create External Directory" }
 - { file : "runExtractor.yml" , folder : "user_scripts/odbfcl" , type : "yml", task_action : "Collect DB Info" }
+- { file : "externalDir.yml" , type : "yml" , task_action : "Create External Directory" }
 
 user_expdp_post :
 - { file : "tables_recreate_adb.yml" , folder : "user_scripts/odbfcl" , type : "yml", task_action : "Recreate tables in ADB" }
-# - { file : "adb_load_expdp.yml" , folder : "user_scripts/odbfcl/adb_load_expdp" , type : "yml", task_action : "impdp files from OS to ADB" }
+- { file : "adb_load_expdp.yml" , folder : "user_scripts/odbfcl/adb_load_expdp" , type : "yml", task_action : "impdp files from OS to ADB" }
 # - { file : "adb_load_bugs_fixed.yml" , folder : "user_scripts/odbfcl/adb_load_bugs_fixed" , type : "yml", task_action : "Load fixed bugs list for ORACLE_HOME in ADB" }
 # - { file : "adb_load_filechksum.yml" , folder : "user_scripts/odbfcl/adb_load_filechksum" , type : "yml", task_action : "Load chksum for ORACLE_HOME in ADB" }
 # - { file : "adb_load_symbols.yml" , folder : "user_scripts/odbfcl/adb_load_symbols" , type : "yml", task_action : "Load chksum for ORACLE_HOME in ADB" }
