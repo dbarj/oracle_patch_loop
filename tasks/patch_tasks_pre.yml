@@ -129,8 +129,9 @@
       set_fact:
         found_lvm_entry: "{{ lvm_search }}"
       vars:
-        my_query: "lv_u01_{{ patch.type }}_{{ patch.id }}"
-        lvm_search: "{{ lvs_output.stdout_lines | select('search', my_query) | list | length > 0 }}"
+        my_query: "lv_u01_{{ patch.type }}_{{ patch.id }}$"
+        lvm_search: "{{ lvs_output.stdout_lines | select('match', my_query) | list | length > 0 }}"
+#       lvm_search: "{{ lvs_output.stdout_lines | select('search', my_query) | list | length > 0 }}"
 
     - block:
 

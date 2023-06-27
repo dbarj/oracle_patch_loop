@@ -39,7 +39,7 @@ LOAD
 INTO TABLE T_FILES_LOAD
 APPEND
 FIELDS TERMINATED BY '  '
-(file_name constant "$i",hash,path)
+(file_name constant "$i", hash, path char(4000))
 EOF
 echo $i
 sqlldr ${username}/hash control=${curdir}/load.ctl errors=0 discardmax=0 direct=true data=${filesdir}/${i} log=${filesdir}/${i}.log

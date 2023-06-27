@@ -32,7 +32,7 @@ LOAD
 INTO TABLE ${v_dump_user}.T_FILES
 APPEND
 FIELDS TERMINATED BY '  '
-(sha256_hash, path, file_type)
+(sha256_hash, path char(4000), file_type)
 EOF
 
 $ORACLE_HOME/bin/sqlldr \
