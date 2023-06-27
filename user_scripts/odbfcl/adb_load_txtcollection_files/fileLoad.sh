@@ -46,7 +46,7 @@ LOAD
 INTO TABLE ${v_dump_user}.T_TXTCOLLECTION_LOAD
 APPEND
 FIELDS TERMINATED BY ','
-( path, contents lobfile(path) terminated by eof)
+(path char(4000), contents lobfile(path) terminated by eof)
 EOF
 
 $ORACLE_HOME/bin/sqlldr \

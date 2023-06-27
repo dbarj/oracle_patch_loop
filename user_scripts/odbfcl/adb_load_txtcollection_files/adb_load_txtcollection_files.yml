@@ -40,7 +40,7 @@
         APPEND
         FIELDS TERMINATED BY ','
         (file_name constant "${v_file}",
-         path,
+         path char(4000),
          contents lobfile(path) terminated by eof)
         EOF
 

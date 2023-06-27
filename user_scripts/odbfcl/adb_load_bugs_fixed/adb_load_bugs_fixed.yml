@@ -32,7 +32,7 @@
         INTO TABLE T_BUGSFIXED_LOAD
         APPEND
         FIELDS TERMINATED BY x'09'
-        (file_name constant "${v_file}",bug_id, patch_id, bug_desc)
+        (file_name constant "${v_file}", bug_id, patch_id, bug_desc)
         EOF
 
         cd "{{ bugs_fixed_folder }}"
