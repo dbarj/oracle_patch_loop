@@ -1,10 +1,10 @@
 ## This code will take a snapshot named "vm_snapshot" for the VM. It will later be used as a base release for OJVMs.
 
 # Save latest machine image if not already
-- name: "Create new VM snapshot \"{{ vm_snapshot }}\" if not exists."
+- name: "Create new VM snapshot \"{{ save_snapshot }}\" if not exists."
   shell: |
        MACHINE="{{ vm_machine }}"
-       SNAPSHOT="{{ vm_snapshot }}"
+       SNAPSHOT="{{ save_snapshot }}"
        if ! $(VBoxManage showvminfo --machinereadable "$MACHINE" | grep -q "^SnapshotName.*=\"$SNAPSHOT\"")
        then
          VBoxManage snapshot "$MACHINE" take "$SNAPSHOT"

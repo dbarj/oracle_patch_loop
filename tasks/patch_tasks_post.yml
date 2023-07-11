@@ -50,3 +50,24 @@
 - name : Define latest processed
   set_fact:
     latest_processed: "{{ db_version }}|{{ patch.type }}|{{ patch.id }}"
+
+### Save latest applied PSU/RU as Base Snapshot for OJVM.
+- block:
+
+  - name : Generate Snapshot Name - VBox Mode
+    set_fact:
+      save_snapshot: "{{ db_version }} {{ patch.type }} {{ base_OJVM_id }}"
+    when: not oci_mode
+
+  - include: vbox_savestate.yml
+    when: not oci_mode
+
+  - name : Generate Snapshot Name - LVM Mode
+    set_fact:
+      save_snapshot: "{{ patch.type }}_{{ base_OJVM_id }}"
+    when: oci_mode
+
+  - include: lvm_savestate.yml
+    when: oci_mode
+
+  when: ( patch.type == "PSU" or patch.type == "RU" ) and base_OJVM_line == latest_processed

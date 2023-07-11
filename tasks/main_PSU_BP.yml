@@ -23,18 +23,43 @@
   with_items: "{{ list_info_oci }}"
   when: item.id == db_version and oci_mode
 
-# reload is called before every patch is applied to rollback the VM to the snapshot image.
-- name : Define snapshot base version to rollback when reload is called.
-  set_fact:
-    vm_snapshot: "{{ patch_base }}"
-
 # This parameter will control if database start command was ever called.
 - name : Define database_started variable to false.
   set_fact:
     database_started: false
 
+### For PSU or OJVM
+- block:
+
+  # Define base_OJVM_line. This is used by patch_task_post to save the snapshot.
+  - name: Get latest PSU ID
+    set_fact:
+      latest_PSU_id: "{{ lookup('vars', patch_list) | json_query(filter_qry_1) | max }}"
+      base_OJVM_id: "{{ ( ( lookup('vars', patch_list) | json_query(filter_qry_2) ) + [0] ) | max }}"
+    vars:
+      filter_qry_1: "[? type == 'PSU' ].id"
+      filter_qry_2: "[? type == 'PSU' && base_ojvm != null ].id"
+
+  - name : Set base OJVM ID
+    set_fact:
+      base_OJVM_id: "{{ latest_PSU_id }}"
+    when: (base_OJVM_id | int) == 0
+
+  - name : Generate base_OJVM_line
+    set_fact:
+      base_OJVM_line: "{{ db_version }}|PSU|{{ base_OJVM_id }}"
+
+  - name: "Base OJVM"
+    debug: msg="Base OJVM ID - {{ base_OJVM_line }}"
+
+  when: param_type is undefined or param_type == "PSU" or param_type == "OJVM"
+
 ### PSU
 - block:
+
+  - name : Define snapshot base version to rollback when reload is called.
+    set_fact:
+      vm_snapshot: "{{ patch_base }}"
 
   # Execute for base release
   - include: "{{ patch_file }}"
@@ -59,68 +84,24 @@
 
   when: param_type is undefined or param_type == "PSU"
 
-### Save latest applied PSU as Base Snapshot for OJVM. Why? OJVM can't be appied over base release. They requires a DB PSU.
+### OJVM
 - block:
 
-  - name: Get latest PSU ID
-    set_fact:
-      latest_psu_id: "{{ lookup('vars', patch_list) | json_query(filter_qry) | max }}"
-    vars:
-      filter_qry: "[?type=='PSU'].id"
+  ### Clean OJVM dumps if base_OJVM_id is different from the last.
+  - include: clean_ojvm_dumps.yml base_id="PSU_{{ base_OJVM_id }}"
 
-  - name : Generate Snapshot Name - VBox Mode
+  - name : Change Base Snapshot Name - VBox Mode
     set_fact:
-      vm_snapshot: "{{ db_version }} PSU {{ latest_psu_id }}"
-      latest_psu_line: "{{ db_version }}|PSU|{{ latest_psu_id }}"
+      vm_snapshot: "{{ db_version }} PSU {{ base_OJVM_id }}"
     when: not oci_mode
 
-  - name : Generate Snapshot Name - LVM Mode
+  - name : Change Base Snapshot Name - LVM Mode
     set_fact:
-      vm_snapshot: "PSU_{{ latest_psu_id }}"
-      latest_psu_line: "{{ db_version }}|PSU|{{ latest_psu_id }}"
-    when: oci_mode
-
-  - name: "Latest PSU"
-    debug: msg="Latest PSU ID - {{ latest_psu_line }}"
-
-  # Save lastest PSU as a new snapshot - Also changes vm_snapshot variable to it (for OJVM).
-  - include: vbox_savestate.yml
-    when: latest_psu_line == latest_processed and not oci_mode
-
-  - include: lvm_savestate.yml
-    when: latest_psu_line == latest_processed and oci_mode
-
-  - include: clean_ojvm_dumps.yml base_id="PSU_{{ latest_psu_id }}"
-
-  when: param_type is undefined or param_type == "PSU"
-
-### OJVM define base Snapshot
-# Will define it if not already done by the PSU above task. i.e: param_type is defined and "OJVM"
-- block:
-
-  - name: Get latest PSU ID
-    set_fact:
-      latest_psu_id: "{{ lookup('vars', patch_list) | json_query(filter_qry) | max }}"
-    vars:
-      filter_qry: "[?type=='PSU'].id"
-
-  - name : Generate Snapshot Name - VBox Mode
-    set_fact:
-      vm_snapshot: "{{ db_version }} PSU {{ latest_psu_id }}"
-    when: not oci_mode
-
-  - name : Generate Snapshot Name - LVM Mode
-    set_fact:
-      vm_snapshot: "PSU_{{ latest_psu_id }}"
+      vm_snapshot: "PSU_{{ base_OJVM_id }}"
     when: oci_mode
 
   - name: "Base Snapshot will be {{ vm_snapshot }}"
     debug: msg="Base Snapshot will be {{ vm_snapshot }}"
-
-  when: param_type is defined and param_type == "OJVM"
-
-### OJVM
-- block:
 
   # Execute for every OJVM
   - include: "{{ patch_file }}"
