@@ -131,6 +131,7 @@ list_11204:
   - { type : "BP"   , id : 221018 , patch_number : 34536785 , patch_folder : 34383800 }
   - { type : "BP"   , id : 230117 , patch_number : 34774400 , patch_folder : 34677707 }
   - { type : "BP"   , id : 230418 , patch_number : 35058326 , patch_folder : 34998345 }
+  - { type : "BP"   , id : 230718 , patch_number : 35369924 , patch_folder : 35269278 }
 
 ####################
 ##### 12.1.0.1 #####
@@ -286,6 +287,7 @@ list_12102:
   - { type : "BP"   , id : 221018 , patch_number : 34536908 , patch_folder : 34386250 }
   - { type : "BP"   , id : 230117 , patch_number : 34774411 , patch_folder : 34677708 } # START TIER 1
   - { type : "BP"   , id : 230418 , patch_number : 35058289 , patch_folder : 34998350 }
+  - { type : "BP"   , id : 230718 , patch_number : 35369903 , patch_folder : 35269270 }
 
 ####################
 ##### 12.2.0.1 #####
