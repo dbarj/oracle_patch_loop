@@ -380,51 +380,51 @@ list_12201:
 # No more updates on this one.
 
 list_18000:
-#  - { type : "RU"   , id : 2  , patch_number : 27676517 , base_snap : "18.1.0" }
-  - { type : "RU"   , id : 3  , patch_number : 28090523 , base_snap : "18.1.0" }
-  - { type : "RU"   , id : 4  , patch_number : 28655784 }
-  - { type : "RU"   , id : 5  , patch_number : 28822489 }
-  - { type : "RU"   , id : 6  , patch_number : 29301631 }
-  - { type : "RU"   , id : 7  , patch_number : 29757256 }
-  - { type : "RU"   , id : 8  , patch_number : 30112122 }
-  - { type : "RU"   , id : 9  , patch_number : 30480385 }
-  - { type : "RU"   , id : 10 , patch_number : 30872794 }
-  - { type : "RU"   , id : 11 , patch_number : 31308624 }
-  - { type : "RU"   , id : 12 , patch_number : 31730250 }
-  - { type : "RU"   , id : 13 , patch_number : 32204699 }
-  - { type : "RU"   , id : 14 , patch_number : 32524155 }
-  - { type : "RU"   , id : 15 , patch_number : 32907484 } # NOT AVAILABLE TO DOWNLOAD
-  - { type : "RU"   , id : 16 , patch_number : 33339024 } # NOT AVAILABLE TO DOWNLOAD
-  - { type : "RU"   , id : 17 , patch_number : 33583960 , base_ojvm: true } # LAST PATCH
-  - { type : "RU"   , id : 18 , patch_number : 33878468 } # NOT AVAILABLE TO DOWNLOAD
-  - { type : "RU"   , id : 19 , patch_number : 34219743 } # NOT AVAILABLE TO DOWNLOAD
-  - { type : "RU"   , id : 20 , patch_number : 34518577 } # NOT AVAILABLE TO DOWNLOAD
-  - { type : "RU"   , id : 21 , patch_number : 34854019 } # NOT AVAILABLE TO DOWNLOAD
-  - { type : "RU"   , id : 22 , patch_number : 35114260 } # NOT AVAILABLE TO DOWNLOAD
-  - { type : "RU"   , id : 23 , patch_number : 35411347 } # NOT AVAILABLE TO DOWNLOAD
-# - { type : "RUR"  , id : 1  , patch_number : 28346593 , base_ru : '18.2'  }
-# - { type : "RUR"  , id : 2  , patch_number : 28601267 , base_ru : '18.2'  }
-  - { type : "RUR"  , id : 1  , patch_number : 28507480 , base_ru : '18.3'  }
-  - { type : "RUR"  , id : 2  , patch_number : 28790643 , base_ru : '18.3'  }
-  - { type : "RUR"  , id : 1  , patch_number : 28822587 , base_ru : '18.4'  }
-  - { type : "RUR"  , id : 2  , patch_number : 29230809 , base_ru : '18.4'  }
-  - { type : "RUR"  , id : 1  , patch_number : 29230887 , base_ru : '18.5'  }
-  - { type : "RUR"  , id : 2  , patch_number : 29708437 , base_ru : '18.5'  }
-  - { type : "RUR"  , id : 1  , patch_number : 29708235 , base_ru : '18.6'  }
-  - { type : "RUR"  , id : 2  , patch_number : 30087881 , base_ru : '18.6'  }
-  - { type : "RUR"  , id : 1  , patch_number : 30080518 , base_ru : '18.7'  }
-  - { type : "RUR"  , id : 2  , patch_number : 30446239 , base_ru : '18.7'  }
-  - { type : "RUR"  , id : 1  , patch_number : 30445895 , base_ru : '18.8'  }
-  - { type : "RUR"  , id : 2  , patch_number : 30830887 , base_ru : '18.8'  }
-  - { type : "RUR"  , id : 1  , patch_number : 30798089 , base_ru : '18.9'  }
-  - { type : "RUR"  , id : 2  , patch_number : 31212186 , base_ru : '18.9'  }
-  - { type : "RUR"  , id : 1  , patch_number : 31211410 , base_ru : '18.10' }
-  - { type : "RUR"  , id : 2  , patch_number : 31667173 , base_ru : '18.10' }
-  - { type : "RUR"  , id : 1  , patch_number : 31666917 , base_ru : '18.11' }
-  - { type : "RUR"  , id : 2  , patch_number : 32066686 , base_ru : '18.11' }
-  - { type : "RUR"  , id : 1  , patch_number : 32072459 , base_ru : '18.12' }
-  - { type : "RUR"  , id : 2  , patch_number : 32421478 , base_ru : '18.12' }
-  - { type : "RUR"  , id : 1  , patch_number : 32451079 , base_ru : '18.13' }
+# - { type : "RU"   , id : 2      , patch_number : 27676517 , base_snap : "18.1.0" }
+  - { type : "RU"   , id : 3      , patch_number : 28090523 , base_snap : "18.1.0" }
+  - { type : "RU"   , id : 4      , patch_number : 28655784 }
+  - { type : "RU"   , id : 5      , patch_number : 28822489 }
+  - { type : "RU"   , id : 6      , patch_number : 29301631 }
+  - { type : "RU"   , id : 7      , patch_number : 29757256 }
+  - { type : "RU"   , id : 8      , patch_number : 30112122 }
+  - { type : "RU"   , id : 9      , patch_number : 30480385 }
+  - { type : "RU"   , id : 10     , patch_number : 30872794 }
+  - { type : "RU"   , id : 11     , patch_number : 31308624 }
+  - { type : "RU"   , id : 12     , patch_number : 31730250 }
+  - { type : "RU"   , id : 13     , patch_number : 32204699 }
+  - { type : "RU"   , id : 14     , patch_number : 32524155 }
+  - { type : "RU"   , id : 15     , patch_number : 32907484 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 16     , patch_number : 33339024 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 17     , patch_number : 33583960 , base_ojvm: true } # LAST PATCH
+  - { type : "RU"   , id : 18     , patch_number : 33878468 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 19     , patch_number : 34219743 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 20     , patch_number : 34518577 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 21     , patch_number : 34854019 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 22     , patch_number : 35114260 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 23     , patch_number : 35411347 } # NOT AVAILABLE TO DOWNLOAD
+# - { type : "RUR"  , id : 1      , patch_number : 28346593 , base_ru : '18.2'  }
+# - { type : "RUR"  , id : 2      , patch_number : 28601267 , base_ru : '18.2'  }
+  - { type : "RUR"  , id : 1      , patch_number : 28507480 , base_ru : '18.3'  }
+  - { type : "RUR"  , id : 2      , patch_number : 28790643 , base_ru : '18.3'  }
+  - { type : "RUR"  , id : 1      , patch_number : 28822587 , base_ru : '18.4'  }
+  - { type : "RUR"  , id : 2      , patch_number : 29230809 , base_ru : '18.4'  }
+  - { type : "RUR"  , id : 1      , patch_number : 29230887 , base_ru : '18.5'  }
+  - { type : "RUR"  , id : 2      , patch_number : 29708437 , base_ru : '18.5'  }
+  - { type : "RUR"  , id : 1      , patch_number : 29708235 , base_ru : '18.6'  }
+  - { type : "RUR"  , id : 2      , patch_number : 30087881 , base_ru : '18.6'  }
+  - { type : "RUR"  , id : 1      , patch_number : 30080518 , base_ru : '18.7'  }
+  - { type : "RUR"  , id : 2      , patch_number : 30446239 , base_ru : '18.7'  }
+  - { type : "RUR"  , id : 1      , patch_number : 30445895 , base_ru : '18.8'  }
+  - { type : "RUR"  , id : 2      , patch_number : 30830887 , base_ru : '18.8'  }
+  - { type : "RUR"  , id : 1      , patch_number : 30798089 , base_ru : '18.9'  }
+  - { type : "RUR"  , id : 2      , patch_number : 31212186 , base_ru : '18.9'  }
+  - { type : "RUR"  , id : 1      , patch_number : 31211410 , base_ru : '18.10' }
+  - { type : "RUR"  , id : 2      , patch_number : 31667173 , base_ru : '18.10' }
+  - { type : "RUR"  , id : 1      , patch_number : 31666917 , base_ru : '18.11' }
+  - { type : "RUR"  , id : 2      , patch_number : 32066686 , base_ru : '18.11' }
+  - { type : "RUR"  , id : 1      , patch_number : 32072459 , base_ru : '18.12' }
+  - { type : "RUR"  , id : 2      , patch_number : 32421478 , base_ru : '18.12' }
+  - { type : "RUR"  , id : 1      , patch_number : 32451079 , base_ru : '18.13' }
   - { type : "OJVM" , id : 180417 , patch_number : 27636900 }
   - { type : "OJVM" , id : 180717 , patch_number : 27923415 }
   - { type : "OJVM" , id : 181016 , patch_number : 28502229 }
@@ -457,54 +457,54 @@ list_18000:
 # Oracle Database 19c Proactive Patch Information (Doc ID 2521164.1)
 
 list_19000:
-  - { type : "RU"   , id : 3  , patch_number : 29517242 , base_snap : "19.2.0" }
-  - { type : "RU"   , id : 4  , patch_number : 29834717 }
-  - { type : "RU"   , id : 5  , patch_number : 30125133 }
-  - { type : "RU"   , id : 6  , patch_number : 30557433 }
-  - { type : "RU"   , id : 7  , patch_number : 30869156 }
-  - { type : "RU"   , id : 8  , patch_number : 31281355 }
-  - { type : "RU"   , id : 9  , patch_number : 31771877 }
-  - { type : "RU"   , id : 10 , patch_number : 32218454 }
-  - { type : "RU"   , id : 11 , patch_number : 32545013 }
-  - { type : "RU"   , id : 12 , patch_number : 32904851 }
-  - { type : "RU"   , id : 13 , patch_number : 33192793 }
-  - { type : "RU"   , id : 14 , patch_number : 33515361 }
-  - { type : "RU"   , id : 15 , patch_number : 33806152 }
-  - { type : "RU"   , id : 16 , patch_number : 34133642 }
-  - { type : "RU"   , id : 17 , patch_number : 34419443 }
-  - { type : "RU"   , id : 18   , patch_number : 34765931 , aru : 25078403 , file_suf : '_v0' }
-  - { type : "RU"   , id : 18.1 , patch_number : 34765931 , aru : 25098466 }
-  - { type : "RU"   , id : 19 , patch_number : 35042068 }
-  - { type : "RU"   , id : 20 , patch_number : 35320081 }
-  - { type : "RUR"  , id : 1 , patch_number : 29799057 , base_ru : '19.3' }
-  - { type : "RUR"  , id : 2 , patch_number : 30087906 , base_ru : '19.3' }
-  - { type : "RUR"  , id : 1 , patch_number : 30080447 , base_ru : '19.4' }
-  - { type : "RUR"  , id : 2 , patch_number : 30446228 , base_ru : '19.4' }
-  - { type : "RUR"  , id : 1 , patch_number : 30446054 , base_ru : '19.5' }
-  - { type : "RUR"  , id : 2 , patch_number : 30830913 , base_ru : '19.5' }
-  - { type : "RUR"  , id : 1 , patch_number : 30797938 , base_ru : '19.6' }
-  - { type : "RUR"  , id : 2 , patch_number : 31212138 , base_ru : '19.6' }
-  - { type : "RUR"  , id : 1 , patch_number : 31204483 , base_ru : '19.7' }
-  - { type : "RUR"  , id : 2 , patch_number : 31667176 , base_ru : '19.7' }
-  - { type : "RUR"  , id : 1 , patch_number : 31666885 , base_ru : '19.8' }
-  - { type : "RUR"  , id : 2 , patch_number : 32066676 , base_ru : '19.8' }
-  - { type : "RUR"  , id : 1 , patch_number : 32072711 , base_ru : '19.9' }
-  - { type : "RUR"  , id : 2 , patch_number : 32421507 , base_ru : '19.9' }
-  - { type : "RUR"  , id : 1 , patch_number : 32441092 , base_ru : '19.10' }
-  - { type : "RUR"  , id : 2 , patch_number : 32819074 , base_ru : '19.10' }
-  - { type : "RUR"  , id : 3 , patch_number : 32923627 , base_ru : '19.10' }
-  - { type : "RUR"  , id : 1 , patch_number : 32844504 , base_ru : '19.11' }
-  - { type : "RUR"  , id : 2 , patch_number : 33153989 , base_ru : '19.11' }
-  - { type : "RUR"  , id : 1 , patch_number : 33210889 , base_ru : '19.12' }
-  - { type : "RUR"  , id : 2 , patch_number : 33494256 , base_ru : '19.12' }
-  - { type : "RUR"  , id : 1 , patch_number : 33516456 , base_ru : '19.13' }
-  - { type : "RUR"  , id : 2 , patch_number : 33783771 , base_ru : '19.13' }
-  - { type : "RUR"  , id : 1 , patch_number : 33806138 , base_ru : '19.14' }
-  - { type : "RUR"  , id : 2 , patch_number : 34110559 , base_ru : '19.14' }
-  - { type : "RUR"  , id : 1 , patch_number : 34119532 , base_ru : '19.15' }
-  - { type : "RUR"  , id : 2 , patch_number : 34429835 , base_ru : '19.15' }
-  - { type : "RUR"  , id : 1 , patch_number : 34444812 , base_ru : '19.16' }
-  - { type : "RUR"  , id : 2 , patch_number : 34771828 , base_ru : '19.16' }
+  - { type : "RU"   , id : 3      , patch_number : 29517242 , base_snap : "19.2.0" }
+  - { type : "RU"   , id : 4      , patch_number : 29834717 }
+  - { type : "RU"   , id : 5      , patch_number : 30125133 }
+  - { type : "RU"   , id : 6      , patch_number : 30557433 }
+  - { type : "RU"   , id : 7      , patch_number : 30869156 }
+  - { type : "RU"   , id : 8      , patch_number : 31281355 }
+  - { type : "RU"   , id : 9      , patch_number : 31771877 }
+  - { type : "RU"   , id : 10     , patch_number : 32218454 }
+  - { type : "RU"   , id : 11     , patch_number : 32545013 }
+  - { type : "RU"   , id : 12     , patch_number : 32904851 }
+  - { type : "RU"   , id : 13     , patch_number : 33192793 }
+  - { type : "RU"   , id : 14     , patch_number : 33515361 }
+  - { type : "RU"   , id : 15     , patch_number : 33806152 }
+  - { type : "RU"   , id : 16     , patch_number : 34133642 }
+  - { type : "RU"   , id : 17     , patch_number : 34419443 }
+  - { type : "RU"   , id : 18     , patch_number : 34765931 , aru : 25078403 , file_suf : '_v0' }
+  - { type : "RU"   , id : 18.1   , patch_number : 34765931 , aru : 25098466 }
+  - { type : "RU"   , id : 19     , patch_number : 35042068 }
+  - { type : "RU"   , id : 20     , patch_number : 35320081 }
+  - { type : "RUR"  , id : 1      , patch_number : 29799057 , base_ru : '19.3' }
+  - { type : "RUR"  , id : 2      , patch_number : 30087906 , base_ru : '19.3' }
+  - { type : "RUR"  , id : 1      , patch_number : 30080447 , base_ru : '19.4' }
+  - { type : "RUR"  , id : 2      , patch_number : 30446228 , base_ru : '19.4' }
+  - { type : "RUR"  , id : 1      , patch_number : 30446054 , base_ru : '19.5' }
+  - { type : "RUR"  , id : 2      , patch_number : 30830913 , base_ru : '19.5' }
+  - { type : "RUR"  , id : 1      , patch_number : 30797938 , base_ru : '19.6' }
+  - { type : "RUR"  , id : 2      , patch_number : 31212138 , base_ru : '19.6' }
+  - { type : "RUR"  , id : 1      , patch_number : 31204483 , base_ru : '19.7' }
+  - { type : "RUR"  , id : 2      , patch_number : 31667176 , base_ru : '19.7' }
+  - { type : "RUR"  , id : 1      , patch_number : 31666885 , base_ru : '19.8' }
+  - { type : "RUR"  , id : 2      , patch_number : 32066676 , base_ru : '19.8' }
+  - { type : "RUR"  , id : 1      , patch_number : 32072711 , base_ru : '19.9' }
+  - { type : "RUR"  , id : 2      , patch_number : 32421507 , base_ru : '19.9' }
+  - { type : "RUR"  , id : 1      , patch_number : 32441092 , base_ru : '19.10' }
+  - { type : "RUR"  , id : 2      , patch_number : 32819074 , base_ru : '19.10' }
+  - { type : "RUR"  , id : 3      , patch_number : 32923627 , base_ru : '19.10' }
+  - { type : "RUR"  , id : 1      , patch_number : 32844504 , base_ru : '19.11' }
+  - { type : "RUR"  , id : 2      , patch_number : 33153989 , base_ru : '19.11' }
+  - { type : "RUR"  , id : 1      , patch_number : 33210889 , base_ru : '19.12' }
+  - { type : "RUR"  , id : 2      , patch_number : 33494256 , base_ru : '19.12' }
+  - { type : "RUR"  , id : 1      , patch_number : 33516456 , base_ru : '19.13' }
+  - { type : "RUR"  , id : 2      , patch_number : 33783771 , base_ru : '19.13' }
+  - { type : "RUR"  , id : 1      , patch_number : 33806138 , base_ru : '19.14' }
+  - { type : "RUR"  , id : 2      , patch_number : 34110559 , base_ru : '19.14' }
+  - { type : "RUR"  , id : 1      , patch_number : 34119532 , base_ru : '19.15' }
+  - { type : "RUR"  , id : 2      , patch_number : 34429835 , base_ru : '19.15' }
+  - { type : "RUR"  , id : 1      , patch_number : 34444812 , base_ru : '19.16' }
+  - { type : "RUR"  , id : 2      , patch_number : 34771828 , base_ru : '19.16' }
   - { type : "MRP"  , id : 221115 , patch_number : 34737974 , base_ru : '19.17' , dep_type : 'RU' , dep_id : 17 , apply_method : "opatchauto" }
   - { type : "MRP"  , id : 221220 , patch_number : 34819700 , base_ru : '19.17' , dep_type : 'RU' , dep_id : 17 , apply_method : "opatchauto" }
   - { type : "MRP"  , id : 230117 , patch_number : 34935010 , base_ru : '19.17' , dep_type : 'RU' , dep_id : 17 , apply_method : "opatchauto" }
@@ -544,7 +544,7 @@ list_19000:
 ####################
 
 list_21000:
-  #- { type : "RU"   , id : 3  , patch_number : 00000000 , base_snap : "21.2.0" }
+# - { type : "RU"   , id : 3   , patch_number : 00000000 , base_snap : "21.2.0" }
   - { type : "RU"   , id : 4   , patch_number : 33239276 }
   - { type : "RU"   , id : 5   , patch_number : 33516412 }
   - { type : "RU"   , id : 6   , patch_number : 33843745 }
