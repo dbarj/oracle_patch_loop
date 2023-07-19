@@ -32,8 +32,8 @@ list_11204:
   - { type : "PSU"  , id : 200114 , patch_number : 30298532 }
   - { type : "PSU"  , id : 200414 , patch_number : 30670774 }
   - { type : "PSU"  , id : 200714 , patch_number : 31103343 }
-  - { type : "PSU"  , id : 201020 , patch_number : 31537677 }
-  - { type : "PSU"  , id : 210119 , patch_number : 31983472 }
+  - { type : "PSU"  , id : 201020 , patch_number : 31537677 } # LAST PUBLIC - END OF EXTENDED
+  - { type : "PSU"  , id : 210119 , patch_number : 31983472 } # START TIER 1
   - { type : "PSU"  , id : 210420 , patch_number : 32328626 }
   - { type : "PSU"  , id : 210720 , patch_number : 32758711 }
   - { type : "PSU"  , id : 211019 , patch_number : 33128584 }
@@ -41,6 +41,9 @@ list_11204:
   - { type : "PSU"  , id : 220419 , patch_number : 33711103 }
   - { type : "PSU"  , id : 220719 , patch_number : 34057724 }
   - { type : "PSU"  , id : 221018 , patch_number : 34386237 }
+  - { type : "PSU"  , id : 230117 , patch_number : 34677698 }
+  - { type : "PSU"  , id : 230418 , patch_number : 34998337 }
+  - { type : "PSU"  , id : 230718 , patch_number : 35269283 }
   - { type : "OJVM" , id : 1      , patch_number : 19282021 }
   - { type : "OJVM" , id : 2      , patch_number : 19877440 }
   - { type : "OJVM" , id : 3      , patch_number : 20406239 }
@@ -65,15 +68,18 @@ list_11204:
   - { type : "OJVM" , id : 200114 , patch_number : 30503372 }
   - { type : "OJVM" , id : 200414 , patch_number : 30805543 }
   - { type : "OJVM" , id : 200714 , patch_number : 31219953 }
-  - { type : "OJVM" , id : 201020 , patch_number : 31668908 }
-# - { type : "OJVM" , id : 210119 , patch_number :  } # NOTHING TO FIX - NO PATCH CREATED
-  - { type : "OJVM" , id : 210420 , patch_number : 32671980 }
+  - { type : "OJVM" , id : 201020 , patch_number : 31668908 } # LAST PUBLIC - END OF EXTENDED
+# - { type : "OJVM" , id : 210119 , patch_number : xxxxxxxx } # NOTHING TO FIX - NO PATCH CREATED
+  - { type : "OJVM" , id : 210420 , patch_number : 32671980 } # START TIER 1
   - { type : "OJVM" , id : 210720 , patch_number : 32876451 }
   - { type : "OJVM" , id : 211019 , patch_number : 33192642 }
   - { type : "OJVM" , id : 220118 , patch_number : 33561250 }
   - { type : "OJVM" , id : 220419 , patch_number : 33829826 }
   - { type : "OJVM" , id : 220719 , patch_number : 34085652 }
   - { type : "OJVM" , id : 221018 , patch_number : 34412266 }
+  - { type : "OJVM" , id : 230117 , patch_number : 34763334 }
+  - { type : "OJVM" , id : 230418 , patch_number : 35039831 }
+  - { type : "OJVM" , id : 230718 , patch_number : 35349843 }
   - { type : "BP"   , id : 1      , patch_number : 17628025 , patch_folder : 17628006 }
   - { type : "BP"   , id : 2      , patch_number : 17838803 , patch_folder : 17741631 }
   - { type : "BP"   , id : 3      , patch_number : 17904156 , patch_folder : 17943261 }
@@ -114,8 +120,8 @@ list_11204:
   - { type : "BP"   , id : 200114 , patch_number : 30501894 , patch_folder : 30310975 }
   - { type : "BP"   , id : 200414 , patch_number : 30805507 , patch_folder : 30691206 }
   - { type : "BP"   , id : 200714 , patch_number : 31220011 , patch_folder : 31103314 }
-  - { type : "BP"   , id : 201020 , patch_number : 31718644 , patch_folder : 31537652 }
-  - { type : "BP"   , id : 210119 , patch_number : 32131241 , patch_folder : 31983477 }
+  - { type : "BP"   , id : 201020 , patch_number : 31718644 , patch_folder : 31537652 } # LAST PUBLIC - END OF EXTENDED
+  - { type : "BP"   , id : 210119 , patch_number : 32131241 , patch_folder : 31983477 } # START TIER 1
   - { type : "BP"   , id : 210420 , patch_number : 32537095 , patch_folder : 32328629 }
   - { type : "BP"   , id : 210720 , patch_number : 32917411 , patch_folder : 32758732 }
   - { type : "BP"   , id : 211019 , patch_number : 33248386 , patch_folder : 33128587 }
@@ -123,7 +129,8 @@ list_11204:
   - { type : "BP"   , id : 220419 , patch_number : 33880541 , patch_folder : 33711121 }
   - { type : "BP"   , id : 220719 , patch_number : 34204546 , patch_folder : 34057719 }
   - { type : "BP"   , id : 221018 , patch_number : 34536785 , patch_folder : 34383800 }
-
+  - { type : "BP"   , id : 230117 , patch_number : 34774400 , patch_folder : 34677707 }
+  - { type : "BP"   , id : 230418 , patch_number : 35058326 , patch_folder : 34998345 }
 
 ####################
 ##### 12.1.0.1 #####
@@ -174,7 +181,7 @@ list_12102:
   - { type : "PSU"  , id : 170117 , patch_number : 24732082 }
   - { type : "PSU"  , id : 170418 , patch_number : 25171037 }
   - { type : "PSU"  , id : 170718 , patch_number : 25755742 }
-  - { type : "PSU"  , id : 170814 , patch_number : 26609783 }
+  - { type : "PSU"  , id : 170814 , patch_number : 26609783 } # EXTRA PSU
   - { type : "PSU"  , id : 171017 , patch_number : 26713565 }
   - { type : "PSU"  , id : 180116 , patch_number : 26925311 }
   - { type : "PSU"  , id : 180417 , patch_number : 27338041 }
@@ -194,8 +201,11 @@ list_12102:
   - { type : "PSU"  , id : 211019 , patch_number : 33128590 }
   - { type : "PSU"  , id : 220118 , patch_number : 33477199 }
   - { type : "PSU"  , id : 220419 , patch_number : 33711081 }
-  - { type : "PSU"  , id : 220719 , patch_number : 34057742 }
+  - { type : "PSU"  , id : 220719 , patch_number : 34057742 } # LAST PUBLIC - END OF EXTENDED
   - { type : "PSU"  , id : 221018 , patch_number : 34386266 }
+  - { type : "PSU"  , id : 230117 , patch_number : 34677720 } # START TIER 1
+  - { type : "PSU"  , id : 230418 , patch_number : 34998358 }
+  - { type : "PSU"  , id : 230718 , patch_number : 35269262 }
   - { type : "OJVM" , id : 1      , patch_number : 19282028 }
   - { type : "OJVM" , id : 2      , patch_number : 19877336 }
   - { type : "OJVM" , id : 3      , patch_number : 20415564 }
@@ -227,8 +237,11 @@ list_12102:
   - { type : "OJVM" , id : 211019 , patch_number : 33192628 }
   - { type : "OJVM" , id : 220118 , patch_number : 33561268 }
   - { type : "OJVM" , id : 220419 , patch_number : 33808385 }
-  - { type : "OJVM" , id : 220719 , patch_number : 34086863 }
+  - { type : "OJVM" , id : 220719 , patch_number : 34086863 } # LAST PUBLIC - END OF EXTENDED
   - { type : "OJVM" , id : 221018 , patch_number : 34412250 }
+  - { type : "OJVM" , id : 230117 , patch_number : 34763317 } # START TIER 1
+  - { type : "OJVM" , id : 230418 , patch_number : 35077439 }
+  - { type : "OJVM" , id : 230718 , patch_number : 35354391 }
   - { type : "BP"   , id : 1      , patch_number : 19404326 , patch_folder : 19189240 }
   - { type : "BP"   , id : 2      , patch_number : 19774304 , patch_folder : 19649591 }
   - { type : "BP"   , id : 3      , patch_number : 20026159 , patch_folder : 19878106 }
@@ -269,8 +282,10 @@ list_12102:
   - { type : "BP"   , id : 211019 , patch_number : 33248411 , patch_folder : 33114885 }
   - { type : "BP"   , id : 220118 , patch_number : 33575286 , patch_folder : 33465249 }
   - { type : "BP"   , id : 220419 , patch_number : 33880550 , patch_folder : 33711072 }
-  - { type : "BP"   , id : 220719 , patch_number : 34204559 , patch_folder : 34057733 }
+  - { type : "BP"   , id : 220719 , patch_number : 34204559 , patch_folder : 34057733 } # LAST PUBLIC - END OF EXTENDED
   - { type : "BP"   , id : 221018 , patch_number : 34536908 , patch_folder : 34386250 }
+  - { type : "BP"   , id : 230117 , patch_number : 34774411 , patch_folder : 34677708 } # START TIER 1
+  - { type : "BP"   , id : 230418 , patch_number : 35058289 , patch_folder : 34998350 }
 
 ####################
 ##### 12.2.0.1 #####
@@ -298,10 +313,13 @@ list_12201:
   - { type : "RU"   , id : 210420 , patch_number : 32507738 }
   - { type : "RU"   , id : 210720 , patch_number : 32916808 }
   - { type : "RU"   , id : 211019 , patch_number : 33261817 }
-  - { type : "RU"   , id : 220118 , patch_number : 33587128 }
-# - { type : "RU"   , id : 220419 , patch_number : 33878460 } # NOT AVAILABLE TO DOWNLOAD
-# - { type : "RU"   , id : 220719 , patch_number : 34219726 } # NOT AVAILABLE TO DOWNLOAD
-# - { type : "RU"   , id : 221018 , patch_number : 34518562 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 220118 , patch_number : 33587128 , base_ojvm: true } # LAST PATCH
+  - { type : "RU"   , id : 220419 , patch_number : 33878460 } # PASSWORD PROTECTED
+  - { type : "RU"   , id : 220719 , patch_number : 34219726 } # PASSWORD PROTECTED
+  - { type : "RU"   , id : 221018 , patch_number : 34518562 } # PASSWORD PROTECTED
+  - { type : "RU"   , id : 230117 , patch_number : 34850184 } # PASSWORD PROTECTED
+  - { type : "RU"   , id : 230418 , patch_number : 35115783 } # PASSWORD PROTECTED
+  - { type : "RU"   , id : 230718 , patch_number : 35407080 } # PASSWORD PROTECTED
   - { type : "RUR"  , id : 171017 , patch_number : 26518812 , base_ru : JUL2017 }
   - { type : "RUR"  , id : 180116 , patch_number : 27013506 , base_ru : JUL2017 }
   - { type : "RUR"  , id : 180116 , patch_number : 27013510 , base_ru : OCT2017 }
@@ -345,10 +363,13 @@ list_12201:
   - { type : "OJVM" , id : 210420 , patch_number : 32473172 }
   - { type : "OJVM" , id : 210720 , patch_number : 32876409 }
   - { type : "OJVM" , id : 211019 , patch_number : 33192662 }
-  - { type : "OJVM" , id : 220118 , patch_number : 33561275 }
-# - { type : "OJVM" , id : 220419 , patch_number : 33829783 } # NOT AVAILABLE TO DOWNLOAD
-# - { type : "OJVM" , id : 220719 , patch_number : 34086867 } # NOT AVAILABLE TO DOWNLOAD
-# - { type : "OJVM" , id : 221018 , patch_number : 34412174 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "OJVM" , id : 220118 , patch_number : 33561275 } # LAST PATCH
+  - { type : "OJVM" , id : 220419 , patch_number : 33829783 } # PASSWORD PROTECTED
+  - { type : "OJVM" , id : 220719 , patch_number : 34086867 } # PASSWORD PROTECTED
+  - { type : "OJVM" , id : 221018 , patch_number : 34412174 } # PASSWORD PROTECTED
+  - { type : "OJVM" , id : 230117 , patch_number : 34763276 } # PASSWORD PROTECTED
+  - { type : "OJVM" , id : 230418 , patch_number : 35058256 } # PASSWORD PROTECTED
+  - { type : "OJVM" , id : 230718 , patch_number : 35348984 } # PASSWORD PROTECTED
 
 ####################
 ##### 18.0.0.0 #####
@@ -372,12 +393,15 @@ list_18000:
   - { type : "RU"   , id : 12 , patch_number : 31730250 }
   - { type : "RU"   , id : 13 , patch_number : 32204699 }
   - { type : "RU"   , id : 14 , patch_number : 32524155 }
-# - { type : "RU"   , id : 15 , patch_number : 32907484 } # NOT AVAILABLE TO DOWNLOAD
-# - { type : "RU"   , id : 16 , patch_number : 33339024 } # NOT AVAILABLE TO DOWNLOAD
-  - { type : "RU"   , id : 17 , patch_number : 33583960 }
-# - { type : "RU"   , id : 18 , patch_number : 33878468 } # NOT AVAILABLE TO DOWNLOAD
-# - { type : "RU"   , id : 19 , patch_number : 34219743 } # NOT AVAILABLE TO DOWNLOAD
-# - { type : "RU"   , id : 20 , patch_number : 34518577 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 15 , patch_number : 32907484 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 16 , patch_number : 33339024 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 17 , patch_number : 33583960 , base_ojvm: true } # LAST PATCH
+  - { type : "RU"   , id : 18 , patch_number : 33878468 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 19 , patch_number : 34219743 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 20 , patch_number : 34518577 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 21 , patch_number : 34854019 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 22 , patch_number : 35114260 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 23 , patch_number : 35411347 } # NOT AVAILABLE TO DOWNLOAD
 # - { type : "RUR"  , id : 1  , patch_number : 28346593 , base_ru : '18.2'  }
 # - { type : "RUR"  , id : 2  , patch_number : 28601267 , base_ru : '18.2'  }
   - { type : "RUR"  , id : 1  , patch_number : 28507480 , base_ru : '18.3'  }
@@ -413,14 +437,16 @@ list_18000:
   - { type : "OJVM" , id : 200714 , patch_number : 31219909 }
   - { type : "OJVM" , id : 201020 , patch_number : 31668892 }
   - { type : "OJVM" , id : 210119 , patch_number : 32119939 }
-  - { type : "OJVM" , id : 210420 , patch_number : 32552752 }
-# - { type : "OJVM" , id : 210720 , patch_number : 32876373 } # NOT AVAILABLE TO DOWNLOAD
-# - { type : "OJVM" , id : 211019 , patch_number : 33192684 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "OJVM" , id : 210420 , patch_number : 32552752 } # LAST PATCH
+  - { type : "OJVM" , id : 210720 , patch_number : 32876373 } # PASSWORD PROTECTED
+  - { type : "OJVM" , id : 211019 , patch_number : 33192684 } # NOT AVAILABLE TO DOWNLOAD
   - { type : "OJVM" , id : 220118 , patch_number : 33549631 }
-# - { type : "OJVM" , id : 220419 , patch_number : 33829896 } # NOT AVAILABLE TO DOWNLOAD
-# - { type : "OJVM" , id : 220719 , patch_number : 34086894 } # NOT AVAILABLE TO DOWNLOAD
-# - { type : "OJVM" , id : 221018 , patch_number : 34411878 } # NOT AVAILABLE TO DOWNLOAD
-
+  - { type : "OJVM" , id : 220419 , patch_number : 33829896 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "OJVM" , id : 220719 , patch_number : 34086894 } # NOT AVAILABLE TO DOWNLOAD # 18.19
+  - { type : "OJVM" , id : 221018 , patch_number : 34411878 } # NOT AVAILABLE TO DOWNLOAD # 18.20
+  - { type : "OJVM" , id : 230117 , patch_number : 34763258 } # NOT AVAILABLE TO DOWNLOAD # 18.21
+  - { type : "OJVM" , id : 230418 , patch_number : 35058238 } # NOT AVAILABLE TO DOWNLOAD # 18.22
+  - { type : "OJVM" , id : 230718 , patch_number : 35354394 } # NOT AVAILABLE TO DOWNLOAD # 18.23
 
 # No more updates on this one.
 
@@ -446,6 +472,10 @@ list_19000:
   - { type : "RU"   , id : 15 , patch_number : 33806152 }
   - { type : "RU"   , id : 16 , patch_number : 34133642 }
   - { type : "RU"   , id : 17 , patch_number : 34419443 }
+  - { type : "RU"   , id : 18   , patch_number : 34765931 , aru : 25078403 , file_suf : '_v0' }
+  - { type : "RU"   , id : 18.1 , patch_number : 34765931 , aru : 25098466 }
+  - { type : "RU"   , id : 19 , patch_number : 35042068 }
+  - { type : "RU"   , id : 20 , patch_number : 35320081 }
   - { type : "RUR"  , id : 1 , patch_number : 29799057 , base_ru : '19.3' }
   - { type : "RUR"  , id : 2 , patch_number : 30087906 , base_ru : '19.3' }
   - { type : "RUR"  , id : 1 , patch_number : 30080447 , base_ru : '19.4' }
@@ -474,7 +504,22 @@ list_19000:
   - { type : "RUR"  , id : 1 , patch_number : 34119532 , base_ru : '19.15' }
   - { type : "RUR"  , id : 2 , patch_number : 34429835 , base_ru : '19.15' }
   - { type : "RUR"  , id : 1 , patch_number : 34444812 , base_ru : '19.16' }
+  - { type : "RUR"  , id : 2 , patch_number : 34771828 , base_ru : '19.16' }
   - { type : "MRP"  , id : 221115 , patch_number : 34737974 , base_ru : '19.17' , dep_type : 'RU' , dep_id : 17 , apply_method : "opatchauto" }
+  - { type : "MRP"  , id : 221220 , patch_number : 34819700 , base_ru : '19.17' , dep_type : 'RU' , dep_id : 17 , apply_method : "opatchauto" }
+  - { type : "MRP"  , id : 230117 , patch_number : 34935010 , base_ru : '19.17' , dep_type : 'RU' , dep_id : 17 , apply_method : "opatchauto" }
+  - { type : "MRP"  , id : 230221 , patch_number : 35011213 , base_ru : '19.17' , dep_type : 'RU' , dep_id : 17 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230321 , patch_number : 35154667 , base_ru : '19.17' , dep_type : 'RU' , dep_id : 17 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230418 , patch_number : 35237165 , base_ru : '19.17' , dep_type : 'RU' , dep_id : 17 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230221 , patch_number : 35011316 , base_ru : '19.18' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230321 , patch_number : 35155358 , base_ru : '19.18' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230418 , patch_number : 35237121 , base_ru : '19.18' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230516 , patch_number : 35333818 , base_ru : '19.18' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230620 , patch_number : 35449858 , base_ru : '19.18' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230718 , patch_number : 35573556 , base_ru : '19.18' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230516 , patch_number : 35333937 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230620 , patch_number : 35449803 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230718 , patch_number : 35573506 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
   - { type : "OJVM" , id : 190416 , patch_number : 29548437 }
   - { type : "OJVM" , id : 190716 , patch_number : 29774421 }
   - { type : "OJVM" , id : 191015 , patch_number : 30128191 }
@@ -490,6 +535,9 @@ list_19000:
   - { type : "OJVM" , id : 220419 , patch_number : 33808367 }
   - { type : "OJVM" , id : 220719 , patch_number : 34086870 }
   - { type : "OJVM" , id : 221018 , patch_number : 34411846 }
+  - { type : "OJVM" , id : 230117 , patch_number : 34786990 }
+  - { type : "OJVM" , id : 230418 , patch_number : 35050341 }
+  - { type : "OJVM" , id : 230718 , patch_number : 35354406 }
 
 ####################
 ##### 21.0.0.0 #####
@@ -497,15 +545,21 @@ list_19000:
 
 list_21000:
   #- { type : "RU"   , id : 3  , patch_number : 00000000 , base_snap : "21.2.0" }
-  - { type : "RU"   , id : 4  , patch_number : 33239276 }
-  - { type : "RU"   , id : 5  , patch_number : 33516412 }
-  - { type : "RU"   , id : 6  , patch_number : 33843745 }
-  - { type : "RU"   , id : 7  , patch_number : 34160444 }
-  - { type : "RU"   , id : 8  , patch_number : 34527084 }
+  - { type : "RU"   , id : 4   , patch_number : 33239276 }
+  - { type : "RU"   , id : 5   , patch_number : 33516412 }
+  - { type : "RU"   , id : 6   , patch_number : 33843745 }
+  - { type : "RU"   , id : 7   , patch_number : 34160444 }
+  - { type : "RU"   , id : 8   , patch_number : 34527084 }
+  - { type : "RU"   , id : 9   , patch_number : 34839741 }
+  - { type : "RU"   , id : 10  , patch_number : 35134934 }
+  - { type : "RU"   , id : 11  , patch_number : 35428978 }
 
 ####################
 ##### 23.0.0.0 #####
 ####################
 
 list_23000:
-  - { type : "RU"   , id : 3  , patch_number : 00000000 , base_snap : "23.2.0" }
+  - { type : "RU"   , id : 1   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta1.tar.gz" }
+  - { type : "RU"   , id : 2   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta2.tar.gz" }
+  - { type : "RU"   , id : 2.1 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.DevRel.tar.gz" }
+#  - { type : "RU"   , id : 3  , patch_number : 00000000 , base_snap : "23.2.0" }
