@@ -1,8 +1,14 @@
 WHENEVER SQLERROR EXIT SQL.SQLCODE
 
+DECLARE
+  FILE_DOES_NOT_EXIST EXCEPTION;
+  PRAGMA EXCEPTION_INIT ( FILE_DOES_NOT_EXIST, -20019 );
 BEGIN
-    DBMS_CLOUD.DELETE_FILE (
-        directory_name       => 'DATA_PUMP_DIR',
-        file_name            => '&1.');
+  DBMS_CLOUD.DELETE_FILE (
+      directory_name       => 'ORADIFF_DIR',
+      file_name            => '&1.');
+  EXCEPTION
+    WHEN FILE_DOES_NOT_EXIST THEN
+      NULL;
 END;
 /
