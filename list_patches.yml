@@ -519,9 +519,9 @@ list_19000:
   - { type : "MRP"  , id : 230516 , patch_number : 35333818 , base_ru : '19.18' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
   - { type : "MRP"  , id : 230620 , patch_number : 35449858 , base_ru : '19.18' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
   - { type : "MRP"  , id : 230718 , patch_number : 35573556 , base_ru : '19.18' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
-  - { type : "MRP"  , id : 230516 , patch_number : 35333937 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
-  - { type : "MRP"  , id : 230620 , patch_number : 35449803 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
-  - { type : "MRP"  , id : 230718 , patch_number : 35573506 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 18 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230516 , patch_number : 35333937 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 19 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230620 , patch_number : 35449803 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 19 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230718 , patch_number : 35573506 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 19 , apply_method : "napply" }
   - { type : "OJVM" , id : 190416 , patch_number : 29548437 }
   - { type : "OJVM" , id : 190716 , patch_number : 29774421 }
   - { type : "OJVM" , id : 191015 , patch_number : 30128191 }
