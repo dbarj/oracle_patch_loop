@@ -12,7 +12,7 @@ shared_folder : "/u02"
 VM_folder  : "/u02"
 
 # Oracle SID of the database that we are collecting data from. Must be included in /etc/oratab for oraenv utility.
-mysid : "orcl"
+default_sid : "orcl"
 
 # Folder to store the final generated files.
 output_folder : "/u01/patch_automation/output"

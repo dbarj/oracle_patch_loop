@@ -9,7 +9,7 @@ shared_folder : "/Users/rodrigo.jorge/Desktop/extract"
 VM_folder  : "/media/sf_Patch/"
 
 # Oracle SID. Must be included in /etc/oratab for oraenv utility.
-mysid : "orcl"
+default_sid : "orcl"
 
 # Folder to store the final generated files. It must contain the subfolder expdp
 output_folder : "/Volumes/Samsung_T3/OraSum/files"

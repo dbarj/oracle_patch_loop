@@ -5,9 +5,10 @@
   set_fact:
     file_suffix: "{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}"
     dump_file_prefix: "tables_{{ db_version }}_{{ patch.base_ru | default('') }}{{ patch.type }}_{{ patch.id }}"
+    mysid: "{{ patch.oracle_sid | default(default_sid) }}"
     skip_all: false
     fix_datapatch_retries: 0
-    expdp_version: ""
+    # expdp_version: ""
     patch_file_path: ""
     db_patch: ""
     perform_patch_actions: true # If opatch / datapatch / patch download / etc are needed or not.

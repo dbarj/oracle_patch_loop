@@ -137,7 +137,6 @@
       register: tmp_shell_output
       become: true
       become_user: root
-      when:
       delegate_to: "{{ vm_ip_address }}"
 
     # Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
@@ -170,9 +169,23 @@
         expdp_version: "version={{ target_db_version }}"
       when: (db_version.split('.')[0] | int) > target_db_version
 
+    - name: Set compression parameter for expdp
+      set_fact:
+        expdp_compression: "compression=all compression_algorithm=high"
+      when: patch.expdp_comp | default(true)
+
     - name: Export Database Tables
       shell: |
-          {{ dbhome_locl }}/bin/expdp userid={{ dump_user_int }}/{{ dump_pass }} directory={{ dump_dir_name }} compression=all compression_algorithm=high metrics=yes dumpfile={{ dump_file_prefix }}.dmp logfile={{ dump_file_prefix }}.log content=data_only schemas={{ dump_user_int }} {{ expdp_version }}
+          {{ dbhome_locl }}/bin/expdp \
+          userid={{ dump_user_int }}/{{ dump_pass }} \
+          directory={{ dump_dir_name }} \
+          {{ expdp_compression | default('') }} \
+          metrics=yes \
+          dumpfile={{ dump_file_prefix }}.dmp \
+          logfile={{ dump_file_prefix }}.log \
+          content=data_only \
+          schemas={{ dump_user_int }} \
+          {{ expdp_version | default('') }}
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
         ORACLE_SID: "{{ mysid }}"
