@@ -14,6 +14,7 @@ list_versions:
   - { id : "18.0.0.0" , patch_list : "list_18000" , main_file : "patch_main.yml"     , opatch_file : "p6880880_210000_Linux-x86-64.zip" }
   - { id : "19.0.0.0" , patch_list : "list_19000" , main_file : "patch_main.yml"     , opatch_file : "p6880880_210000_Linux-x86-64.zip" }
   - { id : "21.0.0.0" , patch_list : "list_21000" , main_file : "patch_main.yml"     , opatch_file : "p6880880_210000_Linux-x86-64.zip" }
+  - { id : "23.0.0.0" , patch_list : "list_23000" , main_file : "patch_main.yml"     , opatch_file : "p6880880_210000_Linux-x86-64.zip" }
 
 list_info_vbox:
   - { id : "11.2.0.4" , vmachine : "Oracle Linux 6.8" , base_snap : "11.2.0.4 Ready" , ip : "xxx" }
@@ -32,3 +33,4 @@ list_info_oci:
   - { id : "18.0.0.0" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" , out_of_box_ru : 3 }
   - { id : "19.0.0.0" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" , out_of_box_ru : 3 }
   - { id : "21.0.0.0" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" , out_of_box_ru : 3 }
+  - { id : "23.0.0.0" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" , out_of_box_ru : 1 }
