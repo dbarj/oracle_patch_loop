@@ -70,4 +70,4 @@
   - include: lvm_savestate.yml
     when: oci_mode
 
-  when: ( patch.type == "PSU" or patch.type == "RU" ) and base_OJVM_line == latest_processed
+  when: base_OJVM_line is defined and ( patch.type == "PSU" or patch.type == "RU" ) and base_OJVM_line == latest_processed
