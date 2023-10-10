@@ -540,6 +540,18 @@ list_19000:
   - { type : "OJVM" , id : 230117 , patch_number : 34786990 }
   - { type : "OJVM" , id : 230418 , patch_number : 35050341 }
   - { type : "OJVM" , id : 230718 , patch_number : 35354406 }
+# 19c DPBP
+  - { type : "DPBP" , id : 10 , patch_number : 32583144 , dep_type : 'RU' , dep_id : 10 }
+  - { type : "DPBP" , id : 11 , patch_number : 32958059 , dep_type : 'RU' , dep_id : 11 }
+  - { type : "DPBP" , id : 12 , patch_number : 33590062 , dep_type : 'RU' , dep_id : 12 }
+  - { type : "DPBP" , id : 13 , patch_number : 33952087 , dep_type : 'RU' , dep_id : 13 }
+  - { type : "DPBP" , id : 14 , patch_number : 34423086 , dep_type : 'RU' , dep_id : 14 }
+  - { type : "DPBP" , id : 15 , patch_number : 34547013 , dep_type : 'RU' , dep_id : 15 }
+  - { type : "DPBP" , id : 16 , patch_number : 34620690 , dep_type : 'RU' , dep_id : 16 }
+  - { type : "DPBP" , id : 17 , patch_number : 34734035 , dep_type : 'RU' , dep_id : 17 }
+  - { type : "DPBP" , id : 18 , patch_number : 34972375 , dep_type : 'RU' , dep_id : 18 }
+  - { type : "DPBP" , id : 19 , patch_number : 35261302 , dep_type : 'RU' , dep_id : 19 }
+  - { type : "DPBP" , id : 20 , patch_number : 35512813 , dep_type : 'RU' , dep_id : 20 }
 
 ####################
 ##### 21.0.0.0 #####

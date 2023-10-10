@@ -1,4 +1,4 @@
-### Will Run RU + OJVM + RUR + MRP for given version
+### Will Run RU + OJVM + RUR + MRP + DPBP for given version
 
 - name : Define version
   set_fact:
@@ -140,7 +140,7 @@
 
   when: param_type is undefined or param_type == "RUR"
 
-### MRP
+### MRP & DPBP
 - block:
 
   - name : Define snapshot base version to rollback when reload is called.
@@ -154,12 +154,12 @@
       loop_var: patch
       label: "{{ patch.id }}"
     when:
-      - patch.type == "MRP"
+      - (param_type is undefined and (patch.type == "MRP" or patch.type == "DPBP")) or patch.type == param_type
       - patch.id == (param_patch | float)      or param_patch == -1
       - patch.id >= (param_patch_from | float) or param_patch_from == -1
       - patch.id <= (param_patch_to | float)   or param_patch_to == -1
 
-  when: param_type is undefined or param_type == "MRP"
+  when: param_type is undefined or param_type == "MRP" or param_type == "DPBP"
 
 # Stop OCI VM
 - name: Call role to stop OCI VM

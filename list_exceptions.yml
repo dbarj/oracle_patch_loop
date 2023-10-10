@@ -66,3 +66,15 @@ list_retry_datapatch:
   - { version: "12.2.0.1" , type : "RUR" , id : 200414 , retries : 1 }
   - { version: "12.2.0.1" , type : "RUR" , id : 200714 , retries : 1 }
   - { version: "12.2.0.1" , type : "RUR" , id : 201020 , retries : 1 }
+######
+  - { version: "19.0.0.0" , type : "DPBP" , id : 10 , retries : 1 }
+  - { version: "19.0.0.0" , type : "DPBP" , id : 11 , retries : 1 }
+  - { version: "19.0.0.0" , type : "DPBP" , id : 12 , retries : 1 }
+  - { version: "19.0.0.0" , type : "DPBP" , id : 13 , retries : 1 }
+  - { version: "19.0.0.0" , type : "DPBP" , id : 14 , retries : 1 }
+  - { version: "19.0.0.0" , type : "DPBP" , id : 15 , retries : 1 }
+  - { version: "19.0.0.0" , type : "DPBP" , id : 16 , retries : 1 }
+  - { version: "19.0.0.0" , type : "DPBP" , id : 17 , retries : 1 }
+  - { version: "19.0.0.0" , type : "DPBP" , id : 18 , retries : 1 }
+  - { version: "19.0.0.0" , type : "DPBP" , id : 19 , retries : 1 }
+  - { version: "19.0.0.0" , type : "DPBP" , id : 20 , retries : 1 }
