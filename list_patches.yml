@@ -1,10 +1,90 @@
 ####################
+##### 11.2.0.X #####
+####################
+
+# 11.2.0.1 Patch Set Updates - List of Fixes in each PSU (Doc ID 1340010.1)
+# 11.2.0.2 Patch Set Updates - List of Fixes in each PSU (Doc ID 1340011.1)
+# 11.2.0.3 Patch Set Updates - List of Fixes in each PSU (Doc ID 1449750.1)
+
+list_1120X:
+# 11.2.0.1
+  - { version : "11.2.0.1" , type : "PSU"  , id : 1      , patch_number : 9352237  }
+  - { version : "11.2.0.1" , type : "PSU"  , id : 2      , patch_number : 9654983  }
+  - { version : "11.2.0.1" , type : "PSU"  , id : 3      , patch_number : 9952216  }
+  - { version : "11.2.0.1" , type : "PSU"  , id : 4      , patch_number : 10248516 }
+  - { version : "11.2.0.1" , type : "PSU"  , id : 5      , patch_number : 11724930 }
+  - { version : "11.2.0.1" , type : "PSU"  , id : 6      , patch_number : 12419378 }
+  - { version : "11.2.0.1" , type : "CPU"  , id : 1      , patch_number : 9369797  }
+  - { version : "11.2.0.1" , type : "CPU"  , id : 2      , patch_number : 9655013  }
+  - { version : "11.2.0.1" , type : "CPU"  , id : 3      , patch_number : 9952260  }
+  - { version : "11.2.0.1" , type : "CPU"  , id : 4      , patch_number : 10249532 }
+  - { version : "11.2.0.1" , type : "CPU"  , id : 5      , patch_number : 11724991 }
+  - { version : "11.2.0.1" , type : "CPU"  , id : 6      , patch_number : 12419278 }
+# 11.2.0.2
+  - { version : "11.2.0.2" , type : "PSU"  , id : 1      , patch_number : 10248523 }
+  - { version : "11.2.0.2" , type : "PSU"  , id : 2      , patch_number : 11724916 }
+  - { version : "11.2.0.2" , type : "PSU"  , id : 3      , patch_number : 12419331 }
+  - { version : "11.2.0.2" , type : "PSU"  , id : 4      , patch_number : 12827726 }
+  - { version : "11.2.0.2" , type : "PSU"  , id : 5      , patch_number : 13343424 }
+  - { version : "11.2.0.2" , type : "PSU"  , id : 6      , patch_number : 13696224 }
+  - { version : "11.2.0.2" , type : "PSU"  , id : 7      , patch_number : 13923804 }
+  - { version : "11.2.0.2" , type : "PSU"  , id : 8      , patch_number : 14275621 }
+  - { version : "11.2.0.2" , type : "PSU"  , id : 9      , patch_number : 14727315 }
+  - { version : "11.2.0.2" , type : "PSU"  , id : 10     , patch_number : 16056267 }
+  - { version : "11.2.0.2" , type : "PSU"  , id : 11     , patch_number : 16619893 }
+  - { version : "11.2.0.2" , type : "PSU"  , id : 12     , patch_number : 17082367 }
+# - { version : "11.2.0.2" , type : "CPU"  , id : 1      , patch_number : xxxxxxxx } # NOTHING TO FIX - NO PATCH CREATED
+  - { version : "11.2.0.2" , type : "CPU"  , id : 2      , patch_number : 11724984 }
+  - { version : "11.2.0.2" , type : "CPU"  , id : 3      , patch_number : 12419321 }
+  - { version : "11.2.0.2" , type : "CPU"  , id : 4      , patch_number : 12828071 }
+  - { version : "11.2.0.2" , type : "CPU"  , id : 5      , patch_number : 13343244 }
+  - { version : "11.2.0.2" , type : "CPU"  , id : 6      , patch_number : 13632725 }
+  - { version : "11.2.0.2" , type : "CPU"  , id : 7      , patch_number : 14038791 }
+  - { version : "11.2.0.2" , type : "CPU"  , id : 8      , patch_number : 14390377 }
+  - { version : "11.2.0.2" , type : "CPU"  , id : 9      , patch_number : 14841437 }
+  - { version : "11.2.0.2" , type : "CPU"  , id : 10     , patch_number : 16294412 }
+  - { version : "11.2.0.2" , type : "CPU"  , id : 11     , patch_number : 16742100 }
+  - { version : "11.2.0.2" , type : "CPU"  , id : 12     , patch_number : 17082375 }
+# 11.2.0.3
+  - { version : "11.2.0.3" , type : "PSU"  , id : 1      , patch_number : 13343438 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 2      , patch_number : 13696216 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 3      , patch_number : 13923374 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 4      , patch_number : 14275605 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 5      , patch_number : 14727310 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 6      , patch_number : 16056266 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 7      , patch_number : 16619892 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 8      , patch_number : 16902043 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 9      , patch_number : 17540582 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 10     , patch_number : 18031683 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 11     , patch_number : 18522512 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 12     , patch_number : 19121548 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 13     , patch_number : 19769496 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 14     , patch_number : 20299017 }
+  - { version : "11.2.0.3" , type : "PSU"  , id : 15     , patch_number : 20760997 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 1      , patch_number : 13466801 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 2      , patch_number : 13632717 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 3      , patch_number : 14038787 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 4      , patch_number : 14390252 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 5      , patch_number : 14841409 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 6      , patch_number : 16294378 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 7      , patch_number : 16742095 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 8      , patch_number : 17082364 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 9      , patch_number : 17478415 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 10     , patch_number : 18139695 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 11     , patch_number : 18681866 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 12     , patch_number : 19271438 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 13     , patch_number : 19854461 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 14     , patch_number : 20299010 }
+  - { version : "11.2.0.3" , type : "CPU"  , id : 15     , patch_number : 20803576 }
+
+####################
 ##### 11.2.0.4 #####
 ####################
 
 # Database 11.2.0.4 Proactive Patch Information (Doc ID 2285559.1)
 
 list_11204:
+# 11.2.0.4 PSU
   - { type : "PSU"  , id : 1      , patch_number : 17478514 }
   - { type : "PSU"  , id : 2      , patch_number : 18031668 }
   - { type : "PSU"  , id : 3      , patch_number : 18522509 }
@@ -44,6 +124,8 @@ list_11204:
   - { type : "PSU"  , id : 230117 , patch_number : 34677698 }
   - { type : "PSU"  , id : 230418 , patch_number : 34998337 }
   - { type : "PSU"  , id : 230718 , patch_number : 35269283 }
+  - { type : "PSU"  , id : 231017 , patch_number : 35574075 }
+# 11.2.0.4 OJVM
   - { type : "OJVM" , id : 1      , patch_number : 19282021 }
   - { type : "OJVM" , id : 2      , patch_number : 19877440 }
   - { type : "OJVM" , id : 3      , patch_number : 20406239 }
@@ -80,6 +162,8 @@ list_11204:
   - { type : "OJVM" , id : 230117 , patch_number : 34763334 }
   - { type : "OJVM" , id : 230418 , patch_number : 35039831 }
   - { type : "OJVM" , id : 230718 , patch_number : 35349843 }
+  - { type : "OJVM" , id : 231017 , patch_number : 35685663 }
+# 11.2.0.4 BP
   - { type : "BP"   , id : 1      , patch_number : 17628025 , patch_folder : 17628006 }
   - { type : "BP"   , id : 2      , patch_number : 17838803 , patch_folder : 17741631 }
   - { type : "BP"   , id : 3      , patch_number : 17904156 , patch_folder : 17943261 }
@@ -132,6 +216,7 @@ list_11204:
   - { type : "BP"   , id : 230117 , patch_number : 34774400 , patch_folder : 34677707 }
   - { type : "BP"   , id : 230418 , patch_number : 35058326 , patch_folder : 34998345 }
   - { type : "BP"   , id : 230718 , patch_number : 35369924 , patch_folder : 35269278 }
+  - { type : "BP"   , id : 231017 , patch_number : 35685705 , patch_folder : 35574089 }
 
 ####################
 ##### 12.1.0.1 #####
@@ -140,6 +225,7 @@ list_11204:
 # No more updates on this one.
 
 list_12101:
+# 12.1.0.1 PSU
   - { type : "PSU"  , id : 1      , patch_number : 17027533 }
   - { type : "PSU"  , id : 2      , patch_number : 17552800 }
   - { type : "PSU"  , id : 3      , patch_number : 18031528 }
@@ -152,6 +238,7 @@ list_12101:
   - { type : "PSU"  , id : 160119 , patch_number : 21951844 }
   - { type : "PSU"  , id : 160419 , patch_number : 22291141 }
   - { type : "PSU"  , id : 160719 , patch_number : 23054354 }
+# 12.1.0.1 OJVM
   - { type : "OJVM" , id : 1      , patch_number : 19282024 }
   - { type : "OJVM" , id : 2      , patch_number : 19877342 }
   - { type : "OJVM" , id : 3      , patch_number : 20406245 }
@@ -170,6 +257,7 @@ list_12101:
 # Database 12.1.0.2 Proactive Patch Information (Doc ID 2285558.1)
 
 list_12102:
+# 12.1.0.2 PSU
   - { type : "PSU"  , id : 1      , patch_number : 19303936 }
   - { type : "PSU"  , id : 2      , patch_number : 19769480 }
   - { type : "PSU"  , id : 3      , patch_number : 20299023 }
@@ -207,6 +295,8 @@ list_12102:
   - { type : "PSU"  , id : 230117 , patch_number : 34677720 } # START TIER 1
   - { type : "PSU"  , id : 230418 , patch_number : 34998358 }
   - { type : "PSU"  , id : 230718 , patch_number : 35269262 }
+  - { type : "PSU"  , id : 231017 , patch_number : 35564645 }
+# 12.1.0.2 OJVM
   - { type : "OJVM" , id : 1      , patch_number : 19282028 }
   - { type : "OJVM" , id : 2      , patch_number : 19877336 }
   - { type : "OJVM" , id : 3      , patch_number : 20415564 }
@@ -243,6 +333,8 @@ list_12102:
   - { type : "OJVM" , id : 230117 , patch_number : 34763317 } # START TIER 1
   - { type : "OJVM" , id : 230418 , patch_number : 35077439 }
   - { type : "OJVM" , id : 230718 , patch_number : 35354391 }
+  - { type : "OJVM" , id : 231017 , patch_number : 35685666 }
+# 12.1.0.2 BP
   - { type : "BP"   , id : 1      , patch_number : 19404326 , patch_folder : 19189240 }
   - { type : "BP"   , id : 2      , patch_number : 19774304 , patch_folder : 19649591 }
   - { type : "BP"   , id : 3      , patch_number : 20026159 , patch_folder : 19878106 }
@@ -288,6 +380,7 @@ list_12102:
   - { type : "BP"   , id : 230117 , patch_number : 34774411 , patch_folder : 34677708 } # START TIER 1
   - { type : "BP"   , id : 230418 , patch_number : 35058289 , patch_folder : 34998350 }
   - { type : "BP"   , id : 230718 , patch_number : 35369903 , patch_folder : 35269270 }
+  - { type : "BP"   , id : 231017 , patch_number : 35685744 , patch_folder : 35564676 }
 
 ####################
 ##### 12.2.0.1 #####
@@ -296,6 +389,7 @@ list_12102:
 # Database 12.2.0.1 Proactive Patch Information (Doc ID 2285557.1)
 
 list_12201:
+# 12.2.0.1 RU
   - { type : "RU"   , id : 170718 , patch_number : 26123830 }
   - { type : "RU"   , id : 170814 , patch_number : 26609817 }
   - { type : "RU"   , id : 171017 , patch_number : 26710464 }
@@ -322,6 +416,8 @@ list_12201:
   - { type : "RU"   , id : 230117 , patch_number : 34850184 } # PASSWORD PROTECTED
   - { type : "RU"   , id : 230418 , patch_number : 35115783 } # PASSWORD PROTECTED
   - { type : "RU"   , id : 230718 , patch_number : 35407080 } # PASSWORD PROTECTED
+  - { type : "RU"   , id : 231017 , patch_number : 35746058 } # PASSWORD PROTECTED
+# 12.2.0.1 RUR
   - { type : "RUR"  , id : 171017 , patch_number : 26518812 , base_ru : JUL2017 }
   - { type : "RUR"  , id : 180116 , patch_number : 27013506 , base_ru : JUL2017 }
   - { type : "RUR"  , id : 180116 , patch_number : 27013510 , base_ru : OCT2017 }
@@ -347,6 +443,7 @@ list_12201:
   - { type : "RUR"  , id : 200714 , patch_number : 31199988 , base_ru : APR2020 }
   - { type : "RUR"  , id : 201020 , patch_number : 31667168 , base_ru : APR2020 }
   - { type : "RUR"  , id : 201020 , patch_number : 31666944 , base_ru : JUL2020 }
+# 12.2.0.1 OJVM
   - { type : "OJVM" , id : 170718 , patch_number : 25811364 }
   - { type : "OJVM" , id : 171017 , patch_number : 26635944 }
   - { type : "OJVM" , id : 180116 , patch_number : 27001739 }
@@ -372,6 +469,7 @@ list_12201:
   - { type : "OJVM" , id : 230117 , patch_number : 34763276 } # PASSWORD PROTECTED
   - { type : "OJVM" , id : 230418 , patch_number : 35058256 } # PASSWORD PROTECTED
   - { type : "OJVM" , id : 230718 , patch_number : 35348984 } # PASSWORD PROTECTED
+  - { type : "OJVM" , id : 231017 , patch_number : 35685669 } # PASSWORD PROTECTED
 
 ####################
 ##### 18.0.0.0 #####
@@ -382,6 +480,7 @@ list_12201:
 # No more updates on this one.
 
 list_18000:
+# 18c RU
 # - { type : "RU"   , id : 2      , patch_number : 27676517 , base_snap : "18.1.0" }
   - { type : "RU"   , id : 3      , patch_number : 28090523 , base_snap : "18.1.0" }
   - { type : "RU"   , id : 4      , patch_number : 28655784 }
@@ -404,6 +503,8 @@ list_18000:
   - { type : "RU"   , id : 21     , patch_number : 34854019 } # NOT AVAILABLE TO DOWNLOAD
   - { type : "RU"   , id : 22     , patch_number : 35114260 } # NOT AVAILABLE TO DOWNLOAD
   - { type : "RU"   , id : 23     , patch_number : 35411347 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 24     , patch_number : 35744266 } # NOT AVAILABLE TO DOWNLOAD
+# 18c RUR
 # - { type : "RUR"  , id : 1      , patch_number : 28346593 , base_ru : '18.2'  }
 # - { type : "RUR"  , id : 2      , patch_number : 28601267 , base_ru : '18.2'  }
   - { type : "RUR"  , id : 1      , patch_number : 28507480 , base_ru : '18.3'  }
@@ -427,6 +528,7 @@ list_18000:
   - { type : "RUR"  , id : 1      , patch_number : 32072459 , base_ru : '18.12' }
   - { type : "RUR"  , id : 2      , patch_number : 32421478 , base_ru : '18.12' }
   - { type : "RUR"  , id : 1      , patch_number : 32451079 , base_ru : '18.13' }
+# 18c OJVM
   - { type : "OJVM" , id : 180417 , patch_number : 27636900 }
   - { type : "OJVM" , id : 180717 , patch_number : 27923415 }
   - { type : "OJVM" , id : 181016 , patch_number : 28502229 }
@@ -449,6 +551,7 @@ list_18000:
   - { type : "OJVM" , id : 230117 , patch_number : 34763258 } # NOT AVAILABLE TO DOWNLOAD # 18.21
   - { type : "OJVM" , id : 230418 , patch_number : 35058238 } # NOT AVAILABLE TO DOWNLOAD # 18.22
   - { type : "OJVM" , id : 230718 , patch_number : 35354394 } # NOT AVAILABLE TO DOWNLOAD # 18.23
+  - { type : "OJVM" , id : 231017 , patch_number : 35685672 } # NOT AVAILABLE TO DOWNLOAD # 18.24
 
 # No more updates on this one.
 
@@ -459,6 +562,7 @@ list_18000:
 # Oracle Database 19c Proactive Patch Information (Doc ID 2521164.1)
 
 list_19000:
+# 19c RU
   - { type : "RU"   , id : 3      , patch_number : 29517242 , base_snap : "19.2.0" }
   - { type : "RU"   , id : 4      , patch_number : 29834717 }
   - { type : "RU"   , id : 5      , patch_number : 30125133 }
@@ -478,6 +582,8 @@ list_19000:
   - { type : "RU"   , id : 18.1   , patch_number : 34765931 , aru : 25098466 }
   - { type : "RU"   , id : 19     , patch_number : 35042068 }
   - { type : "RU"   , id : 20     , patch_number : 35320081 }
+  - { type : "RU"   , id : 21     , patch_number : 35643107 }
+# 19c RUR
   - { type : "RUR"  , id : 1      , patch_number : 29799057 , base_ru : '19.3' }
   - { type : "RUR"  , id : 2      , patch_number : 30087906 , base_ru : '19.3' }
   - { type : "RUR"  , id : 1      , patch_number : 30080447 , base_ru : '19.4' }
@@ -507,6 +613,7 @@ list_19000:
   - { type : "RUR"  , id : 2      , patch_number : 34429835 , base_ru : '19.15' }
   - { type : "RUR"  , id : 1      , patch_number : 34444812 , base_ru : '19.16' }
   - { type : "RUR"  , id : 2      , patch_number : 34771828 , base_ru : '19.16' }
+# 19c MRP
   - { type : "MRP"  , id : 221115 , patch_number : 34737974 , base_ru : '19.17' , dep_type : 'RU' , dep_id : 17 , apply_method : "opatchauto" }
   - { type : "MRP"  , id : 221220 , patch_number : 34819700 , base_ru : '19.17' , dep_type : 'RU' , dep_id : 17 , apply_method : "opatchauto" }
   - { type : "MRP"  , id : 230117 , patch_number : 34935010 , base_ru : '19.17' , dep_type : 'RU' , dep_id : 17 , apply_method : "opatchauto" }
@@ -522,6 +629,13 @@ list_19000:
   - { type : "MRP"  , id : 230516 , patch_number : 35333937 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 19 , apply_method : "napply" }
   - { type : "MRP"  , id : 230620 , patch_number : 35449803 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 19 , apply_method : "napply" }
   - { type : "MRP"  , id : 230718 , patch_number : 35573506 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 19 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230815 , patch_number : 35656804 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 19 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230919 , patch_number : 35755595 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 19 , apply_method : "napply" }
+  - { type : "MRP"  , id : 231017 , patch_number : 35869728 , base_ru : '19.19' , dep_type : 'RU' , dep_id : 19 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230815 , patch_number : 35656870 , base_ru : '19.20' , dep_type : 'RU' , dep_id : 20 , apply_method : "napply" }
+  - { type : "MRP"  , id : 230919 , patch_number : 35755640 , base_ru : '19.20' , dep_type : 'RU' , dep_id : 20 , apply_method : "napply" }
+  - { type : "MRP"  , id : 231017 , patch_number : 35870130 , base_ru : '19.20' , dep_type : 'RU' , dep_id : 20 , apply_method : "napply" }
+# 19c OJVM
   - { type : "OJVM" , id : 190416 , patch_number : 29548437 }
   - { type : "OJVM" , id : 190716 , patch_number : 29774421 }
   - { type : "OJVM" , id : 191015 , patch_number : 30128191 }
@@ -540,6 +654,7 @@ list_19000:
   - { type : "OJVM" , id : 230117 , patch_number : 34786990 }
   - { type : "OJVM" , id : 230418 , patch_number : 35050341 }
   - { type : "OJVM" , id : 230718 , patch_number : 35354406 }
+  - { type : "OJVM" , id : 231017 , patch_number : 35648110 }
 # 19c DPBP
   - { type : "DPBP" , id : 10 , patch_number : 32583144 , dep_type : 'RU' , dep_id : 10 }
   - { type : "DPBP" , id : 11 , patch_number : 32958059 , dep_type : 'RU' , dep_id : 11 }
@@ -552,6 +667,7 @@ list_19000:
   - { type : "DPBP" , id : 18 , patch_number : 34972375 , dep_type : 'RU' , dep_id : 18 }
   - { type : "DPBP" , id : 19 , patch_number : 35261302 , dep_type : 'RU' , dep_id : 19 }
   - { type : "DPBP" , id : 20 , patch_number : 35512813 , dep_type : 'RU' , dep_id : 20 }
+  - { type : "DPBP" , id : 21 , patch_number : 35787077 , dep_type : 'RU' , dep_id : 21 }
 
 ####################
 ##### 21.0.0.0 #####
@@ -567,6 +683,7 @@ list_21000:
   - { type : "RU"   , id : 9   , patch_number : 34839741 }
   - { type : "RU"   , id : 10  , patch_number : 35134934 }
   - { type : "RU"   , id : 11  , patch_number : 35428978 }
+  - { type : "RU"   , id : 12  , patch_number : 35740258 }
 
 ####################
 ##### 23.0.0.0 #####
