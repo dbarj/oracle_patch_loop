@@ -48,6 +48,10 @@
   register: tmp_find_result
   when: patch.type == "MRP"
 
+# Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+- set_fact: find_result="{{tmp_find_result}}"
+  when: tmp_find_result is not skipped
+
 - name: Finding Patch File
   find:
     paths:     "{{ patch_location_path }}"
