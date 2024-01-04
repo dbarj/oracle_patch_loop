@@ -755,6 +755,20 @@ CREATE TABLE "T_OPTSTAT_HIST_CONTROL"
 )
 COMPRESS NOLOGGING;
 
+CREATE TABLE "T_SQL_HINT"
+(
+"NAME" VARCHAR2(64),
+"SQL_FEATURE" VARCHAR2(64),
+"CLASS" VARCHAR2(64),
+"INVERSE" VARCHAR2(64),
+"TARGET_LEVEL" NUMBER,
+"PROPERTY" NUMBER,
+"VERSION" VARCHAR2(25),
+"VERSION_OUTLINE" VARCHAR2(25),
+"CON_ID" NUMBER
+)
+COMPRESS NOLOGGING;
+
 -----------------------------------------------------
 -----------------------------------------------------
 -----------------------------------------------------
