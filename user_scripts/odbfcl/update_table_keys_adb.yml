@@ -1,8 +1,0 @@
-- include: tasks/local_sqlplus.yml
-  vars:
-    sql_param : { task_action : "Update {{ oci_adb_transient_user }} tables with new keys" ,
-                  cred : "{{ oci_adb_connection_tns }}" ,
-                  file : "update_table_keys_adb.sql" ,
-                  folder : "user_scripts/odbfcl" ,
-                  params : "{{ db_version }} {{ patch.base_ru | default('') }}{{ patch.type }} {{ patch.id }}"
-                }

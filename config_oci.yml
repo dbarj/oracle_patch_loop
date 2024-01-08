@@ -42,8 +42,6 @@ user_expdp_post :
 # - { file : "adb_load_filechksum.yml" , folder : "user_scripts/odbfcl/adb_load_filechksum" , type : "yml", task_action : "Load chksum for ORACLE_HOME in ADB" }
 # - { file : "adb_load_symbols.yml" , folder : "user_scripts/odbfcl/adb_load_symbols" , type : "yml", task_action : "Load chksum for ORACLE_HOME in ADB" }
 # - { file : "adb_load_txtcollection_files.yml" , folder : "user_scripts/odbfcl/adb_load_txtcollection_files" , type : "yml", task_action : "Load non-binary files from ORACLE_HOME in ADB" }
-# - { file : "update_table_keys_adb.yml" , folder : "user_scripts/odbfcl" , type : "yml", task_action : "Update table keys to reflect correct partition name" }
-# - { file : "exchange_tables_adb.yml" , folder : "user_scripts/odbfcl" , type : "yml", task_action : "Exchange loaded table in the correct partition position" }
 - { file : "diff_calculate.yml" , folder : "user_scripts/odbfcl/diff_calculate" , type : "yml", task_action : "Generate differences between 2 releases" }
 
 # User that will hold your tables outputs and be exported after each execution. If the database is CDB, "C##" will be automatically be appended.

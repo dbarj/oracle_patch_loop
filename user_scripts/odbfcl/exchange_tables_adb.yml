@@ -1,8 +1,0 @@
-- include: tasks/local_sqlplus.yml
-  vars:
-    sql_param : { task_action : "Load {{ oci_adb_transient_user }} tables into {{ oci_adb_user }} schema" ,
-                  cred : "{{ oci_adb_connection_tns }}" ,
-                  file : "exchange_tables_adb.sql" ,
-                  folder : "user_scripts/odbfcl" ,
-                  params : "{{ oci_adb_user }} {{ db_version }} {{ patch.base_ru | default('') }}{{ patch.type }} {{ patch.id }}"
-                }
