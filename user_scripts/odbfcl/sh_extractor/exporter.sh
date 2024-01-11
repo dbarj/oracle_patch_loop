@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script to collect all info needed from the DB
 # Created by Rodrigo Jorge <http://www.dbarj.com.br/>
-# v1.0.0.5
+# v1.0.0.6
 
 set -eo pipefail
 
@@ -52,7 +52,14 @@ v_dump_user='hash'
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
 echo "Checking if common user. Please wait.."
-v_common_user=$($ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" @${v_thisdir}/get_user_prefix.sql)
+v_common_user=$($ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" @${v_thisdir}/get_user_prefix.sql) && v_ret=$? || v_ret=$?
+
+if [ $v_ret -ne 0 ]
+then
+  echoError "Failed to get required information."
+  exitError "${v_common_user}"
+fi
+
 [ -n "${v_common_user}" ] && v_dump_user="${v_common_user}${v_dump_user}"
 ##################
 v_thisdir_bkp="${v_thisdir}" # REMOVE_IF_ZIP
