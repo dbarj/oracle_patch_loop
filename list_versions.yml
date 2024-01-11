@@ -33,4 +33,4 @@ list_info_oci:
   - { id : "18.0.0.0" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" , out_of_box_ru : 3 }
   - { id : "19.0.0.0" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" , out_of_box_ru : 3 }
   - { id : "21.0.0.0" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" , out_of_box_ru : 3 }
-  - { id : "23.0.0.0" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" , out_of_box_ru : 1 }
+  - { id : "23.0.0.0" , oci_instance_id : "ocid1.instance.oc1.iad.xxx" , base_snap : "base" , out_of_box_ru : null }

@@ -162,7 +162,7 @@
 
 - name : Define Cloud params
   set_fact:
-    out_of_box_ru: "{{ item.out_of_box_ru | default(0) }}"
+    out_of_box_ru: "{{ item.out_of_box_ru | default(-1, true) }}"
   with_items: "{{ list_info_oci }}"
   when: item.id == db_version
 

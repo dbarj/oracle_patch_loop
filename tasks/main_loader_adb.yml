@@ -8,7 +8,7 @@
 
 - name : Define Cloud params
   set_fact:
-    out_of_box_ru: "{{ item.out_of_box_ru | default(0) }}"
+    out_of_box_ru: "{{ item.out_of_box_ru | default(-1, true) }}"
   with_items: "{{ list_info_oci }}"
   when: item.id == db_version
 
@@ -26,12 +26,6 @@
     total_bps: "{{ lookup('vars', patch_list) | json_query(filter_qry) | count }}"
   vars:
     filter_qry: "[?type=='BP'].id"
-
-- name : Check if there is any RU
-  set_fact:
-    total_rus: "{{ lookup('vars', patch_list) | json_query(filter_qry) | count }}"
-  vars:
-    filter_qry: "[?type=='RU'].id"
 
 ###############################
 
@@ -62,7 +56,7 @@
   vars:
     patch : { type : RU , id : "{{ out_of_box_ru }}" , patch_number : 0 }
   when:
-    - total_rus != "0"
+    - (out_of_box_ru | float) != -1
     - (out_of_box_ru | float) == (param_patch | float)      or param_patch == -1
     - (out_of_box_ru | float) >= (param_patch_from | float) or param_patch_from == -1
     - (out_of_box_ru | float) <= (param_patch_to | float)   or param_patch_to == -1
