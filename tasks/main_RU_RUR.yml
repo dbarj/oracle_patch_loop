@@ -35,7 +35,7 @@
   # Define base_OJVM_line. This is used by patch_task_post to save the snapshot.
   - name: Get latest RU ID
     set_fact:
-      latest_RU_id: "{{ lookup('vars', patch_list) | json_query(filter_qry_1) | max }}"
+      latest_RU_id: "{{ ( ( lookup('vars', patch_list) | json_query(filter_qry_1) ) + [0] ) | max }}"
       base_OJVM_id: "{{ ( ( lookup('vars', patch_list) | json_query(filter_qry_2) ) + [0] ) | max }}"
     vars:
       filter_qry_1: "[? type == 'RU' ].id"
@@ -119,47 +119,26 @@
 
   when: param_type is undefined or param_type == "OJVM"
 
-### RUR
+### RUR & MRP & DPBP & OTHERS
 - block:
 
   - name : Define snapshot base version to rollback when reload is called.
     set_fact:
       vm_snapshot: "{{ patch_base }}"
 
-  # Execute for every RUR
+  # Execute for every patch
   - include: "{{ patch_file }}"
     loop: "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
     loop_control:
       loop_var: patch
       label: "{{ patch.id }}"
     when:
-      - patch.type == "RUR"
+      - (param_type is undefined and (patch.type != "RU" and patch.type != "OJVM")) or patch.type == param_type
       - patch.id == (param_patch | float)      or param_patch == -1
       - patch.id >= (param_patch_from | float) or param_patch_from == -1
       - patch.id <= (param_patch_to | float)   or param_patch_to == -1
 
-  when: param_type is undefined or param_type == "RUR"
-
-### MRP & DPBP
-- block:
-
-  - name : Define snapshot base version to rollback when reload is called.
-    set_fact:
-      vm_snapshot: "{{ patch_base }}"
-
-  # Execute for every MRP
-  - include: "{{ patch_file }}"
-    loop: "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
-    loop_control:
-      loop_var: patch
-      label: "{{ patch.id }}"
-    when:
-      - (param_type is undefined and (patch.type == "MRP" or patch.type == "DPBP")) or patch.type == param_type
-      - patch.id == (param_patch | float)      or param_patch == -1
-      - patch.id >= (param_patch_from | float) or param_patch_from == -1
-      - patch.id <= (param_patch_to | float)   or param_patch_to == -1
-
-  when: param_type is undefined or param_type == "MRP" or param_type == "DPBP"
+  when: param_type is undefined or (param_type != "RU" and param_type != "OJVM")
 
 # Stop OCI VM
 - name: Call role to stop OCI VM
