@@ -64,7 +64,7 @@
   # Execute for base release
   - include: "{{ patch_file }}"
     vars:
-      patch : { type : PSU , id : 0, patch_number : 0 }
+      patch : { type : BASE , id : 0, patch_number : 0 }
     when:
       - 0 == (param_patch | float)      or param_patch == -1
       - 0 >= (param_patch_from | float) or param_patch_from == -1
@@ -123,12 +123,6 @@
   - name : Define snapshot base version to rollback when reload is called.
     set_fact:
       vm_snapshot: "{{ patch_base }}"
-
-  - name : Check if there is any BP
-    set_fact:
-      total_bps: "{{ lookup('vars', patch_list) | json_query(filter_qry) | count }}"
-    vars:
-      filter_qry: "[?type=='BP'].id"
 
   # Execute for every BP
   - include: "{{ patch_file }}"

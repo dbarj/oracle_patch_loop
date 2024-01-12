@@ -21,18 +21,12 @@
   vars:
     filter_qry: "[?type=='PSU'].id"
 
-- name : Check if there is any BP
-  set_fact:
-    total_bps: "{{ lookup('vars', patch_list) | json_query(filter_qry) | count }}"
-  vars:
-    filter_qry: "[?type=='BP'].id"
-
 ###############################
 
 # Execute for base release if there is at least 1 PSU for that version
 - include: "impdp_file_adb.yml"
   vars:
-    patch : { type : PSU , id : 0, patch_number : 0 }
+    patch : { type : BASE , id : 0, patch_number : 0 }
   when:
     - total_psus != "0"
     - 0 == (param_patch | float)      or param_patch == -1
@@ -40,21 +34,10 @@
     - 0 <= (param_patch_to | float)   or param_patch_to == -1
     - param_type is undefined or param_type == "PSU"
 
-# Execute for base release if there is at least 1 BP for that version
-- include: "impdp_file_adb.yml"
-  vars:
-    patch : { type : BP , id : 0, patch_number : 0 }
-  when:
-    - total_bps != "0"
-    - 0 == (param_patch | float)      or param_patch == -1
-    - 0 >= (param_patch_from | float) or param_patch_from == -1
-    - 0 <= (param_patch_to | float)   or param_patch_to == -1
-    - param_type is undefined or param_type == "BP"
-
 # Execute for base release if there is at least 1 RU for that version
 - include: "impdp_file_adb.yml"
   vars:
-    patch : { type : RU , id : "{{ out_of_box_ru }}" , patch_number : 0 }
+    patch : { type : BASE , id : "{{ out_of_box_ru }}" , patch_number : 0 }
   when:
     - (out_of_box_ru | float) != -1
     - (out_of_box_ru | float) == (param_patch | float)      or param_patch == -1

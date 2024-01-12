@@ -65,7 +65,7 @@
   # Execute for base release
   - include: "{{ patch_file }}"
     vars:
-      patch : { type : RU , id : "{{ out_of_box_ru }}" , patch_number : 0 }
+      patch : { type : BASE , id : "{{ out_of_box_ru }}" , patch_number : 0 }
     when:
       - (out_of_box_ru | float) != -1
       - (out_of_box_ru | float) == (param_patch | float)      or param_patch == -1
