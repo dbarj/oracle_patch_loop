@@ -563,7 +563,7 @@ list_18000:
 
 list_19000:
 # 19c RU
-  - { type : "RU"   , id : 3      , patch_number : 29517242 , base_snap : "19.2.0" }
+# - { type : "RU"   , id : 3      , patch_number : 29517242 , base_snap : "19.2.0" }
   - { type : "RU"   , id : 4      , patch_number : 29834717 }
   - { type : "RU"   , id : 5      , patch_number : 30125133 }
   - { type : "RU"   , id : 6      , patch_number : 30557433 }
