@@ -482,7 +482,7 @@ list_12201:
 list_18000:
 # 18c RU
 # - { type : "RU"   , id : 2      , patch_number : 27676517 , base_snap : "18.1.0" }
-  - { type : "RU"   , id : 3      , patch_number : 28090523 , base_snap : "18.1.0" }
+# - { type : "RU"   , id : 3      , patch_number : 28090523 , base_snap : "18.1.0" }
   - { type : "RU"   , id : 4      , patch_number : 28655784 }
   - { type : "RU"   , id : 5      , patch_number : 28822489 }
   - { type : "RU"   , id : 6      , patch_number : 29301631 }
