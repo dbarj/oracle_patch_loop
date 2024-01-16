@@ -28,7 +28,7 @@ v_output_file="$(basename "${v_output}")"
 v_output_file_noext="${v_output_file%.*}"
 
 v_output_full="${v_output_fdr}/${v_output_file}"
-v_output_error="${v_output_fdr}/${v_output_file_noext}"
+v_output_error="${v_output_fdr}/${v_output_file_noext}.err"
 
 # If DB_EXP_DUMP_PASS is exported, use it as the password.
 [ -n "$DB_EXP_DUMP_PASS" ] && v_dump_pass="$DB_EXP_DUMP_PASS" || v_dump_pass='HhAaSsHh..135'

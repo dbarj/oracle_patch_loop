@@ -40,6 +40,10 @@ The output is a zip file.
 # If DB_EXP_GEN_DUMP=0, then nothing will be exported. Only the schema populated.
 [ "$DB_EXP_GEN_DUMP" == "0" ] && v_gen_dump=0 || v_gen_dump=1
 
+# Check if DB_EXP_CRED was exported.
+# If DB_EXP_CRED is exported, then connect using this string instead of '/ as sysdba'.
+[ -n "$DB_EXP_CRED" ] && v_sysdba_connect="$DB_EXP_CRED"
+
 v_pattern_cnt=`awk -F" " '{print NF-1}' <<< "${v_pattern}"`
 [ ${v_pattern_cnt} -ne 0 ] && exitError "Pattern \"${v_output}\" must not have any spaces. Eg: ${v_example}"
 
@@ -122,10 +126,19 @@ sh "${v_thisdir}/dictionaryGet.sh" ${v_dump_user}
 
 if [ ${v_gen_dump} -eq 1 ]
 then
-  sh "${v_thisdir}/dumpCreate.sh" ${v_dump_user} ${v_pattern}.dmp
-  mv ${v_pattern}.dmp tables_${v_pattern}.dmp
-  mv ${v_pattern}.log tables_${v_pattern}.log
+  sh "${v_thisdir}/dumpCreate.sh" ${v_dump_user} tables_${v_pattern}.dmp
+  set +e
   zip -m ${v_pattern}.zip tables_${v_pattern}.dmp tables_${v_pattern}.log
+  v_ret=$?
+  set -eo pipefail
+  if [ $v_ret -ne 0 ]
+  then
+    echoError "Script failed to zip tables_${v_pattern}.dmp in ${v_pattern}.zip". 
+    echoError "1 - Try to rerun as user: $(stat -c '%U' tables_${v_pattern}.dmp)". 
+    echoError "2 - Check permissions on tables_${v_pattern}.dmp, make it readeable and run:". 
+    echoError "$ zip ${v_pattern}.zip tables_${v_pattern}.dmp"
+    exit $v_ret
+  fi
 fi
 
 echo "Script Finished."
