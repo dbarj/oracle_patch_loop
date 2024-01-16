@@ -24,6 +24,16 @@ v_output="$1"
 
 echo "Generating bugs list. Please wait.." 
 
+# Check if opatch command works
+v_out=$("$ORACLE_HOME"/OPatch/opatch lsinv 2>&1) && v_ret=$? || v_ret=$?
+if [ ${v_ret} -ne 0 ]
+then
+  echoError "Unable to run opatch. Error was:"
+  echoError "${v_out}"
+  echoError "Skipping opatch collection."
+  exit ${v_ret}
+fi
+
 "$ORACLE_HOME"/OPatch/opatch lsinv -bugs_fixed |
 # Remove lines before this entry (inclusive)
 sed '1,/^List of Bugs fixed by Installed Patches/d' |

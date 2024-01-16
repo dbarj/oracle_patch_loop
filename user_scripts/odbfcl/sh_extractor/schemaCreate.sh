@@ -25,10 +25,12 @@ v_dump_user="$1"
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
 
+[ -z "${v_sysdba_connect}" ] && v_sysdba_connect='/ as sysdba'
+
 echo "Generating export user. Please wait.." 
 
 cd "${v_thisdir}"/../
-$ORACLE_HOME/bin/sqlplus "/ as sysdba" <<EOF
+$ORACLE_HOME/bin/sqlplus "${v_sysdba_connect}" <<EOF
 set verify off
 @tables_recreate.sql "${v_dump_user}" "${v_dump_pass}"
 EOF

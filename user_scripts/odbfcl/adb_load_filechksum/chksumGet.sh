@@ -24,20 +24,26 @@ v_output="$1"
 
 v_output_fdr="$(cd "$(dirname "${v_output}")"; pwd)"
 v_output_file="$(basename "${v_output}")"
+v_output_file_noext="${v_output_file%.*}"
 
 v_output_full="${v_output_fdr}/${v_output_file}"
+v_output_error="${v_output_fdr}/${v_output_file_noext}.err"
+
+[ -f "${v_output_error}" ] && rm -f "${v_output_error}"
 
 echo "Generating sha256sum for \$ORACLE_HOME files. Please wait.." 
 
 cd "$ORACLE_HOME"
 set +e
-find -type f -exec sha256sum "{}" + > "${v_output_full}"
+find -type f -exec sha256sum "{}" + > "${v_output_full}" 2>> "${v_output_error}"
 set -eo pipefail
 cd - > /dev/null
 
 sed -i 's/$/  F/' "${v_output_full}"
 
-v_libs=$(find "$ORACLE_HOME" -type f -name "*.a")
+set +e
+v_libs=$(find "$ORACLE_HOME" -type f -name "*.a" 2>> "${v_output_error}")
+set -eo pipefail
 
 v_ext_fold=`mktemp -d`
 v_out_file=`mktemp`
@@ -51,7 +57,7 @@ do
   mkdir "${v_ext_fold}"
   cd "${v_ext_fold}"
   set +e
-  ar x "${v_lib}"
+  ar x "${v_lib}" 2>> "${v_output_error}"
   set -eo pipefail
   find -type f -exec sha256sum "{}" + > "${v_out_file}"
   cd - > /dev/null
@@ -60,5 +66,7 @@ do
   cat "${v_out_file}" >> "${v_output}"
   rm -rf "${v_ext_fold}" "${v_out_file}"
 done
+
+[ -f "${v_output_error}" ] && echo "Total errors detected: $(wc -l < "${v_output_error}")"
 
 exit 0

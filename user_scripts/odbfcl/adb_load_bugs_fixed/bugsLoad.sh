@@ -25,6 +25,8 @@ v_outpref="${v_file}"
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
+[ -z "${v_sysdba_connect}" ] && v_sysdba_connect='/ as sysdba'
+
 echo "Loading bugs list. Please wait.." 
 
 cat << EOF > "${v_outpref}_load.ctl"
@@ -36,7 +38,7 @@ FIELDS TERMINATED BY x'09'
 EOF
 
 $ORACLE_HOME/bin/sqlldr \
-userid=\'/ as sysdba\' \
+userid=\'"${v_sysdba_connect}"\' \
 control="${v_outpref}_load.ctl" \
 errors=0 \
 discardmax=0 \

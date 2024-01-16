@@ -25,6 +25,8 @@ v_outpref="${v_file}"
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
+[ -z "${v_sysdba_connect}" ] && v_sysdba_connect='/ as sysdba'
+
 echo "Loading ORACLE_HOME non-binary files. Please wait.." 
 
 rm -rf "${v_outpref}_unzip"
@@ -34,7 +36,7 @@ tar -xf "${v_file}" -C "${v_outpref}_unzip"
 
 cd "${v_outpref}_unzip"
 
-$ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" <<EOF
+$ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
 whenever sqlerror exit failure rollback
 create table ${v_dump_user}.t_txtcollection_load
 ( path varchar2(500) not null, contents clob not null, md5_hash raw(16) )
@@ -50,7 +52,7 @@ FIELDS TERMINATED BY ','
 EOF
 
 $ORACLE_HOME/bin/sqlldr \
-userid=\'/ as sysdba\' \
+userid=\'"${v_sysdba_connect}"\' \
 control="${v_outpref}_load.ctl" \
 errors=0 \
 discardmax=0 \
@@ -61,7 +63,7 @@ log="${v_outpref}_load.log"
 cd ..
 rm -rf "${v_outpref}_unzip"
 
-$ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" <<EOF
+$ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
 whenever sqlerror exit failure rollback
 update ${v_dump_user}.t_txtcollection_load
 set md5_hash=sys.dbms_crypto.hash(contents,2);

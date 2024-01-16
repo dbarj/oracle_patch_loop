@@ -1,9 +1,12 @@
 #!/bin/bash
 # Script to collect all info needed from the DB
 # Created by Rodrigo Jorge <http://www.dbarj.com.br/>
-# v1.0.0.6
+# v1.0.0.7
 
 set -eo pipefail
+
+# Change this if you need to provide a password to connect as sysdba
+export v_sysdba_connect='/ as sysdba'
 
 function echoError ()
 {
@@ -52,7 +55,7 @@ v_dump_user='hash'
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
 echo "Checking if common user. Please wait.."
-v_common_user=$($ORACLE_HOME/bin/sqlplus -L -S "/ as sysdba" @${v_thisdir}/get_user_prefix.sql) && v_ret=$? || v_ret=$?
+v_common_user=$($ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" @${v_thisdir}/get_user_prefix.sql) && v_ret=$? || v_ret=$?
 
 if [ $v_ret -ne 0 ]
 then
@@ -67,7 +70,7 @@ v_thisdir_bkp="${v_thisdir}" # REMOVE_IF_ZIP
 
 [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_bugs_fixed" # REMOVE_IF_ZIP
 v_file=bugs_${v_pattern}.txt
-sh "${v_thisdir}/bugsGet.sh" ${v_file}
+sh "${v_thisdir}/bugsGet.sh" ${v_file} && v_bugs_ret=$? || v_bugs_ret=$?
 [ ${v_load_file} -eq 0 ] && zip -m ${v_zip} ${v_file}
 
 [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_filechksum" # REMOVE_IF_ZIP
@@ -90,10 +93,13 @@ sh "${v_thisdir}/schemaCreate.sh" ${v_dump_user}
 
 if [ ${v_load_file} -eq 1 ]
 then
-  [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_bugs_fixed" # REMOVE_IF_ZIP
-  v_file=bugs_${v_pattern}.txt
-  sh "${v_thisdir}/bugsLoad.sh" ${v_dump_user} ${v_file}
-  rm -f ${v_file}
+  if [ ${v_bugs_ret} -eq 0 ]
+  then
+    [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_bugs_fixed" # REMOVE_IF_ZIP
+    v_file=bugs_${v_pattern}.txt
+    sh "${v_thisdir}/bugsLoad.sh" ${v_dump_user} ${v_file}
+    rm -f ${v_file}
+  fi
 
   [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_filechksum" # REMOVE_IF_ZIP
   v_file=sha256sum_${v_pattern}.chk
