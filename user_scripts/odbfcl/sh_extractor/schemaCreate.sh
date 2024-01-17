@@ -24,7 +24,7 @@ v_dump_user_name="$1"
 [ -n "$DB_EXP_USER_PASS" ] && v_dump_user_pass="$DB_EXP_USER_PASS" || v_dump_user_pass='HhAaSsHh..135'
 
 # If DB_EXP_USER_PASS is exported, use it as the password.
-[ -n "$DB_EXP_USER_TBS" ] && v_dump_user_tbs="$DB_EXP_USER_TBS" || v_dump_user_tbs='DATA'
+[ -n "$DB_EXP_USER_TBS" ] && v_dump_user_tbs="$DB_EXP_USER_TBS" || v_dump_user_tbs='USERS'
 
 # If DB_EXP_USER_PASS is exported, use it as the password.
 [ -n "$DB_EXP_USER_TEMP" ] && v_dump_user_temp="$DB_EXP_USER_TEMP" || v_dump_user_temp='TEMP'

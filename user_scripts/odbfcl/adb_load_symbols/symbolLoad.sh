@@ -34,9 +34,10 @@ LOAD
 INTO TABLE ${v_dump_user_name}.T_SYMBOLS
 APPEND
 FIELDS TERMINATED BY '|'
-(file_name, symbol_type, symbol_name char(4000))
+(file_name, symbol_type, symbol_name char(4000) "substr(:symbol_name, 0, 500)")
 EOF
 
+set +e
 $ORACLE_HOME/bin/sqlldr \
 userid=\'"${v_sysdba_connect}"\' \
 control="${v_outpref}_load.ctl" \
@@ -45,6 +46,13 @@ discardmax=0 \
 direct=Y \
 data="${v_file}" \
 log="${v_outpref}_load.log"
+v_ret=$?
+set -eo pipefail
+
+if [ $v_ret -ne 0 ]
+then
+  exitError "sqlldr failed to load '${v_file}'. Check also the 'bad' file for more information."
+fi
 
 rm -f "${v_outpref}_load.log" "${v_outpref}_load.ctl"
 
