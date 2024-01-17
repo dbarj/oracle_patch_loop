@@ -15,7 +15,7 @@ function exitError ()
   exit 1
 }
 
-v_dump_user="$1"
+v_dump_user_name="$1"
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
@@ -30,7 +30,7 @@ echo "Generating table export. Please wait.."
 
 cd "${v_thisdir}"/../extract
 $ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
-@hashGet.sql "${v_dump_user}" "${v_dump_dir_name}"
+@hashGet.sql "${v_dump_user_name}" "${v_dump_dir_name}"
 EOF
 
 exit 0

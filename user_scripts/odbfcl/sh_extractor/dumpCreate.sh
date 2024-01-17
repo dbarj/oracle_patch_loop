@@ -15,7 +15,7 @@ function exitError ()
   exit 1
 }
 
-v_dump_user="$1"
+v_dump_user_name="$1"
 v_output="$2"
 
 [ -z "$v_output" ] && exitError "First parameter is the target file and cannot be null."
@@ -30,8 +30,8 @@ v_output_file_noext="${v_output_file%.*}"
 v_output_full="${v_output_fdr}/${v_output_file}"
 v_output_error="${v_output_fdr}/${v_output_file_noext}.err"
 
-# If DB_EXP_DUMP_PASS is exported, use it as the password.
-[ -n "$DB_EXP_DUMP_PASS" ] && v_dump_pass="$DB_EXP_DUMP_PASS" || v_dump_pass='HhAaSsHh..135'
+# If DB_EXP_USER_PASS is exported, use it as the password.
+[ -n "$DB_EXP_USER_PASS" ] && v_dump_user_pass="$DB_EXP_USER_PASS" || v_dump_user_pass='HhAaSsHh..135'
 
 v_dump_dir_name='expdir_hash'
 
@@ -46,7 +46,7 @@ echo "Generating table export. Please wait.."
 
 cd "${v_thisdir}"/../../
 $ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
-@externalDir.sql "${v_output_fdr}" "${v_dump_user}" "${v_dump_dir_name}"
+@externalDir.sql "${v_output_fdr}" "${v_dump_user_name}" "${v_dump_dir_name}"
 EOF
 
 # Get DB Version
@@ -69,13 +69,13 @@ exec 3>&1
 
 set +e
 $ORACLE_HOME/bin/expdp \
-userid="${v_dump_user}/${v_dump_pass}" \
+userid="${v_dump_user_name}/${v_dump_user_pass}" \
 directory=${v_dump_dir_name} \
 compression=all "${v_compress_alg}" \
 dumpfile="${v_output_file}" \
 logfile="${v_output_file_noext}.log" \
 content=data_only \
-schemas="${v_dump_user}" 2>&1 >&3 | tee "${v_output_error}"
+schemas="${v_dump_user_name}" 2>&1 >&3 | tee "${v_output_error}"
 v_ret=$?
 set -eo pipefail
 
@@ -93,7 +93,7 @@ fi
 cd odbfcl/sh_extractor/
 $ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
 set verify off
-@cleanUser.sql "${v_dump_user}" "${v_dump_dir_name}"
+@cleanUser.sql "${v_dump_user_name}" "${v_dump_dir_name}"
 EOF
 
 exit 0

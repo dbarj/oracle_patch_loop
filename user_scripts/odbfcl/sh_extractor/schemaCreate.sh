@@ -15,13 +15,19 @@ function exitError ()
   exit 1
 }
 
-v_dump_user="$1"
+v_dump_user_name="$1"
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
-# If DB_EXP_DUMP_PASS is exported, use it as the password.
-[ -n "$DB_EXP_DUMP_PASS" ] && v_dump_pass="$DB_EXP_DUMP_PASS" || v_dump_pass='HhAaSsHh..135'
+# If DB_EXP_USER_PASS is exported, use it as the password.
+[ -n "$DB_EXP_USER_PASS" ] && v_dump_user_pass="$DB_EXP_USER_PASS" || v_dump_user_pass='HhAaSsHh..135'
+
+# If DB_EXP_USER_PASS is exported, use it as the password.
+[ -n "$DB_EXP_USER_TBS" ] && v_dump_user_tbs="$DB_EXP_USER_TBS" || v_dump_user_pass='DATA'
+
+# If DB_EXP_USER_PASS is exported, use it as the password.
+[ -n "$DB_EXP_USER_TEMP" ] && v_dump_user_temp="$DB_EXP_USER_TEMP" || v_dump_user_pass='TEMP'
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
 
@@ -32,7 +38,7 @@ echo "Generating export user. Please wait.."
 cd "${v_thisdir}"/../
 $ORACLE_HOME/bin/sqlplus "${v_sysdba_connect}" <<EOF
 set verify off
-@tables_recreate.sql "${v_dump_user}" "${v_dump_pass}"
+@tables_recreate.sql "${v_dump_user_name}" "${v_dump_user_pass}" "${v_dump_user_tbs}" "${v_dump_user_temp}"
 EOF
 
 exit 0

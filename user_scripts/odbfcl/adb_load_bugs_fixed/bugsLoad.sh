@@ -15,7 +15,7 @@ function exitError ()
   exit 1
 }
 
-v_dump_user="$1"
+v_dump_user_name="$1"
 v_file="$2"
 v_outpref="${v_file}"
 
@@ -31,7 +31,7 @@ echo "Loading bugs list. Please wait.."
 
 cat << EOF > "${v_outpref}_load.ctl"
 LOAD
-INTO TABLE ${v_dump_user}.T_BUGSFIXED
+INTO TABLE ${v_dump_user_name}.T_BUGSFIXED
 APPEND
 FIELDS TERMINATED BY x'09'
 (bug_id, patch_id, bug_desc)

@@ -15,7 +15,7 @@ function exitError ()
   exit 1
 }
 
-v_dump_user="$1"
+v_dump_user_name="$1"
 v_file="$2"
 v_outpref="${v_file}"
 
@@ -38,14 +38,14 @@ cd "${v_outpref}_unzip"
 
 $ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
 whenever sqlerror exit failure rollback
-create table ${v_dump_user}.t_txtcollection_load
+create table ${v_dump_user_name}.t_txtcollection_load
 ( path varchar2(500) not null, contents clob not null, md5_hash raw(16) )
 compress nologging;
 EOF
 
 cat << EOF > "${v_outpref}_load.ctl"
 LOAD
-INTO TABLE ${v_dump_user}.T_TXTCOLLECTION_LOAD
+INTO TABLE ${v_dump_user_name}.T_TXTCOLLECTION_LOAD
 APPEND
 FIELDS TERMINATED BY ','
 (path char(4000), contents lobfile(path) terminated by eof)
@@ -65,24 +65,24 @@ rm -rf "${v_outpref}_unzip"
 
 $ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
 whenever sqlerror exit failure rollback
-update ${v_dump_user}.t_txtcollection_load
+update ${v_dump_user_name}.t_txtcollection_load
 set md5_hash=sys.dbms_crypto.hash(contents,2);
 
-insert /*+ append */ into ${v_dump_user}.dm_contents (md5_hash, contents)
+insert /*+ append */ into ${v_dump_user_name}.dm_contents (md5_hash, contents)
 select md5_hash, contents
 from (
   select md5_hash, contents, rank() over (partition by md5_hash order by rowid asc) col_ind
-  from   ${v_dump_user}.t_txtcollection_load
+  from   ${v_dump_user_name}.t_txtcollection_load
 )
 where col_ind=1;
 
-insert /*+ append */ into ${v_dump_user}.t_txtcollection (path, md5_hash)
+insert /*+ append */ into ${v_dump_user_name}.t_txtcollection (path, md5_hash)
 select path, md5_hash
-from   ${v_dump_user}.t_txtcollection_load;
+from   ${v_dump_user_name}.t_txtcollection_load;
 
 commit;
 
-drop table ${v_dump_user}.t_txtcollection_load purge;
+drop table ${v_dump_user_name}.t_txtcollection_load purge;
 EOF
 
 exit 0
