@@ -134,8 +134,9 @@ then
   if [ $v_ret -ne 0 ]
   then
     echoError "Script failed to zip tables_${v_pattern}.dmp in ${v_pattern}.zip". 
-    echoError "1 - Try to rerun as user: $(stat -c '%U' tables_${v_pattern}.dmp)". 
-    echoError "2 - Check permissions on tables_${v_pattern}.dmp, make it readeable and run:". 
+    v_file_user=$(stat -c '%U' tables_${v_pattern}.dmp)
+    echoError "1 - Try to rerun as '${v_file_user}' user." 
+    echoError "2 - Check file 'tables_${v_pattern}.dmp' permissions, make it readeable and run:". 
     echoError "$ zip ${v_pattern}.zip tables_${v_pattern}.dmp"
     exit $v_ret
   fi

@@ -83,7 +83,8 @@ if [ ${v_ret} -ne 0 ]
 then
   if grep -q 'ORA-39070: Unable to open the log file' "${v_output_error}"
   then
-    exitError "Error, check if the Oracle DB has access to this directory: ${v_output_fdr}"
+    v_ora_user=$(stat -c '%U' $ORACLE_HOME/bin/expdp)
+    exitError "Error, check if the Oracle Database ('${v_ora_user}' user) has access to this directory: ${v_output_fdr}"
   else
     exitError 'Error when generating dump file.'
   fi
