@@ -1,6 +1,7 @@
 DECLARE
-  VVERS VARCHAR2(20) := '&P_VERS.';
-  VUSER VARCHAR2(30) := '&v_username.';
+  V_VERS_1D NUMBER := '&P_VERS_1D.';
+  V_VERS_4D VARCHAR2(20) := '&P_VERS_4D.';
+  V_USER    VARCHAR2(30) := '&v_username.';
 
   PROCEDURE RUN_INSERT (IN_TAB_NAME VARCHAR2,
                        OUT_TAB_NAME VARCHAR2)
@@ -11,7 +12,7 @@ DECLARE
     V_CDB_CLAUSE VARCHAR2(30);
   BEGIN
 
-    IF VVERS = '11.2.0.4' THEN
+    IF V_VERS_1D = 11 THEN
       V_CDB_CLAUSE := '';
     else
       V_CDB_CLAUSE := ', CON_ID';
@@ -23,18 +24,18 @@ DECLARE
     from   dba_tab_columns c1, dba_tab_columns c2
     where  c1.table_name = OUT_TAB_NAME
     and    c2.table_name (+) = IN_TAB_NAME
-    and    c1.owner = VUSER
+    and    c1.owner = V_USER
     and    c2.owner(+) = 'DVSYS'
     and    c1.column_name = c2.column_name (+)
     and    c1.column_name not in ('CON_ID');
 
-    V_SQL := 'INSERT /*+ APPEND */ INTO ' || VUSER || '.' || OUT_TAB_NAME || '(' || V_TAB_COLS || V_CDB_CLAUSE || ') SELECT ';
+    V_SQL := 'INSERT /*+ APPEND */ INTO ' || V_USER || '.' || OUT_TAB_NAME || '(' || V_TAB_COLS || V_CDB_CLAUSE || ') SELECT ';
 
     V_SQL := V_SQL || V_INS_COLS || V_CDB_CLAUSE;
 
-    IF VVERS = '11.2.0.4' THEN
+    IF V_VERS_1D = 11 THEN
       V_SQL := V_SQL || ' FROM DVSYS.' || IN_TAB_NAME;
-    ELSIF VVERS = '12.1.0.1' THEN
+    ELSIF V_VERS_4D = '12.1.0.1' THEN
       V_SQL := V_SQL || ' FROM CDB$VIEW("DVSYS"."' || IN_TAB_NAME || '")';
     ELSE
       V_SQL := V_SQL || ' FROM CONTAINERS(DVSYS.' || IN_TAB_NAME || ')';

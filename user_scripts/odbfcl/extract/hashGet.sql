@@ -15,25 +15,23 @@ SELECT UPPER('&V_USERNAME.') V_USERNAME, UPPER('&V_DIRECTORY.') V_DIRECTORY FROM
 col v_username clear
 col v_directory clear
 
-col p_vers new_v p_vers nopri
-select substr(version,1,instr(version,'.',1,4)-1) p_vers
+col p_vers_4d new_v p_vers_4d nopri
+col p_vers_1d new_v p_vers_1d nopri
+select substr(version,1,instr(version,'.',1,4)-1) p_vers_4d,
+       substr(version,1,instr(version,'.',1,1)-1) p_vers_1d
 from (select version from v$instance);
-col p_vers clear
+col p_vers_4d clear
+col p_vers_1d clear
 
 DECLARE
-  V_ORA_VER_MAJOR NUMBER;
-  V_ORA_VERSION   VARCHAR2(20);
+  V_VERS_1D NUMBER := '&p_vers_1d.';
+  V_VERS_4D VARCHAR2(20) := '&p_vers_4d.';
 BEGIN
-  select substr(version,1,instr(version,'.',1,4)-1),
-         substr(version,1,instr(version,'.',1,1)-1)
-  into v_ora_version,
-       v_ora_ver_major
-  from (select '&P_VERS..0' version from dual);
-  IF v_ora_version = '12.1.0.1' THEN
+  IF V_VERS_4D = '12.1.0.1' THEN
     NULL;
-  ELSIF v_ora_version = '12.1.0.2' THEN
+  ELSIF V_VERS_4D = '12.1.0.2' THEN
     execute immediate 'alter session set exclude_seed_cdb_view=false';
-  ELSIF v_ora_ver_major >= 12 THEN
+  ELSIF V_VERS_1D >= 12 THEN
     execute immediate 'alter session set "_exclude_seed_cdb_view"=false';
   END IF;
 END;
