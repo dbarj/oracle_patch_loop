@@ -3,31 +3,62 @@
 
 - block:
 
+  # If needs to perform patch actions
   - block:
 
     # Stop the database
     - include: run_sql.yml
       vars:
         sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database for OPatch" }
+      when: not oci_mode or patch.dep_type is defined
+      # When patch has a dependency, if the dependency is loaded running the full patch process instead of loading from lvm, the DB will be left online.
+
+    ## APPLY ##
 
     - name: Run OPatch
       shell: |
-           export ORACLE_HOME ORACLE_SID
-           ./opatch apply -silent {{ VM_folder }}/{{ patch.patch_number }} -ocmrf {{ VM_folder }}/ocm.rsp
+          export ORACLE_HOME ORACLE_SID
+          ./opatch apply -silent {{ VM_folder }}/{{ patch.patch_number }} -ocmrf {{ VM_folder }}/ocm.rsp
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
         ORACLE_SID: "{{ mysid }}"
       args:
         chdir: "{{ dbhome_locl }}/OPatch"
-      register: shell_output
+      register: tmp_shell_output
       become: true
       become_user: oracle
+      when: patch.apply_method is not defined or patch.apply_method == "opatch"
       delegate_to: "{{ vm_ip_address }}"
-    
+
+    # Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+    - set_fact: shell_output="{{tmp_shell_output}}"
+      when: tmp_shell_output is not skipped
+
+    ## NAPPLY ##
+
+    - name: Run OPatch/opatch NAPPLY
+      shell: |
+          export ORACLE_HOME ORACLE_SID
+          ./opatch napply -silent {{ VM_folder }}/{{ patch.patch_number }} -ocmrf {{ VM_folder }}/ocm.rsp
+      environment:
+        ORACLE_HOME: "{{ dbhome_locl }}"
+        ORACLE_SID: "{{ mysid }}"
+      args:
+        chdir: "{{ dbhome_locl }}/OPatch"
+      register: tmp_shell_output
+      become: true
+      become_user: oracle
+      when: patch.apply_method is defined and patch.apply_method == "napply"
+      delegate_to: "{{ vm_ip_address }}"
+
+    # Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+    - set_fact: shell_output="{{tmp_shell_output}}"
+      when: tmp_shell_output is not skipped
+
     - name: Opatch Output
       debug: msg="{{ shell_output.stdout_lines }}"
       when: shell_output.stdout_lines is defined
-    
+
     - name: Disable Database Vault
       shell: |
            {{ dbhome_locl }}/bin/chopt disable dv
@@ -55,7 +86,13 @@
       vars:
         sql_param : { file : "applySQLPatch.sql" , folder : "patch_sql" , task_action : "Apply Patch" , params : "exa" }
       when: patch.type == "BP"
-    
+
+    # Apply patch changes on DB (if CPU)
+    - include: run_sql.yml
+      vars:
+        sql_param : { file : "applySQLPatch.sql" , folder : "patch_sql" , task_action : "Apply Patch" , params : "cpu" }
+      when: patch.type == "CPU"
+
     # When the SQL Patch is for OJVM
     - block:
     
@@ -94,6 +131,39 @@
       when: dbvault_enabled
 
     when: perform_patch_actions
+
+  # If apply method is UNTAR
+  - block:
+
+    # Stop the database
+    - include: run_sql.yml
+      vars:
+        sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database for OPatch" }
+      when: not oci_mode or patch.dep_type is defined
+      # When patch has a dependency, if the dependency is loaded running the full patch process instead of loading from lvm, the DB will be left online.
+
+    ## TAR ##
+
+    - name: UNTAR full Oracle
+      shell: |
+          rm -rf /u01/*
+          tar -xzf {{ patch.apply_file }}
+      args:
+        chdir: "/"
+      register: tmp_shell_output
+      become: true
+      become_user: root
+      delegate_to: "{{ vm_ip_address }}"
+
+    # Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+    - set_fact: shell_output="{{tmp_shell_output}}"
+      when: tmp_shell_output is not skipped
+
+    - name: TAR Output
+      debug: msg="{{ shell_output.stdout_lines }}"
+      when: shell_output.stdout_lines is defined
+
+    when: patch.apply_method is defined and patch.apply_method == "tar"
 
   # This start is only required if database was never stopped.
   - include: run_sql.yml

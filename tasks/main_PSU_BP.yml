@@ -5,6 +5,7 @@
     patch_file:    "{{ item.main_file }}"
     patch_list:    "{{ item.patch_list }}"
     opatch_file:   "{{ item.opatch_file }}"
+#    db_version_1d: "{{ db_version.split(".")[0] }}"
   with_items: "{{ list_versions }}"
   when: item.id == db_version
 
@@ -20,6 +21,7 @@
   set_fact:
     oci_instance_id: "{{ item.oci_instance_id }}"
     patch_base:    "{{ item.base_snap }}"
+    out_of_box_id: "{{ item.out_of_box_id | default(-1, true) }}"
   with_items: "{{ list_info_oci }}"
   when: item.id == db_version and oci_mode
 
@@ -66,6 +68,7 @@
     vars:
       patch : { type : BASE , id : 0, patch_number : 0 }
     when:
+      - (out_of_box_id | float) != -1
       - 0 == (param_patch | float)      or param_patch == -1
       - 0 >= (param_patch_from | float) or param_patch_from == -1
       - 0 <= (param_patch_to | float)   or param_patch_to == -1
@@ -77,12 +80,13 @@
       loop_var: patch
       label: "{{ patch.id }}"
     when:
-      - patch.type == "PSU"
+      - patch.type == "PSU" or patch.type == "CPU" or patch.type == "BASE"
       - patch.id == (param_patch | float)      or param_patch == -1
       - patch.id >= (param_patch_from | float) or param_patch_from == -1
       - patch.id <= (param_patch_to | float)   or param_patch_to == -1
+      - patch.version == db_version
 
-  when: param_type is undefined or param_type == "PSU"
+  when: param_type is undefined or param_type == "PSU" or param_type == "CPU" or param_type == "BASE"
 
 ### OJVM
 - block:

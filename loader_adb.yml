@@ -35,6 +35,9 @@
 
   tasks:
 
+  - include: tasks/main_loader_adb.yml db_version="11.2.0.3"
+    when: param_version is undefined or param_version == "11.2.0.3"
+
   - include: tasks/main_loader_adb.yml db_version="11.2.0.4"
     when: param_version is undefined or param_version == "11.2.0.4"
 

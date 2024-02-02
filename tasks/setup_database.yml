@@ -35,7 +35,7 @@
   - name : Print Database Vault value
     debug: msg="Database Vault Enabled - {{ dbvault_enabled }}"
 
-  when: db_version == "11.2.0.4"
+  when: db_version == "11.2.0.3" or db_version == "11.2.0.4"
 
 ### Check if CDB
 
@@ -98,13 +98,13 @@
     set_fact:
       db_start_retried: false
 
-  when: db_version != "11.2.0.4"
+  when: db_version != "11.2.0.3" and db_version != "11.2.0.4"
 
 
 - name : Define CDB variable
   set_fact:
     db_iscdb: false
-  when: db_version == "11.2.0.4"
+  when: db_version == "11.2.0.3" or db_version == "11.2.0.4"
 
 ### Adjust dump_user_int based on database type and provided value.
 

@@ -20,7 +20,7 @@
   set_fact:
     oci_instance_id: "{{ item.oci_instance_id }}"
     patch_base:    "{{ item.base_snap }}"
-    out_of_box_ru: "{{ item.out_of_box_ru | default(-1, true) }}"
+    out_of_box_id: "{{ item.out_of_box_id | default(-1, true) }}"
   with_items: "{{ list_info_oci }}"
   when: item.id == db_version and oci_mode
 
@@ -65,12 +65,12 @@
   # Execute for base release
   - include: "{{ patch_file }}"
     vars:
-      patch : { type : BASE , id : "{{ out_of_box_ru }}" , patch_number : 0 }
+      patch : { type : BASE , id : "{{ out_of_box_id }}" , patch_number : 0 }
     when:
-      - (out_of_box_ru | float) != -1
-      - (out_of_box_ru | float) == (param_patch | float)      or param_patch == -1
-      - (out_of_box_ru | float) >= (param_patch_from | float) or param_patch_from == -1
-      - (out_of_box_ru | float) <= (param_patch_to | float)   or param_patch_to == -1
+      - (out_of_box_id | float) != -1
+      - (out_of_box_id | float) == (param_patch | float)      or param_patch == -1
+      - (out_of_box_id | float) >= (param_patch_from | float) or param_patch_from == -1
+      - (out_of_box_id | float) <= (param_patch_to | float)   or param_patch_to == -1
 
   # Execute for every RU
   - include: "{{ patch_file }}"
@@ -83,7 +83,7 @@
       - patch.id == (param_patch | float)      or param_patch == -1
       - patch.id >= (param_patch_from | float) or param_patch_from == -1
       - patch.id <= (param_patch_to | float)   or param_patch_to == -1
-      - patch.id > (out_of_box_ru | float)
+      - patch.id > (out_of_box_id | float)
 
   when: param_type is undefined or param_type == "RU"
 
