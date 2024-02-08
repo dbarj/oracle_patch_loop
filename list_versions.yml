@@ -5,8 +5,13 @@
 # Base Snap:   Snapshot on machine that will be used as a base to rollback before every patch apply (must be unique name for each VM).
 # OPatch File: Filename for OPatch Update.
 # IP Address:  For local SSH connection.          
+# Out of box ID: What is the ID of the base snap. Null means the base snap is not to be used.
 
 list_versions:
+  - { id : "11.1.0.6" , patch_list : "list_1110X" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_111000_Linux-x86-64.zip" }
+  - { id : "11.1.0.7" , patch_list : "list_1110X" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_111000_Linux-x86-64.zip" }
+  - { id : "11.2.0.1" , patch_list : "list_1120X" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_112000_Linux-x86-64.zip" }
+  - { id : "11.2.0.2" , patch_list : "list_1120X" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_112000_Linux-x86-64.zip" }
   - { id : "11.2.0.3" , patch_list : "list_1120X" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_112000_Linux-x86-64.zip" }
   - { id : "11.2.0.4" , patch_list : "list_11204" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_112000_Linux-x86-64.zip" }
   - { id : "12.1.0.1" , patch_list : "list_12101" , main_file : "patch_main.yml"     , opatch_file : "p6880880_210000_Linux-x86-64.zip" }
@@ -36,3 +41,7 @@ list_info_oci:
   - { id : "19.0.0.0" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : 3 }
   - { id : "21.0.0.0" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : 3 }
   - { id : "23.0.0.0" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
+  - { id : "11.1.0.6" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
+  - { id : "11.1.0.7" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
+  - { id : "11.2.0.1" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
+  - { id : "11.2.0.2" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
