@@ -30,6 +30,7 @@
     loop_var: patch
     label: "{{ patch.id }}"
   when:
+    - (patch.version | default(db_version)) == (bkp_patch.version | default(db_version))
     - patch.type == bkp_patch.dep_type
     - patch.id == bkp_patch.dep_id
 

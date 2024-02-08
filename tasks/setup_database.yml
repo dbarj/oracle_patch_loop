@@ -22,7 +22,7 @@
       src: files/ocm.rsp
       dest: "{{ shared_folder }}"
       mode: u=rw,g=r,o=r
-  
+
   - name: Check if Database Vault is enabled
     shell: 'ar -t {{dbhome_locl}}/rdbms/lib/libknlopt.a | grep -q kzvidv.o && echo true || echo false'
     register: dbvaultoutput
@@ -35,7 +35,8 @@
   - name : Print Database Vault value
     debug: msg="Database Vault Enabled - {{ dbvault_enabled }}"
 
-  when: db_version == "11.2.0.3" or db_version == "11.2.0.4"
+# when: db_version == "11.2.0.2" or db_version == "11.2.0.3" or db_version == "11.2.0.4"
+  when: ( db_version | regex_replace('^([^\.]+).*','\\1') | int ) <= 11
 
 ### Check if CDB
 
@@ -64,10 +65,10 @@
     become: true
     become_user: oracle
     delegate_to: "{{ vm_ip_address }}"
-  
+
   - name: SQL Output
     debug: msg="{{ shell_output.stdout_lines }}"
-  
+
   - name : Define CDB variable
     set_fact:
       db_iscdb: "{{ shell_output.stdout | bool }}"
@@ -98,13 +99,15 @@
     set_fact:
       db_start_retried: false
 
-  when: db_version != "11.2.0.3" and db_version != "11.2.0.4"
+# when: db_version != "11.2.0.2" and db_version != "11.2.0.3" and db_version != "11.2.0.4"
+  when: ( db_version | regex_replace('^([^\.]+).*','\\1') | int ) > 11
 
 
 - name : Define CDB variable
   set_fact:
     db_iscdb: false
-  when: db_version == "11.2.0.3" or db_version == "11.2.0.4"
+# when: db_version == "11.2.0.2" or db_version == "11.2.0.3" or db_version == "11.2.0.4"
+  when: ( db_version | regex_replace('^([^\.]+).*','\\1') | int ) <= 11
 
 ### Adjust dump_user_int based on database type and provided value.
 

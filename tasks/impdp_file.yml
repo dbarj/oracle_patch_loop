@@ -29,7 +29,8 @@
   become: true
   become_user: oracle
   delegate_to: "{{ vm_ip_address }}"
-  when: (db_version == "11.2.0.3" or db_version == "11.2.0.4") and dump_user != dump_user_int
+# when: (db_version == "11.2.0.2" or db_version == "11.2.0.3" or db_version == "11.2.0.4") and dump_user != dump_user_int
+  when: ( db_version | regex_replace('^([^\.]+).*','\\1') | int ) <= 11 and dump_user != dump_user_int
 
 - name: Import Database Tables
   shell: |
@@ -40,7 +41,8 @@
   become: true
   become_user: oracle
   delegate_to: "{{ vm_ip_address }}"
-  when: db_version != "11.2.0.3" and db_version != "11.2.0.4"
+# when: db_version != "11.2.0.2" and db_version != "11.2.0.3" and db_version != "11.2.0.4"
+  when: ( db_version | regex_replace('^([^\.]+).*','\\1') | int ) > 11
 
 - name : "Remove file {{ dump_file_prefix }}.dmp"
   file:

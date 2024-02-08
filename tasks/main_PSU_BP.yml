@@ -80,11 +80,11 @@
       loop_var: patch
       label: "{{ patch.id }}"
     when:
-      - patch.type == "PSU" or patch.type == "CPU" or patch.type == "BASE"
+      - (param_type is undefined and (patch.type == "PSU" or patch.type == "CPU" or patch.type == "BASE")) or patch.type == param_type
       - patch.id == (param_patch | float)      or param_patch == -1
       - patch.id >= (param_patch_from | float) or param_patch_from == -1
       - patch.id <= (param_patch_to | float)   or param_patch_to == -1
-      - patch.version == db_version
+      - (patch.version | default(db_version)) == db_version
 
   when: param_type is undefined or param_type == "PSU" or param_type == "CPU" or param_type == "BASE"
 

@@ -16,6 +16,11 @@ Using VirtualBox VM snapshots, the playbook will loop over a list of the availab
 
 The playbook was tested and is currently working for all PSUs, OJVM PSUs, Bundle Patches, RUs, RURs and MRPs for the following versions:
 
+- 11.1.0.6
+- 11.1.0.7
+- 11.2.0.1
+- 11.2.0.2
+- 11.2.0.3
 - 11.2.0.4
 - 12.1.0.1
 - 12.1.0.2

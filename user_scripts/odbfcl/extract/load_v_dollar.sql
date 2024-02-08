@@ -11,15 +11,33 @@ DECLARE
     V_SQL CLOB;
   BEGIN
 
-    select listagg(c1.column_name,', ') within group(order by c1.column_id),
-           listagg(nvl(c2.column_name,'NULL'),', ') within group(order by c1.column_id)
-    into   V_TAB_COLS, V_INS_COLS
-    from   dba_tab_columns c1, dba_tab_columns c2
-    where  c1.table_name = OUT_TAB_NAME
-    and    c2.table_name (+) = IN_TAB_NAME
-    and    c1.owner = '&v_username.'
-    and    c2.owner(+) = 'SYS'
-    and    c1.column_name = c2.column_name (+);
+    $IF DBMS_DB_VERSION.VER_LE_11_1
+    $THEN
+      select wm_concat(c1_column_name),
+             wm_concat(c2_column_name)
+        into v_tab_cols, v_ins_cols
+        from (
+          select c1.column_name c1_column_name,
+                 nvl(c2.column_name,'NULL') c2_column_name
+          from   dba_tab_columns c1, dba_tab_columns c2
+          where  c1.table_name = OUT_TAB_NAME
+          and    c2.table_name (+) = IN_TAB_NAME
+          and    c1.owner = '&v_username.'
+          and    c2.owner(+) = 'SYS'
+          and    c1.column_name = c2.column_name (+)
+          order by c1.column_id
+        );
+    $ELSE
+      select listagg(c1.column_name,', ') within group(order by c1.column_id),
+             listagg(nvl(c2.column_name,'NULL'),', ') within group(order by c1.column_id)
+      into   V_TAB_COLS, V_INS_COLS
+      from   dba_tab_columns c1, dba_tab_columns c2
+      where  c1.table_name = OUT_TAB_NAME
+      and    c2.table_name (+) = IN_TAB_NAME
+      and    c1.owner = '&v_username.'
+      and    c2.owner(+) = 'SYS'
+      and    c1.column_name = c2.column_name (+);
+    $END
 
     V_SQL := 'INSERT /*+ APPEND */ INTO &v_username..' || OUT_TAB_NAME || '(' || V_TAB_COLS || ') SELECT ';
 

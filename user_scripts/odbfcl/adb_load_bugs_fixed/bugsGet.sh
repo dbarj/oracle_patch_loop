@@ -25,7 +25,7 @@ v_output="$1"
 echo "Generating bugs list. Please wait.." 
 
 # Check if opatch command works
-v_out=$("$ORACLE_HOME"/OPatch/opatch lsinv 2>&1) && v_ret=$? || v_ret=$?
+v_out=$("$ORACLE_HOME"/OPatch/opatch lsinv -bugs_fixed 2>&1) && v_ret=$? || v_ret=$?
 if [ ${v_ret} -ne 0 ]
 then
   echoError "Unable to run opatch. Error was:"
@@ -46,11 +46,11 @@ sed '/^$/d' |
 # Remove breaks from lines not starting with number
 sed ':a $!{N; ba}; s/\n\+/\n/g; s/\n\([^0-9]\)/\1/g' |
 # Remove double spaces
-sed -E 's/[[:space:]]+/ /g' |
+sed -r 's/[[:space:]]+/ /g' |
 # Remove date columns
 awk '{$3=$4=$5=$6=$7=$8=""; print $0}' |
 # Remove double spaces again after column removal
-sed -E 's/[[:space:]]+/ /g' |
+sed -r 's/[[:space:]]+/ /g' |
 # Replace first space per tab
 sed 's/ /'$'\t''/' |
 # Replace first space per tab (that was the second)

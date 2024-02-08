@@ -28,6 +28,23 @@ DECLARE
     -- ORA-00600: internal error code, arguments: [kkdlGetBaseUser2:authIdType], [0], [104], [_NEXT_USER], [], [], [], [], [], [], [], []
     -- Bug 22168436  ORA-600 [kkdoilsn2] on select from CONTAINERS(...) -  Using BLOB / ANYDATA / XMLTYPE. 
 
+  $IF DBMS_DB_VERSION.VER_LE_11_1
+  $THEN
+    SELECT WM_CONCAT(C1_COLUMN_NAME),
+           WM_CONCAT(C2_COLUMN_NAME)
+      INTO V_TAB_COLS, V_INS_COLS
+      FROM (
+        SELECT C1.COLUMN_NAME C1_COLUMN_NAME,
+               NVL(C2.COLUMN_NAME,'NULL') C2_COLUMN_NAME
+        FROM   DBA_TAB_COLUMNS C1, DBA_TAB_COLUMNS C2
+        WHERE  C1.TABLE_NAME = 'T_' || IN_TAB_NAME
+        AND    C2.TABLE_NAME (+) = V_PREFIX || IN_TAB_NAME
+        AND    C1.OWNER = V_USER
+        AND    C2.OWNER(+) = 'SYS'
+        AND    C1.COLUMN_NAME = C2.COLUMN_NAME (+)
+        ORDER BY C1.COLUMN_ID
+      );
+  $ELSE
     SELECT LISTAGG(C1.COLUMN_NAME,', ') WITHIN GROUP(ORDER BY C1.COLUMN_ID),
            LISTAGG(NVL(C2.COLUMN_NAME,'NULL'),', ') WITHIN GROUP(ORDER BY C1.COLUMN_ID)
     INTO   V_TAB_COLS, V_INS_COLS
@@ -37,6 +54,7 @@ DECLARE
     AND    C1.OWNER = V_USER
     AND    C2.OWNER(+) = 'SYS'
     AND    C1.COLUMN_NAME = C2.COLUMN_NAME (+);
+  $END
 
     V_SQL := 'INSERT /*+ APPEND */ INTO ' || V_USER || '.T_' || IN_TAB_NAME || '(' || V_TAB_COLS || ') SELECT ';
 

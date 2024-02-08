@@ -32,6 +32,11 @@
 
   tasks:
 
+  - name: Variables not provided
+    fail:
+      msg: "Variables param_version / param_type / param_patch must be defined."
+    when: param_version is undefined or param_type is undefined or param_patch is undefined
+
   - include_vars: config_vbox.yml
     when: not oci_mode
 
@@ -45,13 +50,10 @@
       skip_dump_exists: false
       only_deploy_patch: true
 
-  - name: Variables not provided
-    fail:
-      msg: "Variables param_version / param_type / param_patch must be defined."
-    when: param_version is undefined or param_type is undefined or param_patch is undefined
-
   - include: tasks/main_PSU_BP.yml db_version="{{ param_version }}"
-    when: param_version == "11.2.0.3" or param_version == "11.2.0.4" or param_version == "12.1.0.1" or param_version == "12.1.0.2"
+#   when: param_version == "11.2.0.2" or param_version == "11.2.0.3" or param_version == "11.2.0.4" or param_version == "12.1.0.1" or param_version == "12.1.0.2"
+    when: ( param_version | regex_replace('^([^\.]+).*','\\1') | int ) <= 11  or param_version == "12.1.0.1" or param_version == "12.1.0.2"
 
   - include: tasks/main_RU_RUR.yml db_version="{{ param_version }}"
-    when: not(param_version == "11.2.0.3" or param_version == "11.2.0.4" or param_version == "12.1.0.1" or param_version == "12.1.0.2")
+#   when: not(param_version == "11.2.0.2" or param_version == "11.2.0.3" or param_version == "11.2.0.4" or param_version == "12.1.0.1" or param_version == "12.1.0.2")
+    when: not( ( param_version | regex_replace('^(^[\.]+).*','\\1') | int ) <= 11  or param_version == "12.1.0.1" or param_version == "12.1.0.2" )
