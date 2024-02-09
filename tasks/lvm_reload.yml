@@ -1,50 +1,50 @@
 - name: "Load base snapshot {{ vm_snapshot }}"
   shell: |
-       set -e -x
-       export PATH=$PATH:/sbin:/usr/sbin
-       v_snapshot="{{ vm_snapshot }}"
-       v_disk="/dev/mapper/vg_u01-lv_u01"
-       # Kill all oracle sessions
-       pkill -9 -U oracle || true
-       sleep 5
-       # Try to umount the disk
-       umount -l -f /u01 || true
-       sleep 5
-       # Try to deactivate the disk
-       lvchange -a n ${v_disk} -f && v_ret=$? || v_ret=$?
-       # If not deactivating, try again in 1 minute..
-       if [ $v_ret -ne 0 ]
-       then
-         sleep 60
-         umount -l -f /u01 || true
-         sleep 5
-         lvchange -a n ${v_disk} -f
-       fi
-       if grep -q 'release 5.' /etc/oracle-release
-       then
-         # There is no merge option on OL5, so we replace the current one with the last backup.
-         lvchange -a y ${v_disk}
-         dd if=${v_disk}_${v_snapshot} of=${v_disk} bs=8M  iflag=direct oflag=direct
-       else
-         # Restore target snapshot
-         lvconvert --merge -i 1 -v ${v_disk}_${v_snapshot}
-         lvchange -a n ${v_disk}
-         lvchange -a y ${v_disk}
-         # Wait until snapshot is ready
-         while :
-         do
+      set -e -x
+      export PATH=$PATH:/sbin:/usr/sbin
+      v_snapshot="{{ vm_snapshot }}"
+      v_disk="/dev/mapper/vg_u01-lv_u01"
+      # Kill all oracle sessions
+      pkill -9 -U oracle || true
+      sleep 5
+      # Try to umount the disk
+      umount -l -f /u01 || true
+      sleep 5
+      # Try to deactivate the disk
+      lvchange -a n ${v_disk} -f && v_ret=$? || v_ret=$?
+      # If not deactivating, try again in 1 minute..
+      if [ $v_ret -ne 0 ]
+      then
+        sleep 60
+        umount -l -f /u01 || true
+        sleep 5
+        lvchange -a n ${v_disk} -f
+      fi
+      if grep -q 'release 5.' /etc/oracle-release
+      then
+        # There is no merge option on OL5, so we replace the current one with the last backup.
+        lvchange -a y ${v_disk}
+        dd if=${v_disk}_${v_snapshot} of=${v_disk} bs=8M  iflag=direct oflag=direct
+      else
+        # Restore target snapshot
+        lvconvert --merge -i 1 -v ${v_disk}_${v_snapshot}
+        lvchange -a n ${v_disk}
+        lvchange -a y ${v_disk}
+        # Wait until snapshot is ready
+        while :
+        do
            if ! lvs -a | grep lv_u01_${v_snapshot}
            then
              break
            fi
            dmsetup status ${v_disk}
            sleep 1
-         done
-         v_size=$(lvs --noheadings -o seg_size ${v_disk})
-         lvcreate --size ${v_size} --snapshot --name lv_u01_${v_snapshot} ${v_disk}
-       fi
-       mount /u01 || true
-       mount | grep -q -F " /u01 "
+        done
+        v_size=$(lvs --noheadings -o seg_size ${v_disk})
+        lvcreate --size ${v_size} --snapshot --name lv_u01_${v_snapshot} ${v_disk}
+      fi
+      mount /u01 || true
+      mount | grep -q -F " /u01 "
   become: true
   become_user: root
   delegate_to: "{{ vm_ip_address }}"
@@ -55,4 +55,14 @@
       ipcs -m | grep oracle | awk ' { print $2 } ' | xargs -I {} ipcrm -m {}
   become: true
   become_user: oracle
+  delegate_to: "{{ vm_ip_address }}"
+
+- name: "Free /dev/shm"
+  shell: |
+      set -e -x
+      # Free up space on /dev/shm
+      umount /dev/shm
+      mount /dev/shm
+  become: true
+  become_user: root
   delegate_to: "{{ vm_ip_address }}"

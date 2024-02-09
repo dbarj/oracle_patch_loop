@@ -38,8 +38,8 @@
       latest_RU_id: "{{ ( ( lookup('vars', patch_list) | json_query(filter_qry_1) ) + [0] ) | max }}"
       base_OJVM_id: "{{ ( ( lookup('vars', patch_list) | json_query(filter_qry_2) ) + [0] ) | max }}"
     vars:
-      filter_qry_1: "[? type == 'RU' ].id"
-      filter_qry_2: "[? type == 'RU' && base_ojvm != null ].id"
+      filter_qry_1: "[? type == 'RU' && (version == null || version == '{{ db_version }}') ].id"
+      filter_qry_2: "[? type == 'RU' && base_ojvm != null && (version == null || version == '{{ db_version }}') ].id"
 
   - name : Set base OJVM ID
     set_fact:

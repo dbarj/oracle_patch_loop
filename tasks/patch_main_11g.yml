@@ -91,7 +91,14 @@
     - include: run_sql.yml
       vars:
         sql_param : { file : "applySQLPatch.sql" , folder : "patch_sql" , task_action : "Apply Patch" , params : "cpu" }
-      when: patch.type == "CPU"
+      when: patch.type == "CPU" and patch.cat_script is not defined
+
+    # Apply patch changes on DB (if Custom)
+    - include: run_sql.yml
+      vars:
+        sql_param : { file : "applySQLCustom.sql" , folder : "patch_sql" , task_action : "Apply Patch" , params : "{{ patch.cat_script }}" }
+      when: patch.type == "CPU" and patch.cat_script is defined
+
 
     # When the SQL Patch is for OJVM
     - block:
