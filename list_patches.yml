@@ -9,7 +9,7 @@ list_1110X:
   - { version : "11.1.0.6" , type : "BASE" , id : 0      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.11.1.0.6.tar.gz" }
   - { version : "11.1.0.6" , type : "CPU"  , id : 200804 , patch_number : 6864063  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUApr2008/catcpu.sql"}
   - { version : "11.1.0.6" , type : "CPU"  , id : 200807 , patch_number : 7150417  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "11.1.0.6" , type : "CPU"  , id : 200811 , patch_number : 7375639  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "11.1.0.6" , type : "CPU"  , id : 200810 , patch_number : 7375639  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
   - { version : "11.1.0.6" , type : "CPU"  , id : 200901 , patch_number : 7592335  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
   - { version : "11.1.0.6" , type : "CPU"  , id : 200904 , patch_number : 8290402  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
   - { version : "11.1.0.6" , type : "CPU"  , id : 200907 , patch_number : 8534378  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
