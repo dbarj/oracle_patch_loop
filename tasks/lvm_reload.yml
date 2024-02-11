@@ -24,7 +24,7 @@
       then
         # There is no merge option on OL5, so we replace the current one with the last backup.
         lvchange -a y ${v_disk}
-        dd if=${v_disk}_${v_snapshot} of=${v_disk} bs=8M  iflag=direct oflag=direct
+        dd if=${v_disk}_${v_snapshot} of=${v_disk} bs=8M iflag=direct oflag=direct
       else
         # Restore target snapshot
         lvconvert --merge -i 1 -v ${v_disk}_${v_snapshot}

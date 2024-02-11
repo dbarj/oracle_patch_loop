@@ -64,7 +64,7 @@
 
   - name : Generate Snapshot Name - LVM Mode
     set_fact:
-      save_snapshot: "{{ patch.type }}_{{ base_OJVM_id }}"
+      save_snapshot: "{{ db_version }}_{{ patch.type }}_{{ base_OJVM_id }}"
     when: oci_mode
 
   - include: lvm_savestate.yml

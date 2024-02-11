@@ -3,12 +3,13 @@
 # Drop old machine image if exists
 - name: "Drop old LVM snapshots for previous RU or PSU if exists."
   shell: |
-       v_snapshot="{{ save_snapshot }}"
-       v_disk_vg='/dev/mapper/vg_u01'
-       for lv_name in `lvs --noheadings -o lv_name | grep -E 'PSU|RU' | grep -v ${v_snapshot}`
-       do
-         lvremove -f ${v_disk_vg}-${lv_name}
-       done
+      export PATH=$PATH:/sbin:/usr/sbin
+      v_snapshot="{{ save_snapshot }}"
+      v_disk_vg='/dev/mapper/vg_u01'
+      for lv_name in `lvs --noheadings -o lv_name | grep -E 'PSU|RU' | grep '{{ db_version }}' | grep -v ${v_snapshot}`
+      do
+        lvremove -f ${v_disk_vg}-${lv_name}
+      done
   become: true
   become_user: root
   delegate_to: "{{ vm_ip_address }}"
@@ -16,13 +17,20 @@
 # Save latest machine image if not already
 - name: "Create new LVM snapshot \"{{ save_snapshot }}\" if not exists."
   shell: |
-       v_snapshot="{{ save_snapshot }}"
-       v_disk='/dev/mapper/vg_u01-lv_u01'
-       if ! $(lvs -a | grep -q "${v_snapshot}")
-       then
-         v_size=$(lvs --noheadings -o seg_size ${v_disk})
-         lvcreate --size ${v_size} --snapshot --name lv_u01_${v_snapshot} ${v_disk}
-       fi
+      export PATH=$PATH:/sbin:/usr/sbin
+      v_snapshot="{{ save_snapshot }}"
+      v_disk='/dev/mapper/vg_u01-lv_u01'
+      if ! $(lvs -a | grep -q "${v_snapshot}")
+      then
+        v_size=$(lvs --noheadings -o seg_size ${v_disk})
+        if grep -q 'release 5.' /etc/oracle-release
+        then
+          lvcreate --size ${v_size} --name lv_u01_${v_snapshot} vg_u01
+          dd if=${v_disk} of=${v_disk}_${v_snapshot} bs=8M iflag=direct oflag=direct
+        else
+          lvcreate --size ${v_size} --snapshot --name lv_u01_${v_snapshot} ${v_disk}
+        fi
+      fi
   become: true
   become_user: root
   delegate_to: "{{ vm_ip_address }}"

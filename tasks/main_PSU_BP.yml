@@ -101,7 +101,7 @@
 
   - name : Change Base Snapshot Name - LVM Mode
     set_fact:
-      vm_snapshot: "PSU_{{ base_OJVM_id }}"
+      vm_snapshot: "{{ db_version }}_PSU_{{ base_OJVM_id }}"
     when: oci_mode
 
   - name: "Base Snapshot will be {{ vm_snapshot }}"
@@ -118,6 +118,7 @@
       - patch.id == (param_patch | float)      or param_patch == -1
       - patch.id >= (param_patch_from | float) or param_patch_from == -1
       - patch.id <= (param_patch_to | float)   or param_patch_to == -1
+      - (patch.version | default(db_version)) == db_version
 
   when: param_type is undefined or param_type == "OJVM"
 

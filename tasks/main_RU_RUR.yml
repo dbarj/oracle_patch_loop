@@ -100,7 +100,7 @@
 
   - name : Change Base Snapshot Name - LVM Mode
     set_fact:
-      vm_snapshot: "RU_{{ base_OJVM_id }}"
+      vm_snapshot: "{{ db_version }}_RU_{{ base_OJVM_id }}"
     when: oci_mode
 
   - name: "Base Snapshot will be {{ vm_snapshot }}"
