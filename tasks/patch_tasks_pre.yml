@@ -130,7 +130,7 @@
       set_fact:
         found_lvm_entry: "{{ lvm_search }}"
       vars:
-        my_query: "lv_u01_{{ db_version }}_{{ patch.type }}_{{ patch.id }}$"
+        my_query: "lv_u01_{{ db_version_short }}_{{ patch.type }}_{{ patch.id }}$"
         lvm_search: "{{ lvs_output.stdout_lines | select('match', my_query) | list | length > 0 }}"
 #       lvm_search: "{{ lvs_output.stdout_lines | select('search', my_query) | list | length > 0 }}"
 
@@ -147,7 +147,7 @@
 
       - name : Set new VM Snap
         set_fact:
-          vm_snapshot: "{{ db_version }}_{{ patch.type }}_{{ patch.id }}"
+          vm_snapshot: "{{ db_version_short }}_{{ patch.type }}_{{ patch.id }}"
 
       when: found_lvm_entry
 

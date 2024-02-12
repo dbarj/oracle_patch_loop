@@ -2,9 +2,10 @@
 
 - name : Define version
   set_fact:
-    patch_file:    "{{ item.main_file }}"
-    patch_list:    "{{ item.patch_list }}"
-    opatch_file:   "{{ item.opatch_file }}"
+    patch_file:       "{{ item.main_file }}"
+    patch_list:       "{{ item.patch_list }}"
+    opatch_file:      "{{ item.opatch_file }}"
+    db_version_short: "{{ db_version | replace('.','') }}"
   with_items: "{{ list_versions }}"
   when: item.id == db_version
 
@@ -100,7 +101,7 @@
 
   - name : Change Base Snapshot Name - LVM Mode
     set_fact:
-      vm_snapshot: "{{ db_version }}_RU_{{ base_OJVM_id }}"
+      vm_snapshot: "{{ db_version_short }}_RU_{{ base_OJVM_id }}"
     when: oci_mode
 
   - name: "Base Snapshot will be {{ vm_snapshot }}"

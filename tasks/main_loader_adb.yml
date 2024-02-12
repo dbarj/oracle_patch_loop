@@ -2,7 +2,8 @@
 
 - name : Define version
   set_fact:
-    patch_list:    "{{ item.patch_list }}"
+    patch_list:       "{{ item.patch_list }}"
+    db_version_short: "{{ db_version | replace('.','') }}"
   with_items: "{{ list_versions }}"
   when: item.id == db_version
 

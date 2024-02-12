@@ -6,7 +6,7 @@
       export PATH=$PATH:/sbin:/usr/sbin
       v_snapshot="{{ save_snapshot }}"
       v_disk_vg='/dev/mapper/vg_u01'
-      for lv_name in `lvs --noheadings -o lv_name | grep -E 'PSU|RU' | grep '{{ db_version }}' | grep -v ${v_snapshot}`
+      for lv_name in `lvs --noheadings -o lv_name | grep -E 'PSU|RU' | grep '{{ db_version_short }}' | grep -v ${v_snapshot}`
       do
         lvremove -f ${v_disk_vg}-${lv_name}
       done
