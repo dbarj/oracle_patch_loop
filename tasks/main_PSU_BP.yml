@@ -37,7 +37,7 @@
   - name: Get latest PSU ID
     set_fact:
       latest_PSU_id: "{{ ( ( lookup('vars', patch_list) | json_query(filter_qry_1) ) + [0] ) | max }}"
-      base_OJVM_id: "{{ ( ( lookup('vars', patch_list) | json_query(filter_qry_2) ) + [0] ) | max }}"
+      base_OJVM_id:  "{{ ( ( lookup('vars', patch_list) | json_query(filter_qry_2) ) + [0] ) | max }}"
     vars:
       filter_qry_1: "[? type == 'PSU' && (version == null || version == '{{ db_version }}') ].id"
       filter_qry_2: "[? type == 'PSU' && base_ojvm != null && (version == null || version == '{{ db_version }}') ].id"
@@ -80,7 +80,7 @@
       loop_var: patch
       label: "{{ patch.id }}"
     when:
-      - (param_type is undefined and (patch.type == "PSU" or patch.type == "CPU" or patch.type == "BASE")) or patch.type == param_type
+      - (param_type is undefined and (patch.type == "PSU" or patch.type == "CPU" or patch.type == "BASE")) or (param_type is defined and patch.type == param_type)
       - patch.id == (param_patch | float)      or param_patch == -1
       - patch.id >= (param_patch_from | float) or param_patch_from == -1
       - patch.id <= (param_patch_to | float)   or param_patch_to == -1

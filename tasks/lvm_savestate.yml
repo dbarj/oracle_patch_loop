@@ -17,6 +17,7 @@
 # Save latest machine image if not already
 - name: "Create new LVM snapshot \"{{ save_snapshot }}\" if not exists."
   shell: |
+      set -e -x
       export PATH=$PATH:/sbin:/usr/sbin
       v_snapshot="{{ save_snapshot }}"
       v_disk='/dev/mapper/vg_u01-lv_u01'
@@ -25,8 +26,27 @@
         v_size=$(lvs --noheadings -o seg_size ${v_disk})
         if grep -q 'release 5.' /etc/oracle-release
         then
+          # Kill all oracle sessions
+          pkill -9 -U oracle || true
+          sleep 5
+          # Try to umount the disk
+          umount -l -f /u01 || true
+          sleep 5
+          # Try to deactivate the disk
+          lvchange -a n ${v_disk} -f && v_ret=$? || v_ret=$?
+          # If not deactivating, try again in 1 minute..
+          if [ $v_ret -ne 0 ]
+          then
+            sleep 60
+            umount -l -f /u01 || true
+            sleep 5
+            lvchange -a n ${v_disk} -f
+          fi
+          lvchange -a y ${v_disk}
           lvcreate --size ${v_size} --name lv_u01_${v_snapshot} vg_u01
           dd if=${v_disk} of=${v_disk}_${v_snapshot} bs=8M iflag=direct oflag=direct
+          mount /u01 || true
+          mount | grep -q -F " /u01 "
         else
           lvcreate --size ${v_size} --snapshot --name lv_u01_${v_snapshot} ${v_disk}
         fi

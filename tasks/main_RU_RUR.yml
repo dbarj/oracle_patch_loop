@@ -135,7 +135,7 @@
       loop_var: patch
       label: "{{ patch.id }}"
     when:
-      - (param_type is undefined and (patch.type != "RU" and patch.type != "OJVM")) or patch.type == param_type
+      - (param_type is undefined and (patch.type != "RU" and patch.type != "OJVM")) or (param_type is defined and patch.type == param_type)
       - patch.id == (param_patch | float)      or param_patch == -1
       - patch.id >= (param_patch_from | float) or param_patch_from == -1
       - patch.id <= (param_patch_to | float)   or param_patch_to == -1
