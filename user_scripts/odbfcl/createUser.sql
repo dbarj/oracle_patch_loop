@@ -1,4 +1,4 @@
--- Create HASH user
+-- Create exporter user
 WHENEVER SQLERROR CONTINUE
 
 def v_username='&1.'
@@ -18,5 +18,8 @@ CREATE USER &v_username.
 
 GRANT CREATE SESSION TO &v_username.;
 GRANT CREATE TABLE TO &v_username.;
+
+-- REMOVE_IF_ZIP_AFTER
+
 -- For unwrapper:
 GRANT CREATE PROCEDURE TO &v_username.;

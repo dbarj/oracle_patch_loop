@@ -23,12 +23,13 @@ v_dump_user_name="$1"
 v_dump_dir_name='expdir_hash'
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
+cd "${v_thisdir}"
 
 [ -z "${v_sysdba_connect}" ] && v_sysdba_connect='/ as sysdba'
 
 echo "Generating table export. Please wait.." 
 
-cd "${v_thisdir}"/../extract
+cd "${v_thisdir}"/../extract # REMOVE_IF_ZIP
 $ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
 @hashGet.sql "${v_dump_user_name}" "${v_dump_dir_name}"
 EOF

@@ -30,12 +30,13 @@ v_dump_user_name="$1"
 [ -n "$DB_EXP_USER_TEMP" ] && v_dump_user_temp="$DB_EXP_USER_TEMP" || v_dump_user_temp='TEMP'
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
+cd "${v_thisdir}"
 
 [ -z "${v_sysdba_connect}" ] && v_sysdba_connect='/ as sysdba'
 
-echo "Generating export user. Please wait.." 
+echo "Creating export user. Please wait.." 
 
-cd "${v_thisdir}"/../
+cd "${v_thisdir}"/../ # REMOVE_IF_ZIP
 $ORACLE_HOME/bin/sqlplus "${v_sysdba_connect}" <<EOF
 set verify off
 @tables_recreate.sql "${v_dump_user_name}" "${v_dump_user_pass}" "${v_dump_user_tbs}" "${v_dump_user_temp}"

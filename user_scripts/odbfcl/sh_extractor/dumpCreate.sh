@@ -36,6 +36,7 @@ v_output_error="${v_output_fdr}/${v_output_file_noext}.err"
 v_dump_dir_name='expdir_hash'
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
+cd "${v_thisdir}"
 
 v_output_file_cnt=`awk -F" " '{print NF-1}' <<< "${v_output_file_noext}"`
 [ ${v_output_file_cnt} -ne 0 ] && exitError "File \"${v_output}\" must not have any spaces."
@@ -44,7 +45,7 @@ v_output_file_cnt=`awk -F" " '{print NF-1}' <<< "${v_output_file_noext}"`
 
 echo "Generating table export. Please wait.." 
 
-cd "${v_thisdir}"/../../
+cd "${v_thisdir}"/../../ # REMOVE_IF_ZIP
 $ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
 @externalDir.sql "${v_output_fdr}" "${v_dump_user_name}" "${v_dump_dir_name}"
 EOF
@@ -90,7 +91,7 @@ then
   fi
 fi
 
-cd odbfcl/sh_extractor/
+cd odbfcl/sh_extractor/ # REMOVE_IF_ZIP
 $ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
 set verify off
 @cleanUser.sql "${v_dump_user_name}" "${v_dump_dir_name}"
