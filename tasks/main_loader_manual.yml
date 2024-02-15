@@ -2,18 +2,19 @@
 
 - name: Variables not provided
   fail:
-    msg: "Variables input_version / input_series / input_patch / input_file must be defined."
+    msg: "Variables input_version / input_series / input_patch / input_file / input_trail must be defined."
   when: input_version is undefined or (input_version|length == 0) or
         input_series is undefined  or (input_series|length == 0)  or
         input_patch is undefined   or (input_patch|length == 0)   or
-        input_file is undefined    or (input_file|length == 0)
+        input_file is undefined    or (input_file|length == 0)    or
+        input_trail is undefined   or (input_trail|length == 0)
 
 - name : Define db_version
   set_fact:
     db_version:      "{{ input_version }}"
     param_type:      "{{ input_series }}" 
     param_patch:     "{{ input_patch }}"
-    output_folder:   "{{ stage_folder }}/temp_load"
+    output_folder:   "{{ stage_folder }}/temp_load/{{ input_trail }}"
     input_file_name: "{{ input_file | basename }}"
 
 - name: Delete content & directory
