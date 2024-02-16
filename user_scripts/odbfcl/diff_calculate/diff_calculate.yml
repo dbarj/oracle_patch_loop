@@ -1,9 +1,9 @@
 # This must come after MV_VERSIONS is reloaded
 
-- name: "Load {{ oci_adb_transient_user }} diff code and contents"
+- name: "Load {{ db_version_short }}_{{ oci_adb_db_id }} diff code and contents"
   shell: |
        set -e
-       v_folder="{{ stage_folder }}/temp_diff_{{ oci_adb_transient_user }}"
+       v_folder="{{ stage_folder }}/temp_diff_{{ db_version_short }}_{{ oci_adb_db_id }}"
        rm -rf "${v_folder}"
        mkdir "${v_folder}"
        cd "${v_folder}"

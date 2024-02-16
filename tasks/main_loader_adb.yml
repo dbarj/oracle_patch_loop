@@ -59,4 +59,5 @@
     - patch.id >= (param_patch_from | float) or param_patch_from == -1
     - patch.id <= (param_patch_to | float)   or param_patch_to == -1
     - patch.id > (out_of_box_id | float)     or patch.type != "RU"     # When RU, skip patch.id lower or equal to out_of_box_id
+    - (patch.version | default(db_version)) == db_version
     - param_type is undefined or param_type == patch.type

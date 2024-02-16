@@ -1,0 +1,203 @@
+### Start
+- name : Print d_uploads_id
+  debug: var=d_uploads_id
+
+- name : Define variables
+  set_fact:
+    #d_uploads_id:    42
+    db_file_version: ''
+    db_file_type:    ''
+    db_file_patch:   ''
+    db_file_proc:    ''
+    run_process:     true
+    output_folder:   '{{ stage_folder }}/temp_zip'
+
+- name : Define db_file_name
+  set_fact:
+    db_file_name:    '{{output_folder}}/{{ d_uploads_id }}.zip'
+
+### Exit if check does not pass
+- block:
+
+  - name: Error
+    debug:
+      msg: 'd_uploads_id must be numeric.'
+
+  - name : Exit
+    set_fact:
+      run_process: false
+
+  when: d_uploads_id is not regex("^[0-9]+$")
+
+- block:
+
+  ### Get data from database
+  - name: "Get data from D_UPLOADS table"
+    shell: |
+          set -eo pipefail
+          sqlplus -L -S {{ oci_adb_main_tns }} <<'EOF'
+          whenever sqlerror exit sql.sqlcode rollback
+          set pages 0 head off feed off echo off trim off trims on ver off term on serverout on
+          DECLARE
+            L_UPLOAD D_UPLOADS%ROWTYPE;
+            V_ID     NUMBER := '{{ d_uploads_id }}';
+          BEGIN
+
+            -- Check if row can be processed.
+            SELECT *
+              INTO L_UPLOAD
+              FROM D_UPLOADS
+            WHERE ID = V_ID
+              AND STATUS = 3
+            FOR UPDATE;
+
+            -- Mark row as being processed.
+            UPDATE D_UPLOADS
+              SET
+              PROCESS_STARTED_ON = SYSTIMESTAMP
+            WHERE ID = L_UPLOAD.ID;
+
+            COMMIT;
+            
+            -- Get info to process.
+            DBMS_OUTPUT.PUT_LINE(L_UPLOAD.ORAVERSION);
+            DBMS_OUTPUT.PUT_LINE(L_UPLOAD.ORASERIES);
+            DBMS_OUTPUT.PUT_LINE(L_UPLOAD.ORAPATCH);
+          EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+              NULL;
+          END;
+          /
+          EOF
+    register: sql_output
+
+  - name : Define variables from DB output
+    set_fact:
+      db_file_version: '{{ sql_output.stdout_lines[0] | trim }}'
+      db_file_type:    '{{ sql_output.stdout_lines[1] | trim }}'
+      db_file_patch:   '{{ sql_output.stdout_lines[2] | trim }}'
+    when: sql_output.stdout_lines[0] is defined
+
+  - block:
+
+    - name: Skipping
+      debug:
+        msg: "Skipping {{ d_uploads_id }}."
+
+    - name : Exit
+      set_fact:
+        run_process: false
+
+    when: db_file_version|length == 0
+
+  - name: Delete content & directory
+    file:
+      state: absent
+      path: "{{ output_folder }}"
+
+  - name: Creates output folder
+    file:
+      path: "{{ output_folder }}"
+      state: directory
+
+  - name: "Download BLOB"
+    shell: |
+          set -eo pipefail
+          cd "{{ output_folder }}"
+          sqlplus -L -S {{ oci_adb_main_tns }} <<'EOF'
+          whenever sqlerror exit sql.sqlcode rollback
+          set verify off feedback off heading off
+          set trimout on trimspool on pagesize 0 linesize 5000 long 100000000 longchunksize 32767
+          set termout off
+          spool "{{ db_file_name }}.base64"
+          with function base64encode(p_blob in blob) return clob is
+            l_clob clob;
+            l_step pls_integer := 12000; -- make sure you set a multiple of 3 not higher than 24573
+          begin
+            if dbms_lob.getlength(p_blob) = 0 then
+              return null;
+            end if;
+            for i in 0 .. trunc((dbms_lob.getlength(p_blob) - 1 )/l_step) loop
+              l_clob := l_clob || utl_raw.cast_to_varchar2(utl_encode.base64_encode(dbms_lob.substr(p_blob, l_step, i * l_step + 1)));
+            end loop;
+            return l_clob;
+          end;
+          select base64encode(blob_content) from d_uploads where id={{ d_uploads_id }};
+          /
+          spool off
+          exit
+          EOF
+          base64 -d "{{ db_file_name }}.base64" > "{{ db_file_name }}"
+          rm -f "{{ db_file_name }}.base64"
+    register: sql_output
+
+  ### Print call.
+  - name: "Calling loader_manual.yml"
+    debug:
+      msg: |
+         ansible-playbook ./loader_manual.yml \
+         --extra-vars "input_version={{ db_file_version }} input_series={{ db_file_type }} input_patch={{ db_file_patch }} input_file={{ db_file_name }}" \
+         >> /u01/patch_automation/auto_logs/run.log 2>> /u01/patch_automation/auto_logs/run.err 
+
+  ### Run manual loader for this file.
+  - name: "Run playbook loader_manual.yml"
+    shell: |
+         ansible-playbook ./loader_manual.yml \
+         --extra-vars "input_version={{ db_file_version }} input_series={{ db_file_type }} input_patch={{ db_file_patch }} input_file={{ db_file_name }}" \
+         >> /u01/patch_automation/auto_logs/run.{{ d_uploads_id }}.$(date '+%Y%m%d_%H%M%S').log 2>> /u01/patch_automation/auto_logs/run.{{ d_uploads_id }}.$(date '+%Y%m%d_%H%M%S').err 
+    register: command_result
+    ignore_errors: yes
+
+  ### Mark row as processed.
+  - name: "Update row for this label"
+    shell: |
+          set -eo pipefail
+          sqlplus -L -S {{ oci_adb_main_tns }} <<'EOF'
+          whenever sqlerror exit sql.sqlcode
+
+          select * from d_uploads where id={{ d_uploads_id }} for update;
+
+          -- Mark row as processed.
+          update d_uploads set process_finished_on=systimestamp where id={{ d_uploads_id }};
+
+          -- If delete was executed during the process, mark for re-execution.
+          update d_uploads set delete_finished_on=null where id={{ d_uploads_id }} and delete_finished_on is not null;
+
+          commit;
+
+          exit
+          EOF
+    register: sql_output
+    when: command_result.rc == 0
+
+  ### Mark row as processed.
+  - name: "Update row for this label"
+    shell: |
+          set -eo pipefail
+          sqlplus -L -S {{ oci_adb_main_tns }} <<'EOF'
+          whenever sqlerror exit sql.sqlcode
+
+          select * from d_uploads where id={{ d_uploads_id }} for update;
+
+          -- Mark row as processed.
+          update d_uploads set process_finished_on=systimestamp, failed_on=systimestamp where id={{ d_uploads_id }};
+
+          -- If delete was executed during the process, mark for re-execution.
+          update d_uploads set delete_finished_on=null where id={{ d_uploads_id }} and delete_finished_on is not null;
+
+          commit;
+
+          exit
+          EOF
+    register: sql_output
+    when: command_result.rc != 0
+
+  - name: Delete content & directory
+    file:
+      state: absent
+      path: "{{ output_folder }}"
+    when: command_result.rc == 0
+
+  when: run_process
+
+###

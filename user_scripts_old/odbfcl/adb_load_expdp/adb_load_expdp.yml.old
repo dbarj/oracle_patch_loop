@@ -20,6 +20,16 @@
       oci_upload_file: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
       object_action: "create"
 
+#  - name : Define source schema
+#    set_fact:
+#      dump_user_int: "{{ dump_user }}"
+#    when: db_version == "11.2.0.4"
+#
+#  - name : Define source schema
+#    set_fact:
+#      dump_user_int: "c##{{ dump_user }}"
+#    when: db_version != "11.2.0.4"
+
   # This is done because expdp/impdp still can't handle Credential using oracle native authentication (instance principal, tenancy id, etc), only swift.
   - include: tasks/local_sqlplus.yml
     vars:
@@ -38,6 +48,19 @@
       oci_object_name: "{{ dump_file_prefix }}.dmp"
       object_action: "remove"
 
+  # This is done because expdp/impdp still can't handle Credential using oracle native authentication (instance principal, tenancy id, etc), only swift.
+  # - name: Import DB Tables
+  #   shell: |
+  #       impdp \
+  #       userid={{ oci_adb_connection_tns }} \
+  #       directory=data_pump_dir \
+  #       credential='{{ oci_adb_credential }}' \
+  #       remap_schema='{{ dump_user_int }}:{{ oci_adb_transient_user }}' \
+  #       parallel=16 \
+  #       table_exists_action=truncate \
+  #       dumpfile={{ oci_adb_os_url_prefix }}/{{ dump_file_prefix }}.dmp > "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.{{ oci_adb_tns }}.log" 2>&1
+  #   register: shell_output
+
   - include: tasks/local_sqlplus.yml
     vars:
       sql_param : { task_action : "Call import process" ,
@@ -46,6 +69,20 @@
                     folder : "user_scripts/odbfcl/adb_load_expdp" ,
                     params : "'{{ db_version }}' '{{ patch.base_ru | default('') }}{{ patch.type }}' '{{ patch.id }}' '{{ dump_file_prefix }}.dmp'"
                   }
+
+#  - name: Import DB Tables
+#    shell: |
+#        impdp \
+#        userid={{ oci_adb_connection_tns }} \
+#        directory=data_pump_dir \
+#        remap_schema='{{ dump_user }}:{{ oci_adb_transient_user }},c##{{ dump_user }}:{{ oci_adb_transient_user }}' \
+#        parallel=16 \
+#        table_exists_action=truncate \
+#        content=data_only \
+#        logfile={{ dump_file_prefix }}.log \
+#        dumpfile={{ dump_file_prefix }}.dmp > "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.{{ oci_adb_tns }}.log" 2>&1
+#    register: shell_output
+#    ignore_errors: yes
 
   - include: tasks/local_sqlplus.yml
     vars:
@@ -64,5 +101,26 @@
                     folder : "user_scripts/odbfcl/adb_load_expdp" ,
                     params : "'{{ dump_file_prefix }}.log'"
                   }
+
+#  - name: Import error output
+#    debug: msg="{{ shell_output.stderr_lines }}"
+#    when: shell_output.rc != 0
+#
+#  - name: impdp error
+#    fail:
+#      msg: "Check {{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.{{ oci_adb_tns }}.log."
+#    when: shell_output.rc != 0 and shell_output.rc != 5
+#
+#  - name: Check impdp error
+#    shell: |
+#        set -e +o pipefail
+#        v_tot=$(cat "{{ output_folder }}/expdp/{{ dump_file_prefix }}.imp.{{ oci_adb_tns }}.log" | grep 'ORA-' | grep -v -E 'ORA-39146|ORA-28002' | wc -l)
+#        if [ $v_tot -ne 0 ]
+#        then
+#          exit 1
+#        else
+#          exit 0
+#        fi
+#    when: shell_output.rc == 5
 
   when: dump_stat_result.stat.exists
