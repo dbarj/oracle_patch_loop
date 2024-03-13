@@ -56,4 +56,4 @@
 
   - include: tasks/main_RU_RUR.yml db_version="{{ param_version }}"
 #   when: not(param_version == "11.2.0.2" or param_version == "11.2.0.3" or param_version == "11.2.0.4" or param_version == "12.1.0.1" or param_version == "12.1.0.2")
-    when: not( ( param_version | regex_replace('^(^[\.]+).*','\\1') | int ) <= 11  or param_version == "12.1.0.1" or param_version == "12.1.0.2" )
+    when: ( param_version | regex_replace('^([^\.]+).*','\\1') | int ) > 12 and param_version != "12.1.0.1" and param_version != "12.1.0.2"
