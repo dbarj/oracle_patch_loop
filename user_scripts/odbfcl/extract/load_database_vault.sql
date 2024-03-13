@@ -12,47 +12,44 @@ DECLARE
     V_CDB_CLAUSE VARCHAR2(30);
   BEGIN
 
-    IF V_VERS_1D = 11 THEN
+    IF V_VERS_1D <= 11 THEN
       V_CDB_CLAUSE := '';
     else
       V_CDB_CLAUSE := ', CON_ID';
     END IF;
 
-    $IF DBMS_DB_VERSION.VER_LE_11_1
+    $IF DBMS_DB_VERSION.VER_LE_10_2
     $THEN
-      select wm_concat(c1_column_name),
-             wm_concat(c2_column_name)
-        into v_tab_cols, v_ins_cols
-        from (
-          select c1.column_name c1_column_name,
-                 nvl(c2.column_name,'NULL') c2_column_name
-          from   dba_tab_columns c1, dba_tab_columns c2
-          where  c1.table_name = OUT_TAB_NAME
-          and    c2.table_name (+) = IN_TAB_NAME
-          and    c1.owner = V_USER
-          and    c2.owner(+) = 'DVSYS'
-          and    c1.column_name = c2.column_name (+)
-          and    c1.column_name not in ('CON_ID')
-          order by c1.column_id
-        );
+    select wm_concat(c1_column_name),
+           wm_concat(c2_column_name)
+    $ELSIF DBMS_DB_VERSION.VER_LE_11_1
+    $THEN
+    select wm_concat(c1_column_name),
+           wm_concat(c2_column_name)
     $ELSE
-      select listagg(c1.column_name,', ') within group(order by c1.column_id),
-             listagg(nvl(c2.column_name,'NULL'),', ') within group(order by c1.column_id)
-      into   V_TAB_COLS, V_INS_COLS
-      from   dba_tab_columns c1, dba_tab_columns c2
-      where  c1.table_name = OUT_TAB_NAME
-      and    c2.table_name (+) = IN_TAB_NAME
-      and    c1.owner = V_USER
-      and    c2.owner(+) = 'DVSYS'
-      and    c1.column_name = c2.column_name (+)
-      and    c1.column_name not in ('CON_ID');
+    select listagg(c1_column_name,', ') within group(order by column_id),
+           listagg(c2_column_name,', ') within group(order by column_id)
     $END
+      into v_tab_cols, v_ins_cols
+      from (
+        select c1.column_name c1_column_name,
+                nvl(c2.column_name,'NULL') c2_column_name,
+                c1.column_id
+        from   dba_tab_columns c1, dba_tab_columns c2
+        where  c1.table_name = OUT_TAB_NAME
+        and    c2.table_name (+) = IN_TAB_NAME
+        and    c1.owner = V_USER
+        and    c2.owner(+) = 'DVSYS'
+        and    c1.column_name = c2.column_name (+)
+        and    c1.column_name not in ('CON_ID')
+        order by c1.column_id
+      );
 
     V_SQL := 'INSERT /*+ APPEND */ INTO ' || V_USER || '.' || OUT_TAB_NAME || '(' || V_TAB_COLS || V_CDB_CLAUSE || ') SELECT ';
 
     V_SQL := V_SQL || V_INS_COLS || V_CDB_CLAUSE;
 
-    IF V_VERS_1D = 11 THEN
+    IF V_VERS_1D <= 11 THEN
       V_SQL := V_SQL || ' FROM DVSYS.' || IN_TAB_NAME;
     ELSIF V_VERS_4D = '12.1.0.1' THEN
       V_SQL := V_SQL || ' FROM CDB$VIEW("DVSYS"."' || IN_TAB_NAME || '")';

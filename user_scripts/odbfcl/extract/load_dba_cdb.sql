@@ -1,18 +1,18 @@
 DECLARE
-  V_VERS_1D NUMBER := '&P_VERS_1D.';
-  V_USER    VARCHAR2(30) := '&V_USERNAME.';
+  V_VERS_1D NUMBER := '&&P_VERS_1D.';
+  V_USER    VARCHAR2(30) := '&&V_USERNAME.';
 
   PROCEDURE RUN_INSERT (IN_TAB_NAME VARCHAR2,
                         IN_WHERE_CLAUSE_12 VARCHAR2 DEFAULT NULL,
                         IN_WHERE_CLAUSE_11 VARCHAR2 DEFAULT NULL)
   AS
-    V_TAB_COLS CLOB;
-    V_INS_COLS CLOB;
+    V_TAB_COLS VARCHAR2(32767);
+    V_INS_COLS VARCHAR2(32767);
     V_PREFIX VARCHAR2(4);
-    V_SQL CLOB;
+    V_SQL VARCHAR2(32767); -- 10.2 does not support CLOB for EXECUTE IMMEDIATE
     V_OBJ_EXISTS NUMBER;
   BEGIN
-    IF V_VERS_1D = 11 THEN
+    IF V_VERS_1D <= 11 THEN
       V_PREFIX := 'DBA_';
     else
       V_PREFIX := 'CDB_';
@@ -28,33 +28,31 @@ DECLARE
     -- ORA-00600: internal error code, arguments: [kkdlGetBaseUser2:authIdType], [0], [104], [_NEXT_USER], [], [], [], [], [], [], [], []
     -- Bug 22168436  ORA-600 [kkdoilsn2] on select from CONTAINERS(...) -  Using BLOB / ANYDATA / XMLTYPE. 
 
-  $IF DBMS_DB_VERSION.VER_LE_11_1
-  $THEN
-    SELECT WM_CONCAT(C1_COLUMN_NAME),
-           WM_CONCAT(C2_COLUMN_NAME)
-      INTO V_TAB_COLS, V_INS_COLS
-      FROM (
-        SELECT C1.COLUMN_NAME C1_COLUMN_NAME,
-               NVL(C2.COLUMN_NAME,'NULL') C2_COLUMN_NAME
-        FROM   DBA_TAB_COLUMNS C1, DBA_TAB_COLUMNS C2
-        WHERE  C1.TABLE_NAME = 'T_' || IN_TAB_NAME
-        AND    C2.TABLE_NAME (+) = V_PREFIX || IN_TAB_NAME
-        AND    C1.OWNER = V_USER
-        AND    C2.OWNER(+) = 'SYS'
-        AND    C1.COLUMN_NAME = C2.COLUMN_NAME (+)
-        ORDER BY C1.COLUMN_ID
+    $IF DBMS_DB_VERSION.VER_LE_10_2
+    $THEN
+    select wm_concat(c1_column_name),
+           wm_concat(c2_column_name)
+    $ELSIF DBMS_DB_VERSION.VER_LE_11_1
+    $THEN
+    select wm_concat(c1_column_name),
+           wm_concat(c2_column_name)
+    $ELSE
+    select listagg(c1_column_name,', ') within group(order by column_id),
+           listagg(c2_column_name,', ') within group(order by column_id)
+    $END
+      into v_tab_cols, v_ins_cols
+      from (
+        select c1.column_name c1_column_name,
+               nvl(c2.column_name,'NULL') c2_column_name,
+               c1.column_id
+        from   dba_tab_columns c1, dba_tab_columns c2
+        where  c1.table_name = 'T_' || in_tab_name
+        and    c2.table_name (+) = v_prefix || in_tab_name
+        and    c1.owner = v_user
+        and    c2.owner(+) = 'SYS'
+        and    c1.column_name = c2.column_name (+)
+        order by c1.column_id
       );
-  $ELSE
-    SELECT LISTAGG(C1.COLUMN_NAME,', ') WITHIN GROUP(ORDER BY C1.COLUMN_ID),
-           LISTAGG(NVL(C2.COLUMN_NAME,'NULL'),', ') WITHIN GROUP(ORDER BY C1.COLUMN_ID)
-    INTO   V_TAB_COLS, V_INS_COLS
-    FROM   DBA_TAB_COLUMNS C1, DBA_TAB_COLUMNS C2
-    WHERE  C1.TABLE_NAME = 'T_' || IN_TAB_NAME
-    AND    C2.TABLE_NAME (+) = V_PREFIX || IN_TAB_NAME
-    AND    C1.OWNER = V_USER
-    AND    C2.OWNER(+) = 'SYS'
-    AND    C1.COLUMN_NAME = C2.COLUMN_NAME (+);
-  $END
 
     V_SQL := 'INSERT /*+ APPEND */ INTO ' || V_USER || '.T_' || IN_TAB_NAME || '(' || V_TAB_COLS || ') SELECT ';
 
@@ -62,7 +60,7 @@ DECLARE
 
     V_SQL := V_SQL || ' FROM ' || V_PREFIX || IN_TAB_NAME;
 
-    IF V_VERS_1D = 11 THEN
+    IF V_VERS_1D <= 11 THEN
       IF IN_WHERE_CLAUSE_11 IS NOT NULL THEN
         V_SQL := V_SQL || ' WHERE ' || IN_WHERE_CLAUSE_11;
       END IF;
@@ -85,20 +83,20 @@ BEGIN
   DBMS_OUTPUT.ENABLE(NULL);
 
   RUN_INSERT ('TAB_PRIVS',
-  q'[GRANTEE != '&V_USERNAME.' AND NOT(TABLE_NAME LIKE '&V_USERNAME.' AND PRIVILEGE='INHERIT PRIVILEGES')]',
-  q'[GRANTEE != '&V_USERNAME.']'
+  q'[GRANTEE != '&&V_USERNAME.' AND NOT(TABLE_NAME LIKE '&&V_USERNAME.' AND PRIVILEGE='INHERIT PRIVILEGES')]',
+  q'[GRANTEE != '&&V_USERNAME.']'
   );
   RUN_INSERT ('COL_PRIVS',
-  q'[GRANTEE != '&V_USERNAME.']',
-  q'[GRANTEE != '&V_USERNAME.']'
+  q'[GRANTEE != '&&V_USERNAME.']',
+  q'[GRANTEE != '&&V_USERNAME.']'
   );
   RUN_INSERT ('SYS_PRIVS',
-  q'[GRANTEE != '&V_USERNAME.']',
-  q'[GRANTEE != '&V_USERNAME.']'
+  q'[GRANTEE != '&&V_USERNAME.']',
+  q'[GRANTEE != '&&V_USERNAME.']'
   );
   RUN_INSERT ('ROLE_PRIVS',
-  q'[GRANTEE != '&V_USERNAME.']',
-  q'[GRANTEE != '&V_USERNAME.']'
+  q'[GRANTEE != '&&V_USERNAME.']',
+  q'[GRANTEE != '&&V_USERNAME.']'
   );
 
   RUN_INSERT ('JAVA_POLICY');
@@ -106,8 +104,8 @@ BEGIN
   RUN_INSERT ('JOBS');
 
   RUN_INSERT ('TS_QUOTAS',
-  q'[USERNAME != '&V_USERNAME.']',
-  q'[USERNAME != '&V_USERNAME.']'
+  q'[USERNAME != '&&V_USERNAME.']',
+  q'[USERNAME != '&&V_USERNAME.']'
   );
 
   RUN_INSERT ('POLICIES');
@@ -129,8 +127,8 @@ BEGIN
   RUN_INSERT ('AUDIT_POLICY_COLUMNS');
 
   RUN_INSERT ('DIRECTORIES',
-  q'[DIRECTORY_NAME != '&V_DIRECTORY.']',
-  q'[DIRECTORY_NAME != '&V_DIRECTORY.']'
+  q'[DIRECTORY_NAME != '&&V_DIRECTORY.']',
+  q'[DIRECTORY_NAME != '&&V_DIRECTORY.']'
   );
 
   RUN_INSERT ('PROCEDURES');
@@ -141,20 +139,20 @@ BEGIN
   );
 
   RUN_INSERT ('USERS',
-  q'[USERNAME != '&V_USERNAME.']',
-  q'[USERNAME != '&V_USERNAME.']'
+  q'[USERNAME != '&&V_USERNAME.']',
+  q'[USERNAME != '&&V_USERNAME.']'
   );
 
   RUN_INSERT ('ROLES');
 
   RUN_INSERT ('OBJECTS',
-  q'[OWNER != '&V_USERNAME.' AND NOT (OWNER='SYS' AND OBJECT_NAME='&V_DIRECTORY.' AND OBJECT_TYPE='DIRECTORY')]',
-  q'[OWNER != '&V_USERNAME.' AND NOT (OWNER='SYS' AND OBJECT_NAME='&V_DIRECTORY.' AND OBJECT_TYPE='DIRECTORY')]'
+  q'[OWNER != '&&V_USERNAME.' AND NOT (OWNER='SYS' AND OBJECT_NAME='&&V_DIRECTORY.' AND OBJECT_TYPE='DIRECTORY')]',
+  q'[OWNER != '&&V_USERNAME.' AND NOT (OWNER='SYS' AND OBJECT_NAME='&&V_DIRECTORY.' AND OBJECT_TYPE='DIRECTORY')]'
   );
 
   RUN_INSERT ('TAB_COLUMNS',
-  q'[OWNER != '&V_USERNAME.']',
-  q'[OWNER != '&V_USERNAME.']'
+  q'[OWNER != '&&V_USERNAME.']',
+  q'[OWNER != '&&V_USERNAME.']'
   );
 
   RUN_INSERT ('REGISTRY');

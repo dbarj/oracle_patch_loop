@@ -54,11 +54,21 @@ EOF
 v_version=$($ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" @${v_thisdir}/get_db_version.sql)
 [ -z "${v_version}" ] && v_version=0
 
-if [ $v_version -lt 12 ]
+if [ $v_version -eq 10 ]
 then
   v_compress_alg=''
+elif [ $v_version -eq 11 ]
+then
+  v_compress_alg='compression=all'
 else
-  v_compress_alg='compression_algorithm=high'
+  v_compress_alg='compression=all compression_algorithm=high'
+fi
+
+if [ $v_version -gt 19 ]
+then
+  v_version_param="version=19"
+else
+  v_version_param=''
 fi
 
 # This makes file descriptor 3 be a copy of the current stdout (i.e. the screen),
@@ -72,10 +82,10 @@ set +e
 $ORACLE_HOME/bin/expdp \
 userid="${v_dump_user_name}/${v_dump_user_pass}" \
 directory=${v_dump_dir_name} \
-compression=all "${v_compress_alg}" \
+"${v_compress_alg}" \
 dumpfile="${v_output_file}" \
 logfile="${v_output_file_noext}.log" \
-content=data_only \
+content=data_only "${v_version_param}" \
 schemas="${v_dump_user_name}" 2>&1 >&3 | tee "${v_output_error}"
 v_ret=$?
 set -eo pipefail
