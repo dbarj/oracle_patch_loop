@@ -1,4 +1,132 @@
 ####################
+##### 10.2.0.X #####
+####################
+
+# 10.2.0.4 Patch Set Updates - List of Fixes in each PSU (Doc ID 1340024.1)
+# 10.2.0.5 Patch Set Updates - List of Fixes in each PSU (Doc ID 1337394.1)
+
+list_1020X:
+# 10.2.0.1
+  - { version : "10.2.0.1" , type : "BASE" , id : 0      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.10.2.0.1.tar.gz" }
+  - { version : "10.2.0.1" , type : "CPU"  , id : 200601 , patch_number : 4751931  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.1" , type : "CPU"  , id : 200604 , patch_number : 5049080  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.1" , type : "CPU"  , id : 200607 , patch_number : 5225798  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.1" , type : "CPU"  , id : 200610 , patch_number : 5490846  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.1" , type : "CPU"  , id : 200701 , patch_number : 5689937  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+# - { version : "10.2.0.1" , type : "CPU"  , id : 200704 , patch_number : 5901880  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
+# 10.2.0.2
+  - { version : "10.2.0.2" , type : "BASE" , id : 0      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.10.2.0.2.tar.gz" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200604 , patch_number : 5079037  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200607 , patch_number : 5225799  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200610 , patch_number : 5490848  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200701 , patch_number : 5689957  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200704 , patch_number : 5901881  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200707 , patch_number : 6079588  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200710 , patch_number : 6394997  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200801 , patch_number : 6646850  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+# - { version : "10.2.0.2" , type : "CPU"  , id : 200804 , patch_number : 6864071  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
+# - { version : "10.2.0.2" , type : "CPU"  , id : 200807 , patch_number : 7154083  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
+# - { version : "10.2.0.2" , type : "CPU"  , id : 200810 , patch_number : 7375660  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
+# - { version : "10.2.0.2" , type : "CPU"  , id : 200901 , patch_number : 7592355  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
+# 10.2.0.3
+  - { version : "10.2.0.3" , type : "BASE" , id : 0      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.10.2.0.3.tar.gz" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200701 , patch_number : 5881721  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200704 , patch_number : 5901891  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200707 , patch_number : 6079591  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200710 , patch_number : 6394981  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200801 , patch_number : 6646853  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200804 , patch_number : 6864068  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200807 , patch_number : 7150622  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200810 , patch_number : 7369190  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200901 , patch_number : 7592354  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+# 10.2.0.4
+  - { version : "10.2.0.4" , type : "BASE" , id : 0      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.10.2.0.4.tar.gz" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 1      , patch_number : 8576156  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 2      , patch_number : 8833280  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 3      , patch_number : 9119284  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 4      , patch_number : 9352164  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 5      , patch_number : 9654991  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 6      , patch_number : 9952234  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 7      , patch_number : 10248636 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 8      , patch_number : 11724977 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 9      , patch_number : 12419397 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 10     , patch_number : 12827778 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 11     , patch_number : 12879929 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 12     , patch_number : 12879933 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+# - { version : "10.2.0.4" , type : "PSU"  , id : 13     , patch_number : 13923851 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
+# - { version : "10.2.0.4" , type : "PSU"  , id : 14     , patch_number : 14275630 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
+# - { version : "10.2.0.4" , type : "PSU"  , id : 15     , patch_number : 14736542 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
+# - { version : "10.2.0.4" , type : "PSU"  , id : 16     , patch_number : 16056269 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
+# - { version : "10.2.0.4" , type : "PSU"  , id : 17     , patch_number : 16619897 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
+  - { version : "10.2.0.4" , type : "CPU"  , id : 200807 , patch_number : 7150470  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 200810 , patch_number : 7375644  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 200901 , patch_number : 7592346  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 200904 , patch_number : 8290506  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 200907 , patch_number : 8534387  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 200910 , patch_number : 8836308  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201001 , patch_number : 9119226  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201004 , patch_number : 9352191  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201007 , patch_number : 9655017  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201010 , patch_number : 9952272  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201101 , patch_number : 10249540 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201104 , patch_number : 11725015 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201107 , patch_number : 12419249 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201110 , patch_number : 12828112 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201201 , patch_number : 12879912 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201204 , patch_number : 12879926 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+# - { version : "10.2.0.4" , type : "CPU"  , id : 201207 , patch_number : 14038814 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NOT AVAILABLE
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201207 , patch_number : 14038833 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # EXCEPTION - PASSWORD PROTECTED
+# - { version : "10.2.0.4" , type : "CPU"  , id : 201210 , patch_number : 14390410 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NOT AVAILABLE
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201210 , patch_number : 14038840 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # EXCEPTION - PASSWORD PROTECTED
+# - { version : "10.2.0.4" , type : "CPU"  , id : 201301 , patch_number : 14841471 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NOT AVAILABLE
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201301 , patch_number : 14038841 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # EXCEPTION - PASSWORD PROTECTED
+# - { version : "10.2.0.4" , type : "CPU"  , id : 201304 , patch_number : 16270931 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NOT AVAILABLE
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201304 , patch_number : 14038843 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # EXCEPTION - PASSWORD PROTECTED
+# - { version : "10.2.0.4" , type : "CPU"  , id : 201307 , patch_number : 16742253 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NOT AVAILABLE
+  - { version : "10.2.0.4" , type : "CPU"  , id : 201307 , patch_number : 14038845 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # EXCEPTION - PASSWORD PROTECTED
+# 10.2.0.5
+  - { version : "10.2.0.5" , type : "BASE" , id : 0      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.10.2.0.5.tar.gz" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 1      , patch_number : 9952230  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 2      , patch_number : 10248542 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 3      , patch_number : 11724962 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 4      , patch_number : 12419392 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 5      , patch_number : 12827745 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 6      , patch_number : 13343471 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 7      , patch_number : 13632743 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 8      , patch_number : 13923855 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 9      , patch_number : 14275629 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 10     , patch_number : 14727319 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 11     , patch_number : 16056270 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 12     , patch_number : 16619894 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 13     , patch_number : 17082365 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 14     , patch_number : 17465584 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 15     , patch_number : 18031728 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 16     , patch_number : 18522511 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 17     , patch_number : 19274523 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 18     , patch_number : 19769505 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "PSU"  , id : 19     , patch_number : 20299014 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201010 , patch_number : 9952270  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201101 , patch_number : 10249537 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201104 , patch_number : 11725006 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201107 , patch_number : 12419258 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201110 , patch_number : 12828105 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201201 , patch_number : 13343467 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201204 , patch_number : 13632738 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201207 , patch_number : 14038805 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201210 , patch_number : 14390396 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201301 , patch_number : 14841459 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201304 , patch_number : 16270946 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201307 , patch_number : 16742123 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201310 , patch_number : 17082371 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201401 , patch_number : 17551414 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201404 , patch_number : 18139709 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201407 , patch_number : 18681879 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201410 , patch_number : 19274521 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201501 , patch_number : 19854436 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+# - { version : "10.2.0.5" , type : "CPU"  , id : 201504 , patch_number : x  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NOTHING TO FIX - NO PATCH CREATED
+  - { version : "10.2.0.5" , type : "CPU"  , id : 201507 , patch_number : 20299021 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+
+####################
 ##### 11.1.0.X #####
 ####################
 

@@ -8,6 +8,11 @@
 # Out of box ID: What is the ID of the base snap. Null means the base snap is not to be used.
 
 list_versions:
+  - { id : "10.2.0.1" , patch_list : "list_1020X" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_102000_Linux-x86-64.zip" }
+  - { id : "10.2.0.2" , patch_list : "list_1020X" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_102000_Linux-x86-64.zip" }
+  - { id : "10.2.0.3" , patch_list : "list_1020X" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_102000_Linux-x86-64.zip" }
+  - { id : "10.2.0.4" , patch_list : "list_1020X" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_102000_Linux-x86-64.zip" }
+  - { id : "10.2.0.5" , patch_list : "list_1020X" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_102000_Linux-x86-64.zip" }
   - { id : "11.1.0.6" , patch_list : "list_1110X" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_111000_Linux-x86-64.zip" }
   - { id : "11.1.0.7" , patch_list : "list_1110X" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_111000_Linux-x86-64.zip" }
   - { id : "11.2.0.1" , patch_list : "list_1120X" , main_file : "patch_main_11g.yml" , opatch_file : "p6880880_112000_Linux-x86-64.zip" }
@@ -32,6 +37,11 @@ list_info_vbox:
   - { id : "21.0.0.0" , vmachine : "Oracle Linux 8"   , base_snap : "21.0.0.0 Ready" , ip : "xxx" }
 
 list_info_oci:
+  - { id : "10.2.0.1" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
+  - { id : "10.2.0.2" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
+  - { id : "10.2.0.3" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
+  - { id : "10.2.0.4" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
+  - { id : "10.2.0.5" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
   - { id : "11.1.0.6" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
   - { id : "11.1.0.7" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
   - { id : "11.2.0.1" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
