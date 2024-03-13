@@ -41,6 +41,21 @@
   - import_tasks: tasks/config_checks.yml
   - import_tasks: tasks/setup_env.yml
 
+  - include: tasks/main_PSU_BP.yml db_version="10.2.0.1"
+    when: param_version is undefined or param_version == "10.2.0.1" or param_version == "10.2"
+
+  - include: tasks/main_PSU_BP.yml db_version="10.2.0.2"
+    when: param_version is undefined or param_version == "10.2.0.2" or param_version == "10.2"
+
+  - include: tasks/main_PSU_BP.yml db_version="10.2.0.3"
+    when: param_version is undefined or param_version == "10.2.0.3" or param_version == "10.2"
+
+  - include: tasks/main_PSU_BP.yml db_version="10.2.0.4"
+    when: param_version is undefined or param_version == "10.2.0.4" or param_version == "10.2"
+
+  - include: tasks/main_PSU_BP.yml db_version="10.2.0.5"
+    when: param_version is undefined or param_version == "10.2.0.5" or param_version == "10.2"
+
   - include: tasks/main_PSU_BP.yml db_version="11.1.0.6"
     when: param_version is undefined or param_version == "11.1.0.6" or param_version == "11.1"
 
