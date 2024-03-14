@@ -12,6 +12,8 @@
     patch_file_path: ""
     db_patch: ""
     perform_patch_actions: true # If opatch / datapatch / patch download / etc are needed or not.
+    restore_from_lvm: false
+    restore_from_tar: false
 
 # Immediatly stop when skip_all becomes true
 - block:
@@ -140,6 +142,7 @@
       - name: LVM image found. Will skip patch actions.
         set_fact:
           perform_patch_actions: false
+          restore_from_lvm: true
 
       - name : Save old VM Snap
         set_fact:
@@ -157,6 +160,13 @@
 #        msg: "Stop."
 
     when: oci_mode
+
+  # Skip patch actions
+  - name: TAR file found. Will skip patch actions.
+    set_fact:
+      perform_patch_actions: false
+      restore_from_tar: true
+    when: patch.apply_method is defined and patch.apply_method == "tar" and not restore_from_lvm
 
   # This part was together with the block before the lvm_check.
   # It was put here together as we don't need to unzip the patch if using the VM.
@@ -196,17 +206,27 @@
   - include: vbox_reload.yml
     when: not oci_mode
 
+  # We will run the lvm reload if we found the LVM entry to restore or if we are not running 
   - include: lvm_reload.yml
-    when: oci_mode and patch.dep_type is not defined
+    when: >
+        oci_mode and
+        (
+          restore_from_lvm or
+          (patch.dep_type is not defined and not restore_from_tar)
+        )
 
   - name : Restore old VM Snap
     set_fact:
       vm_snapshot: "{{ prev_vm_snapshot }}"
     when: oci_mode and found_lvm_entry
 
+  # It is not possible to have both restore_from_lvm and restore_from_tar as true
+  - include: tar_restore.yml
+    when: restore_from_tar
+
   # When patch has a pre-req, call the prepare_dependency script to setup.
   - include: prepare_dependency.yml
-    when: patch.dep_type is defined
+    when: patch.dep_type is defined and not restore_from_tar and not restore_from_lvm
 
   # Replace opatch with latest version, when perform_patch_actions
   - block:

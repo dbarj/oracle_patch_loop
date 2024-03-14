@@ -29,11 +29,24 @@
 - name: Finding Patch File
   find:
     paths:     "{{ patch_location_path }}"
+    patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}_Linux-x86-64{{ patch.file_suf | default('') }}.zip"
+    recurse:   "yes"
+    file_type: "file"
+  register: tmp_find_result
+  when: ( db_version | regex_replace('^([^\.]+).*','\\1') | int ) <= 10
+
+# Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+- set_fact: find_result="{{tmp_find_result}}"
+  when: tmp_find_result is not skipped
+
+- name: Finding Patch File
+  find:
+    paths:     "{{ patch_location_path }}"
     patterns:  "p{{ patch.patch_number }}_{{ db_version | regex_replace('\\.','') }}0_Linux-x86-64{{ patch.file_suf | default('') }}.zip"
     recurse:   "yes"
     file_type: "file"
   register: tmp_find_result
-  when: patch.type != "MRP" and patch.type != "DPBP"
+  when: patch.type != "MRP" and patch.type != "DPBP" and ( db_version | regex_replace('^([^\.]+).*','\\1') | int ) > 10
 
 # Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
 - set_fact: find_result="{{tmp_find_result}}"

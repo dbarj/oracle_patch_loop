@@ -1,0 +1,46 @@
+# Stop the database
+- include: run_sql.yml
+  vars:
+    sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database for UNTAR" }
+  # when: not oci_mode or patch.dep_type is defined
+  # When patch has a dependency, if the dependency is loaded running the full patch process instead of loading from lvm, the DB will be left online.
+
+## TAR ##
+
+- name: UNTAR full Oracle
+  shell: |
+      pkill -9 -U oracle || true
+      rm -rf /u01/*
+      tar -xzf {{ patch.apply_file }}
+  args:
+    chdir: "/"
+  register: tmp_shell_output
+  become: true
+  become_user: root
+  delegate_to: "{{ vm_ip_address }}"
+
+# Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+- set_fact: shell_output="{{tmp_shell_output}}"
+  when: tmp_shell_output is not skipped
+
+- name: TAR Output
+  debug: msg="{{ shell_output.stdout_lines }}"
+  when: shell_output.stdout_lines is defined
+
+- name: "Clean oracle Shared Segments"
+  shell: |
+      # Clean Shared Segments (ORA-12547 TNS: Lost Contact)
+      ipcs -m | grep oracle | awk ' { print $2 } ' | xargs -I {} ipcrm -m {}
+  become: true
+  become_user: oracle
+  delegate_to: "{{ vm_ip_address }}"
+
+- name: "Free /dev/shm"
+  shell: |
+      set -e -x
+      # Free up space on /dev/shm
+      umount /dev/shm
+      mount /dev/shm
+  become: true
+  become_user: root
+  delegate_to: "{{ vm_ip_address }}"

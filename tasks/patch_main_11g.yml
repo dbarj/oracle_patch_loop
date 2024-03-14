@@ -17,6 +17,7 @@
 
     - name: Run OPatch
       shell: |
+          set -eo pipefail
           export ORACLE_HOME ORACLE_SID
           ./opatch apply -silent {{ VM_folder }}/{{ patch.patch_number }} -ocmrf {{ VM_folder }}/ocm.rsp
       environment:
@@ -38,6 +39,7 @@
 
     - name: Run OPatch/opatch NAPPLY
       shell: |
+          set -eo pipefail
           export ORACLE_HOME ORACLE_SID
           ./opatch napply -silent {{ VM_folder }}/{{ patch.patch_number }} -ocmrf {{ VM_folder }}/ocm.rsp
       environment:
@@ -61,6 +63,7 @@
 
     - name: Disable Database Vault
       shell: |
+          set -eo pipefail
            {{ dbhome_locl }}/bin/chopt disable dv
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
@@ -78,27 +81,26 @@
     # Apply patch changes on DB (if PSU)
     - include: run_sql.yml
       vars:
-        sql_param : { file : "applySQLPatch.sql" , folder : "patch_sql" , task_action : "Apply Patch" , params : "psu" }
-      when: patch.type == "PSU"
+        sql_param : { file : "catbundle.sql" , folder : "rdbms/admin" , task_action : "Apply PSU Patch" , params : "psu apply" , root_dir : "{{ dbhome_locl }}"}
+      when: patch.type == "PSU" and patch.cat_script is not defined
     
     # Apply patch changes on DB (if BP)
     - include: run_sql.yml
       vars:
-        sql_param : { file : "applySQLPatch.sql" , folder : "patch_sql" , task_action : "Apply Patch" , params : "exa" }
-      when: patch.type == "BP"
+        sql_param : { file : "catbundle.sql" , folder : "rdbms/admin" , task_action : "Apply BP Patch" , params : "exa apply" , root_dir : "{{ dbhome_locl }}"}
+      when: patch.type == "BP" and patch.cat_script is not defined
 
     # Apply patch changes on DB (if CPU)
     - include: run_sql.yml
       vars:
-        sql_param : { file : "applySQLPatch.sql" , folder : "patch_sql" , task_action : "Apply Patch" , params : "cpu" }
+        sql_param : { file : "catbundle.sql" , folder : "rdbms/admin" , task_action : "Apply CPU Patch" , params : "cpu apply" , root_dir : "{{ dbhome_locl }}"}
       when: patch.type == "CPU" and patch.cat_script is not defined
 
     # Apply patch changes on DB (if Custom)
     - include: run_sql.yml
       vars:
-        sql_param : { file : "applySQLCustom.sql" , folder : "patch_sql" , task_action : "Apply Patch" , params : "{{ patch.cat_script }}" }
-      when: patch.type == "CPU" and patch.cat_script is defined
-
+        sql_param : { file : "{{ patch.cat_script | basename }}" , folder : "{{ patch.cat_script | dirname }}" , task_action : "Run: {{ patch.cat_script }}" , root_dir : "{{ dbhome_locl }}" }
+      when: patch.cat_script is defined
 
     # When the SQL Patch is for OJVM
     - block:
@@ -138,39 +140,6 @@
       when: dbvault_enabled
 
     when: perform_patch_actions
-
-  # If apply method is UNTAR
-  - block:
-
-    # Stop the database
-    - include: run_sql.yml
-      vars:
-        sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database for OPatch" }
-      when: not oci_mode or patch.dep_type is defined
-      # When patch has a dependency, if the dependency is loaded running the full patch process instead of loading from lvm, the DB will be left online.
-
-    ## TAR ##
-
-    - name: UNTAR full Oracle
-      shell: |
-          rm -rf /u01/*
-          tar -xzf {{ patch.apply_file }}
-      args:
-        chdir: "/"
-      register: tmp_shell_output
-      become: true
-      become_user: root
-      delegate_to: "{{ vm_ip_address }}"
-
-    # Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
-    - set_fact: shell_output="{{tmp_shell_output}}"
-      when: tmp_shell_output is not skipped
-
-    - name: TAR Output
-      debug: msg="{{ shell_output.stdout_lines }}"
-      when: shell_output.stdout_lines is defined
-
-    when: patch.apply_method is defined and patch.apply_method == "tar"
 
   # This start is only required if database was never stopped.
   - include: run_sql.yml
