@@ -1,22 +1,36 @@
-- name : Cascade dependencies not supported 
+- name : Cascade dependencies not supported
   fail:
-    msg: "Cascade dependencies not supported."
-  when: bkp_patch is defined and bkp_patch != None
+    msg: "More than 2 cascade dependencies not supported."
+  when: bkp2_patch is defined and bkp2_patch != None
 
-- name : Backup Variables
+- name : Backup2 Variables
   set_fact:
-    bkp_patch: "{{ patch }}"
-    bkp_skip_dump_exists: "{{ skip_dump_exists }}"
-    bkp_only_deploy_patch: "{{ only_deploy_patch }}"
-    bkp_file_suffix: "{{ file_suffix }}"
-    bkp_dump_file_prefix: "{{ dump_file_prefix }}"
-    bkp_skip_all: "{{ skip_all }}"
-    bkp_mysid: "{{ mysid }}"
-    bkp_fix_datapatch_retries: "{{ fix_datapatch_retries }}"
-    # bkp_expdp_version: "{{ expdp_version }}"
-    bkp_db_patch: "{{ db_patch }}"
-    bkp_unzip_patch_folder: "{{ unzip_patch_folder }}"
-    bkp_perform_patch_actions: "{{ perform_patch_actions }}"
+    bkp2_patch: "{{ bkp1_patch }}"
+    bkp2_skip_dump_exists: "{{ bkp1_skip_dump_exists }}"
+    bkp2_only_deploy_patch: "{{ bkp1_only_deploy_patch }}"
+    bkp2_file_suffix: "{{ bkp1_file_suffix }}"
+    bkp2_dump_file_prefix: "{{ bkp1_dump_file_prefix }}"
+    bkp2_skip_all: "{{ bkp1_skip_all }}"
+    bkp2_mysid: "{{ bkp1_mysid }}"
+    bkp2_fix_datapatch_retries: "{{ bkp1_fix_datapatch_retries }}"
+    bkp2_db_patch: "{{ bkp1_db_patch }}"
+    bkp2_unzip_patch_folder: "{{ bkp1_unzip_patch_folder }}"
+    bkp2_perform_patch_actions: "{{ bkp1_perform_patch_actions }}"
+  when: bkp1_patch is defined and bkp1_patch != None
+
+- name : Backup1 Variables
+  set_fact:
+    bkp1_patch: "{{ patch }}"
+    bkp1_skip_dump_exists: "{{ skip_dump_exists }}"
+    bkp1_only_deploy_patch: "{{ only_deploy_patch }}"
+    bkp1_file_suffix: "{{ file_suffix }}"
+    bkp1_dump_file_prefix: "{{ dump_file_prefix }}"
+    bkp1_skip_all: "{{ skip_all }}"
+    bkp1_mysid: "{{ mysid }}"
+    bkp1_fix_datapatch_retries: "{{ fix_datapatch_retries }}"
+    bkp1_db_patch: "{{ db_patch }}"
+    bkp1_unzip_patch_folder: "{{ unzip_patch_folder }}"
+    bkp1_perform_patch_actions: "{{ perform_patch_actions }}"
 
 - name : Replace settings
   set_fact:
@@ -30,25 +44,44 @@
     loop_var: patch
     label: "{{ patch.id }}"
   when:
-    - (patch.version | default(db_version)) == (bkp_patch.version | default(db_version))
-    - patch.type == bkp_patch.dep_type
-    - patch.id == bkp_patch.dep_id
+    - (patch.version | default(db_version)) == (bkp1_patch.version | default(db_version))
+    - patch.type == bkp1_patch.dep_type
+    - patch.id == bkp1_patch.dep_id
 
-- name : Restore Variables
+- name : Restore Main Variables
   set_fact:
-    skip_dump_exists: "{{ bkp_skip_dump_exists }}"
-    only_deploy_patch: "{{ bkp_only_deploy_patch }}"
-    patch: "{{ bkp_patch }}"
-    file_suffix: "{{ bkp_file_suffix }}"
-    dump_file_prefix: "{{ bkp_dump_file_prefix }}"
-    skip_all: "{{ bkp_skip_all }}"
-    mysid: "{{ bkp_mysid }}"
-    fix_datapatch_retries: "{{ bkp_fix_datapatch_retries }}"
-    # expdp_version: "{{ bkp_expdp_version }}"
-    db_patch: "{{ bkp_db_patch }}"
-    unzip_patch_folder: "{{ bkp_unzip_patch_folder }}"
-    perform_patch_actions: "{{ bkp_perform_patch_actions }}"
+    skip_dump_exists: "{{ bkp1_skip_dump_exists }}"
+    only_deploy_patch: "{{ bkp1_only_deploy_patch }}"
+    patch: "{{ bkp1_patch }}"
+    file_suffix: "{{ bkp1_file_suffix }}"
+    dump_file_prefix: "{{ bkp1_dump_file_prefix }}"
+    skip_all: "{{ bkp1_skip_all }}"
+    mysid: "{{ bkp1_mysid }}"
+    fix_datapatch_retries: "{{ bkp1_fix_datapatch_retries }}"
+    db_patch: "{{ bkp1_db_patch }}"
+    unzip_patch_folder: "{{ bkp1_unzip_patch_folder }}"
+    perform_patch_actions: "{{ bkp1_perform_patch_actions }}"
 
-- name : Clean bkp_patch
+- name : Clean Backup1 Variables
   set_fact:
-    bkp_patch:
+    bkp1_patch:
+
+- name : Restore Backup1 Variables
+  set_fact:
+    bkp1_skip_dump_exists: "{{ bkp2_skip_dump_exists }}"
+    bkp1_only_deploy_patch: "{{ bkp2_only_deploy_patch }}"
+    bkp1_patch: "{{ bkp2_patch }}"
+    bkp1_file_suffix: "{{ bkp2_file_suffix }}"
+    bkp1_dump_file_prefix: "{{ bkp2_dump_file_prefix }}"
+    bkp1_skip_all: "{{ bkp2_skip_all }}"
+    bkp1_mysid: "{{ bkp2_mysid }}"
+    bkp1_fix_datapatch_retries: "{{ bkp2_fix_datapatch_retries }}"
+    bkp1_db_patch: "{{ bkp2_db_patch }}"
+    bkp1_unzip_patch_folder: "{{ bkp2_unzip_patch_folder }}"
+    bkp1_perform_patch_actions: "{{ bkp2_perform_patch_actions }}"
+  when: bkp2_patch is defined and bkp2_patch != None
+
+- name : Clean Backup2 Variables
+  set_fact:
+    bkp2_patch:
+  when: bkp2_patch is defined and bkp2_patch != None

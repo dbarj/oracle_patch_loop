@@ -5,27 +5,13 @@
   # when: not oci_mode or patch.dep_type is defined
   # When patch has a dependency, if the dependency is loaded running the full patch process instead of loading from lvm, the DB will be left online.
 
-## TAR ##
-
-- name: UNTAR full Oracle
+- name: "Kill all Oracle processes"
   shell: |
+      set -e -x
       pkill -9 -U oracle || true
-      rm -rf /u01/*
-      tar -xzf {{ patch.apply_file }}
-  args:
-    chdir: "/"
-  register: tmp_shell_output
   become: true
   become_user: root
   delegate_to: "{{ vm_ip_address }}"
-
-# Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
-- set_fact: shell_output="{{tmp_shell_output}}"
-  when: tmp_shell_output is not skipped
-
-- name: TAR Output
-  debug: msg="{{ shell_output.stdout_lines }}"
-  when: shell_output.stdout_lines is defined
 
 - name: "Clean oracle Shared Segments"
   shell: |
@@ -44,3 +30,24 @@
   become: true
   become_user: root
   delegate_to: "{{ vm_ip_address }}"
+
+## TAR ##
+
+- name: UNTAR full Oracle
+  shell: |
+      rm -rf /u01/*
+      tar -xzf {{ patch.apply_file }}
+  args:
+    chdir: "/"
+  register: tmp_shell_output
+  become: true
+  become_user: root
+  delegate_to: "{{ vm_ip_address }}"
+
+# Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+- set_fact: shell_output="{{tmp_shell_output}}"
+  when: tmp_shell_output is not skipped
+
+- name: TAR Output
+  debug: msg="{{ shell_output.stdout_lines }}"
+  when: shell_output.stdout_lines is defined

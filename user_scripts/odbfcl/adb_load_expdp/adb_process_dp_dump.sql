@@ -9,5 +9,7 @@ BEGIN
     P_FILE_NAME => '&4',
     P_EXECUTE => TRUE
   );
+  -- Pause refresh for the next hours.
+  PC_REFRESH_MVS.QUICK_PAUSE;
 END;
 /

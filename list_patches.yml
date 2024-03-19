@@ -8,51 +8,53 @@
 list_1020X:
 # 10.2.0.1
   - { version : "10.2.0.1" , type : "BASE" , id : 0      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.10.2.0.1.tar.gz" }
-  - { version : "10.2.0.1" , type : "CPU"  , id : 200601 , patch_number : 4751931  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.1" , type : "CPU"  , id : 200604 , patch_number : 5049080  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.1" , type : "CPU"  , id : 200607 , patch_number : 5225798  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.1" , type : "CPU"  , id : 200610 , patch_number : 5490846  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.1" , type : "CPU"  , id : 200701 , patch_number : 5689937  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.1" , type : "CPU"  , id : 200601 , patch_number : 4751931  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUJan2006/catcpu.sql" }
+  - { version : "10.2.0.1" , type : "CPU"  , id : 200604 , patch_number : 5049080  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUApr2006/catcpu.sql" }
+  - { version : "10.2.0.1" , type : "CPU"  , id : 200607 , patch_number : 5225798  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUJul2006/catcpu.sql" }
+  - { version : "10.2.0.1" , type : "CPU"  , id : 200610 , patch_number : 5490846  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUOct2006/catcpu.sql" }
+  - { version : "10.2.0.1" , type : "CPU"  , id : 200701 , patch_number : 5689937  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUJan2007/catcpu.sql" }
 # - { version : "10.2.0.1" , type : "CPU"  , id : 200704 , patch_number : 5901880  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
 # 10.2.0.2
   - { version : "10.2.0.2" , type : "BASE" , id : 0      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.10.2.0.2.tar.gz" }
-  - { version : "10.2.0.2" , type : "CPU"  , id : 200604 , patch_number : 5079037  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.2" , type : "CPU"  , id : 200607 , patch_number : 5225799  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.2" , type : "CPU"  , id : 200610 , patch_number : 5490848  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.2" , type : "CPU"  , id : 200701 , patch_number : 5689957  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.2" , type : "CPU"  , id : 200704 , patch_number : 5901881  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.2" , type : "CPU"  , id : 200707 , patch_number : 6079588  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.2" , type : "CPU"  , id : 200710 , patch_number : 6394997  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.2" , type : "CPU"  , id : 200801 , patch_number : 6646850  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.2" , type : "DEP"  , id : 0      , patch_number : 5240469  , dep_type : 'BASE', dep_id : 0 } # Due to a bug, patches can only be applied after 5240469 fix
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200604 , patch_number : 5079037  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUApr2006/catcpu.sql" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200607 , patch_number : 5225799  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUJul2006/catcpu.sql" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200610 , patch_number : 5490848  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUOct2006/catcpu.sql" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200701 , patch_number : 5689957  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUJan2007/catcpu.sql" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200704 , patch_number : 5901881  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUApr2007/catcpu.sql" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200707 , patch_number : 6079588  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUJul2007/catcpu.sql" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200710 , patch_number : 6394997  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUOct2007/catcpu.sql" }
+  - { version : "10.2.0.2" , type : "CPU"  , id : 200801 , patch_number : 6646850  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUJan2008/catcpu.sql" }
 # - { version : "10.2.0.2" , type : "CPU"  , id : 200804 , patch_number : 6864071  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
 # - { version : "10.2.0.2" , type : "CPU"  , id : 200807 , patch_number : 7154083  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
 # - { version : "10.2.0.2" , type : "CPU"  , id : 200810 , patch_number : 7375660  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
 # - { version : "10.2.0.2" , type : "CPU"  , id : 200901 , patch_number : 7592355  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
 # 10.2.0.3
   - { version : "10.2.0.3" , type : "BASE" , id : 0      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.10.2.0.3.tar.gz" }
-  - { version : "10.2.0.3" , type : "CPU"  , id : 200701 , patch_number : 5881721  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.3" , type : "CPU"  , id : 200704 , patch_number : 5901891  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.3" , type : "CPU"  , id : 200707 , patch_number : 6079591  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.3" , type : "CPU"  , id : 200710 , patch_number : 6394981  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.3" , type : "CPU"  , id : 200801 , patch_number : 6646853  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.3" , type : "CPU"  , id : 200804 , patch_number : 6864068  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.3" , type : "CPU"  , id : 200807 , patch_number : 7150622  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.3" , type : "CPU"  , id : 200810 , patch_number : 7369190  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.3" , type : "CPU"  , id : 200901 , patch_number : 7592354  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.3" , type : "DEP"  , id : 0      , patch_number : 5240469  , dep_type : 'BASE', dep_id : 0 } # Due to a bug, patches can only be applied after 5240469 fix
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200701 , patch_number : 5881721  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUJan2007/catcpu.sql" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200704 , patch_number : 5901891  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUApr2007/catcpu.sql" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200707 , patch_number : 6079591  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUJul2007/catcpu.sql" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200710 , patch_number : 6394981  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUOct2007/catcpu.sql" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200801 , patch_number : 6646853  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUJan2008/catcpu.sql" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200804 , patch_number : 6864068  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUApr2008/catcpu.sql" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200807 , patch_number : 7150622  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUJul2008/catcpu.sql" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200810 , patch_number : 7369190  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUOct2008/catcpu.sql" }
+  - { version : "10.2.0.3" , type : "CPU"  , id : 200901 , patch_number : 7592354  , dep_type : 'DEP' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUJan2009/catcpu.sql" }
 # 10.2.0.4
   - { version : "10.2.0.4" , type : "BASE" , id : 0      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.10.2.0.4.tar.gz" }
   - { version : "10.2.0.4" , type : "PSU"  , id : 1      , patch_number : 8576156  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
   - { version : "10.2.0.4" , type : "PSU"  , id : 2      , patch_number : 8833280  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
   - { version : "10.2.0.4" , type : "PSU"  , id : 3      , patch_number : 9119284  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
   - { version : "10.2.0.4" , type : "PSU"  , id : 4      , patch_number : 9352164  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.4" , type : "PSU"  , id : 5      , patch_number : 9654991  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.4" , type : "PSU"  , id : 6      , patch_number : 9952234  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.4" , type : "PSU"  , id : 7      , patch_number : 10248636 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.4" , type : "PSU"  , id : 8      , patch_number : 11724977 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.4" , type : "PSU"  , id : 9      , patch_number : 12419397 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.4" , type : "PSU"  , id : 10     , patch_number : 12827778 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.4" , type : "PSU"  , id : 11     , patch_number : 12879929 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
-  - { version : "10.2.0.4" , type : "PSU"  , id : 12     , patch_number : 12879933 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 5      , patch_number : 9654991  , dep_type : 'PSU'  , dep_id : 4 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 6      , patch_number : 9952234  , dep_type : 'PSU'  , dep_id : 4 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 7      , patch_number : 10248636 , dep_type : 'PSU'  , dep_id : 4 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 8      , patch_number : 11724977 , dep_type : 'PSU'  , dep_id : 4 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 9      , patch_number : 12419397 , dep_type : 'PSU'  , dep_id : 4 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 10     , patch_number : 12827778 , dep_type : 'PSU'  , dep_id : 4 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 11     , patch_number : 12879929 , dep_type : 'PSU'  , dep_id : 4 , apply_method : "napply" }
+  - { version : "10.2.0.4" , type : "PSU"  , id : 12     , patch_number : 12879933 , dep_type : 'PSU'  , dep_id : 4 , apply_method : "napply" }
 # - { version : "10.2.0.4" , type : "PSU"  , id : 13     , patch_number : 13923851 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
 # - { version : "10.2.0.4" , type : "PSU"  , id : 14     , patch_number : 14275630 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
 # - { version : "10.2.0.4" , type : "PSU"  , id : 15     , patch_number : 14736542 , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" } # NO PATCH FOR LINUX
@@ -135,7 +137,7 @@ list_1020X:
 list_1110X:
 # 11.1.0.6
   - { version : "11.1.0.6" , type : "BASE" , id : 0      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.11.1.0.6.tar.gz" }
-  - { version : "11.1.0.6" , type : "CPU"  , id : 200804 , patch_number : 6864063  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUApr2008/catcpu.sql"}
+  - { version : "11.1.0.6" , type : "CPU"  , id : 200804 , patch_number : 6864063  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" , cat_script : "cpu/CPUApr2008/catcpu.sql" }
   - { version : "11.1.0.6" , type : "CPU"  , id : 200807 , patch_number : 7150417  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
   - { version : "11.1.0.6" , type : "CPU"  , id : 200810 , patch_number : 7375639  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }
   - { version : "11.1.0.6" , type : "CPU"  , id : 200901 , patch_number : 7592335  , dep_type : 'BASE' , dep_id : 0 , apply_method : "napply" }

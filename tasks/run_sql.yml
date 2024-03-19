@@ -5,22 +5,18 @@
 # sql_param.params      : Eventual parameters that may be provided to SQL script.
 # sql_param.termout     : Boolean - print the SQL output. (Default: false)
 # sql_param.task_action : Task name to print.
-# sql_param.root_dir    : Where sql_param.folder is located. Default: VM_folder variable.
-
-- name: Set run_sql_chdir
-  set_fact:
-    run_sql_dir: "{{ sql_param.root_dir | default(VM_folder) }}/{{ sql_param.folder | default('user_scripts') }}"
+# sql_param.root_dir    : Where sql_param.folder is located. (Default: VM_folder variable)
 
 - name: "Run SQL - {{ sql_param.task_action }}"
   shell: |
        set -e
        export ORACLE_HOME ORACLE_SID
-       {{ dbhome_locl }}/bin/sqlplus -L -S "/ as sysdba" @{{ run_sql_dir }}/{{ sql_param.file }} {{ sql_param.params | default('') }}
+       {{ dbhome_locl }}/bin/sqlplus -L -S "/ as sysdba" @{{ sql_param.root_dir | default(VM_folder) }}/{{ sql_param.folder | default('user_scripts') }}/{{ sql_param.file }} {{ sql_param.params | default('') }}
   environment:
     ORACLE_HOME: "{{ dbhome_locl }}"
     ORACLE_SID: "{{ mysid }}"
   args:
-    chdir: "{{ run_sql_dir }}"
+    chdir: "{{ sql_param.root_dir | default(VM_folder) }}/{{ sql_param.folder | default('user_scripts') }}"
   register: sqloutput
   become: true
   become_user: oracle

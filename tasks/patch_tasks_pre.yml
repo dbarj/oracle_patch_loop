@@ -248,6 +248,8 @@
       delegate_to: "{{ vm_ip_address }}"
 
     # skip_all must come first as db_opatch may not yet be declared
-    when: db_opatch|length > 0 and perform_patch_actions
+    when: db_opatch|length > 0 # and perform_patch_actions
+    # place opatch even when there is no patch to be applied for the collector script.
+    # Some old versions of OPatch don't have the -bugs_fixed option.
 
   when: not skip_all
