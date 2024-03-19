@@ -19,7 +19,8 @@
       shell: |
           set -eo pipefail
           export ORACLE_HOME ORACLE_SID
-          ./opatch apply -silent {{ VM_folder }}/{{ patch.patch_number }} OPatch.SKIP_VERIFY_SPACE=true
+          [ ! -d ~/opatch_logs ] && mkdir ~/opatch_logs
+          ./opatch apply -silent {{ VM_folder }}/{{ patch.patch_number }} OPatch.SKIP_VERIFY_SPACE=true 2>&1 | tee ~/opatch_logs/{{ patch.patch_number }}.log
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
         ORACLE_SID: "{{ mysid }}"
@@ -41,7 +42,8 @@
       shell: |
           set -eo pipefail
           export ORACLE_HOME ORACLE_SID
-          ./opatch napply -silent {{ VM_folder }}/{{ patch.patch_number }} OPatch.SKIP_VERIFY_SPACE=true
+          [ ! -d ~/opatch_logs ] && mkdir ~/opatch_logs
+          ./opatch napply -silent {{ VM_folder }}/{{ patch.patch_number }} OPatch.SKIP_VERIFY_SPACE=true 2>&1 | tee ~/opatch_logs/{{ patch.patch_number }}.log
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
         ORACLE_SID: "{{ mysid }}"
