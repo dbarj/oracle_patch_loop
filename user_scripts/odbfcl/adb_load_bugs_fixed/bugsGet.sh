@@ -15,26 +15,33 @@ function exitError ()
   exit 1
 }
 
-v_output="$1"
+v_output_file="$1"
 
-[ -z "$v_output" ] && exitError "First parameter is the target file and cannot be null."
-[ -f "${v_output}" ] && exitError "File \"${v_output}\" already exists. Remove it before rerunning."
+[ -z "${v_output_file}" ] && exitError "First parameter is the target file and cannot be null."
+[ -f "${v_output_file}" ] && exitError "File \"${v_output_file}\" already exists. Remove it before rerunning."
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 
 echo "Generating bugs list. Please wait.." 
 
 # Check if opatch command works
-v_out=$("$ORACLE_HOME"/OPatch/opatch lsinv -bugs_fixed 2>&1) && v_ret=$? || v_ret=$?
+v_opatch_out=$("$ORACLE_HOME"/OPatch/opatch lsinv -bugs_fixed 2>&1) && v_ret=$? || v_ret=$?
 if [ ${v_ret} -ne 0 ]
 then
   echoError "Unable to run opatch. Error was:"
-  echoError "${v_out}"
+  echoError "${v_opatch_out}"
   echoError "Skipping opatch collection."
   exit ${v_ret}
 fi
 
-"$ORACLE_HOME"/OPatch/opatch lsinv -bugs_fixed |
+# When opatch runs again and too fast, it will fail as the lsinventory file name will have the exact same name (even the seconds part of it).
+# Example:
+
+# Inventory load failed... OPatch cannot load inventory for the given Oracle Home.
+# LsInventorySession failed: LsInventory cannot create the log directory /u01/app/oracle/product/database/dbhome_1/cfgtoollogs/opatch/lsinv/lsinventory2024-03-20_13-56-38PM.txt
+
+# "$ORACLE_HOME"/OPatch/opatch lsinv -bugs_fixed |
+echo "${v_opatch_out}" |
 # Remove lines before this entry (inclusive)
 sed '1,/^List of Bugs fixed by Installed Patches/d' |
 # Remove lines before this entry (inclusive)
@@ -54,6 +61,6 @@ sed -r 's/[[:space:]]+/ /g' |
 # Replace first space per tab
 sed 's/ /'$'\t''/' |
 # Replace first space per tab (that was the second)
-sed 's/ /'$'\t''/' > "${v_output}"
+sed 's/ /'$'\t''/' > "${v_output_file}"
 
 exit 0

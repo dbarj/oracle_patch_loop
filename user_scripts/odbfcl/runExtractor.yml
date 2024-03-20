@@ -5,9 +5,11 @@
     set -eo pipefail
     export ORACLE_HOME
     export ORACLE_SID
-    export DB_EXP_GEN_DUMP=0
+    export DB_EXP_GEN_DUMP=false
+    export DB_EXP_IGNORE_ERROR=false
     export DB_EXP_USER_PASS="{{ dump_pass }}"
-    sh "{{ VM_folder }}/user_scripts/odbfcl/sh_extractor/exporter.sh" db
+    [ ! -d ~/exporter_logs ] && mkdir ~/exporter_logs
+    sh "{{ VM_folder }}/user_scripts/odbfcl/sh_extractor/exporter.sh" db 2>&1 | tee ~/exporter_logs/{{ file_suffix }}.log
   environment:
     ORACLE_HOME: "{{ dbhome_locl }}"
     ORACLE_SID: "{{ mysid }}"

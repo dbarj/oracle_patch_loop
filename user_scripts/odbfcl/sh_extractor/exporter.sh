@@ -1,12 +1,9 @@
 #!/bin/bash
 # Script to collect all info needed from the DB
 # Created by Rodrigo Jorge <http://www.dbarj.com.br/>
-# v1.0.0.9
+# v1.1.0.0
 
 set -eo pipefail
-
-# Change this if you need to provide a password to connect as sysdba
-export v_sysdba_connect='/ as sysdba'
 
 function echoError ()
 {
@@ -33,16 +30,63 @@ The output is a zip file.
 "
 
 # Check if DB_EXP_MERGE_DUMP was exported.
-# If DB_EXP_MERGE_DUMP=0, then the generated ORACLE_HOME related files (bugs, symbols, chksum, etc) won't be loaded on a table, but added to zip as separate files.
-[ "$DB_EXP_MERGE_DUMP" == "0" ] && v_load_file=0 || v_load_file=1
+# If DB_EXP_MERGE_DUMP=false, then the generated ORACLE_HOME related files (bugs, symbols, chksum, etc) won't be loaded on DB tables, but added to zip as separate files.
+if [ -z "$DB_EXP_MERGE_DUMP" ]
+then
+  v_load_file=true
+  # echo "Note: Variable 'DB_EXP_MERGE_DUMP' was not exported. Assigning DB_EXP_MERGE_DUMP=${v_load_file} (default)."
+else
+  v_load_file=$(echo "${DB_EXP_MERGE_DUMP}" | tr '[:upper:]' '[:lower:]')
+  echo "Note: DB_EXP_MERGE_DUMP=${v_load_file} (provided)."
+fi
+
+if [ "${v_load_file}" != "false" -a "${v_load_file}" != "true" ]
+then
+  exitError "DB_EXP_MERGE_DUMP must be 'true' or 'false'."
+fi
 
 # Check if DB_EXP_GEN_DUMP was exported.
-# If DB_EXP_GEN_DUMP=0, then nothing will be exported. Only the schema populated.
-[ "$DB_EXP_GEN_DUMP" == "0" ] && v_gen_dump=0 || v_gen_dump=1
+# If DB_EXP_GEN_DUMP=false, then nothing will be exported. Only the schema populated.
+if [ -z "$DB_EXP_GEN_DUMP" ]
+then
+  v_gen_dump=true
+  # echo "Note: Variable 'DB_EXP_GEN_DUMP' was not exported. Assigning DB_EXP_GEN_DUMP=${v_gen_dump} (default)."
+else
+  v_gen_dump=$(echo "${DB_EXP_GEN_DUMP}" | tr '[:upper:]' '[:lower:]')
+  echo "Note: DB_EXP_GEN_DUMP=${v_gen_dump} (provided)."
+fi
+
+if [ "${v_gen_dump}" != "false" -a "${v_gen_dump}" != "true" ]
+then
+  exitError "DB_EXP_GEN_DUMP must be 'true' or 'false'."
+fi
+
+# Check if DB_EXP_IGNORE_ERROR was exported.
+# If DB_EXP_IGNORE_ERROR=false, the code will stop on some critical errors.
+if [ -z "$DB_EXP_IGNORE_ERROR" ]
+then
+  v_ignore_error=true
+  # echo "Note: Variable 'DB_EXP_IGNORE_ERROR' was not exported. Assigning DB_EXP_IGNORE_ERROR=${v_ignore_error} (default)."
+else
+  v_ignore_error=$(echo "${DB_EXP_IGNORE_ERROR}" | tr '[:upper:]' '[:lower:]')
+  echo "Note: DB_EXP_IGNORE_ERROR=${v_ignore_error} (provided)."
+fi
+
+if [ "${v_ignore_error}" != "false" -a "${v_ignore_error}" != "true" ]
+then
+  exitError "DB_EXP_IGNORE_ERROR must be 'true' or 'false'."
+fi
 
 # Check if DB_EXP_CRED was exported.
 # If DB_EXP_CRED is exported, then connect using this string instead of '/ as sysdba'.
-[ -n "$DB_EXP_CRED" ] && v_sysdba_connect="$DB_EXP_CRED"
+if [ -z "$DB_EXP_CRED" ]
+then
+  v_sysdba_connect='/ as sysdba'
+  echo "Note: Variable 'DB_EXP_CRED' was not exported. Assigning DB_EXP_CRED='${v_sysdba_connect}' (default)."
+else
+  v_sysdba_connect=$(echo "${DB_EXP_CRED}" | tr '[:upper:]' '[:lower:]')
+  echo "Note: DB_EXP_CRED (provided)."
+fi
 
 v_pattern_cnt=`awk -F" " '{print NF-1}' <<< "${v_pattern}"`
 [ ${v_pattern_cnt} -ne 0 ] && exitError "Pattern \"${v_output}\" must not have any spaces. Eg: ${v_example}"
@@ -71,52 +115,55 @@ fi
 [ -n "${v_common_user}" ] && v_dump_user_name="${v_common_user}${v_dump_user_name}"
 ##################
 v_thisdir_bkp="${v_thisdir}" # REMOVE_IF_ZIP
-[ -f "${v_thisdir}/bugsGet.sh" ] && v_sh_from_zip=1 || v_sh_from_zip=0 # REMOVE_IF_ZIP
 
-[ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_bugs_fixed" # REMOVE_IF_ZIP
+v_thisdir="${v_thisdir_bkp}/../adb_load_bugs_fixed" # REMOVE_IF_ZIP
 v_file=bugs_${v_pattern}.txt
 sh "${v_thisdir}/bugsGet.sh" ${v_file} && v_bugs_ret=$? || v_bugs_ret=$?
-[ ${v_load_file} -eq 0 ] && zip -m ${v_zip} ${v_file}
+if ! ${v_ignore_error} && [ ${v_bugs_ret} -ne 0 ]
+then
+  exitError "OPatch returned ${v_bugs_ret}."
+fi
+! ${v_load_file} && zip -m ${v_zip} ${v_file}
 
-[ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_filechksum" # REMOVE_IF_ZIP
+v_thisdir="${v_thisdir_bkp}/../adb_load_filechksum" # REMOVE_IF_ZIP
 v_file=sha256sum_${v_pattern}.chk
 sh "${v_thisdir}/chksumGet.sh" ${v_file}
-[ ${v_load_file} -eq 0 ] && zip -m ${v_zip} ${v_file}
+! ${v_load_file} && zip -m ${v_zip} ${v_file}
 
-[ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_txtcollection_files" # REMOVE_IF_ZIP
+v_thisdir="${v_thisdir_bkp}/../adb_load_txtcollection_files" # REMOVE_IF_ZIP
 v_file=txtcol_${v_pattern}.tar.gz
 sh "${v_thisdir}/fileGet.sh" ${v_file}
-[ ${v_load_file} -eq 0 ] && zip -m ${v_zip} ${v_file}
+! ${v_load_file} && zip -m ${v_zip} ${v_file}
 
-[ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_symbols" # REMOVE_IF_ZIP
+v_thisdir="${v_thisdir_bkp}/../adb_load_symbols" # REMOVE_IF_ZIP
 v_file=symbols_${v_pattern}.csv
 sh "${v_thisdir}/symbolGet.sh" ${v_file}
-[ ${v_load_file} -eq 0 ] && zip -m ${v_zip} ${v_file}
+! ${v_load_file} && zip -m ${v_zip} ${v_file}
 
 v_thisdir="${v_thisdir_bkp}" # REMOVE_IF_ZIP
 sh "${v_thisdir}/schemaCreate.sh" ${v_dump_user_name}
 
-if [ ${v_load_file} -eq 1 ]
+if ${v_load_file}
 then
   if [ ${v_bugs_ret} -eq 0 ]
   then
-    [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_bugs_fixed" # REMOVE_IF_ZIP
+    v_thisdir="${v_thisdir_bkp}/../adb_load_bugs_fixed" # REMOVE_IF_ZIP
     v_file=bugs_${v_pattern}.txt
     sh "${v_thisdir}/bugsLoad.sh" ${v_dump_user_name} ${v_file}
     rm -f ${v_file}
   fi
 
-  [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_filechksum" # REMOVE_IF_ZIP
+  v_thisdir="${v_thisdir_bkp}/../adb_load_filechksum" # REMOVE_IF_ZIP
   v_file=sha256sum_${v_pattern}.chk
   sh "${v_thisdir}/chksumLoad.sh" ${v_dump_user_name} ${v_file}
   rm -f ${v_file}
 
-  [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_txtcollection_files" # REMOVE_IF_ZIP
+  v_thisdir="${v_thisdir_bkp}/../adb_load_txtcollection_files" # REMOVE_IF_ZIP
   v_file=txtcol_${v_pattern}.tar.gz
   sh "${v_thisdir}/fileLoad.sh" ${v_dump_user_name} ${v_file}
   rm -f ${v_file}
 
-  [ ${v_sh_from_zip} -eq 0 ] && v_thisdir="${v_thisdir_bkp}/../adb_load_symbols" # REMOVE_IF_ZIP
+  v_thisdir="${v_thisdir_bkp}/../adb_load_symbols" # REMOVE_IF_ZIP
   v_file=symbols_${v_pattern}.csv
   sh "${v_thisdir}/symbolLoad.sh" ${v_dump_user_name} ${v_file}
   rm -f ${v_file}
@@ -125,7 +172,7 @@ fi
 v_thisdir="${v_thisdir_bkp}" # REMOVE_IF_ZIP
 sh "${v_thisdir}/dictionaryGet.sh" ${v_dump_user_name}
 
-if [ ${v_gen_dump} -eq 1 ]
+if ${v_gen_dump}
 then
   sh "${v_thisdir}/dumpCreate.sh" ${v_dump_user_name} tables_${v_pattern}.dmp
   set +e
