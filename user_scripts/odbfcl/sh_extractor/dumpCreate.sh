@@ -16,20 +16,20 @@ exitError ()
 }
 
 v_dump_user_name="$1"
-v_output="$2"
+v_out_file_param="$2"
 
-[ -z "${v_output}" ] && exitError "First parameter is the target file and cannot be null."
-[ -f "${v_output}" ] && exitError "File \"${v_output}\" already exists. Remove it before rerunning."
+[ -z "${v_out_file_param}" ] && exitError "First parameter is the target file and cannot be null."
+[ -f "${v_out_file_param}" ] && exitError "File \"${v_out_file_param}\" already exists. Remove it before rerunning."
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
-v_output_fdr="$(cd "$(dirname "${v_output}")"; pwd)"
-v_output_file="$(basename "${v_output}")"
-v_output_file_noext="${v_output_file%.*}"
+v_out_file_fdr="$(cd "$(dirname "${v_out_file_param}")"; pwd)"
+v_out_file_name="$(basename "${v_out_file_param}")"
+v_out_file_name_noext="${v_out_file_name%.*}"
 
-v_output_full="${v_output_fdr}/${v_output_file}"
-v_output_error="${v_output_fdr}/${v_output_file_noext}.err"
+v_out_file_full="${v_out_file_fdr}/${v_out_file_name}"
+v_err_file_full="${v_out_file_fdr}/${v_out_file_name_noext}.err"
 
 # If DB_EXP_USER_PASS is exported, use it as the password.
 [ -n "$DB_EXP_USER_PASS" ] && v_dump_user_pass="$DB_EXP_USER_PASS" || v_dump_user_pass='HhAaSsHh..135'
@@ -39,8 +39,8 @@ v_dump_dir_name='expdir_hash'
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
 cd "${v_thisdir}"
 
-v_output_file_cnt=`awk -F" " '{print NF-1}' <<< "${v_output_file_noext}"`
-[ ${v_output_file_cnt} -ne 0 ] && exitError "File \"${v_output}\" must not have any spaces."
+v_output_file_cnt=`awk -F" " '{print NF-1}' <<< "${v_out_file_name_noext}"`
+[ ${v_output_file_cnt} -ne 0 ] && exitError "File \"${v_out_file_param}\" must not have any spaces."
 
 [ -z "${v_sysdba_connect}" ] && v_sysdba_connect='/ as sysdba'
 
@@ -48,7 +48,7 @@ echo "Generating table export. Please wait.."
 
 cd "${v_thisdir}"/../../ # REMOVE_IF_ZIP
 $ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
-@externalDir.sql "${v_output_fdr}" "${v_dump_user_name}" "${v_dump_dir_name}"
+@externalDir.sql "${v_out_file_fdr}" "${v_dump_user_name}" "${v_dump_dir_name}"
 EOF
 
 # Get DB Version
@@ -84,19 +84,19 @@ $ORACLE_HOME/bin/expdp \
 userid="${v_dump_user_name}/${v_dump_user_pass}" \
 directory=${v_dump_dir_name} \
 "${v_compress_alg}" \
-dumpfile="${v_output_file}" \
-logfile="${v_output_file_noext}.log" \
+dumpfile="${v_out_file_name}" \
+logfile="${v_out_file_name_noext}.log" \
 content=data_only "${v_version_param}" \
-schemas="${v_dump_user_name}" 2>&1 >&3 | tee "${v_output_error}"
+schemas="${v_dump_user_name}" 2>&1 >&3 | tee "${v_err_file_full}"
 v_ret=$?
 set -eo pipefail
 
 if [ ${v_ret} -ne 0 ]
 then
-  if grep -q 'ORA-39070: Unable to open the log file' "${v_output_error}"
+  if grep -q 'ORA-39070: Unable to open the log file' "${v_err_file_full}"
   then
     v_ora_user=$(stat -c '%U' $ORACLE_HOME/bin/expdp)
-    exitError "Error, check if the Oracle Database ('${v_ora_user}' user) has access to this directory: ${v_output_fdr}"
+    exitError "Error, check if the Oracle Database ('${v_ora_user}' user) has access to this directory: ${v_out_file_fdr}"
   else
     exitError 'Error when generating dump file.'
   fi

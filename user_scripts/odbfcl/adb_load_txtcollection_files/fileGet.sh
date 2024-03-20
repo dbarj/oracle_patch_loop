@@ -18,29 +18,29 @@ exitError ()
   exit 1
 }
 
-v_output="$1"
+v_out_file_param="$1"
 
-[ -z "${v_output}" ] && exitError "First parameter is the target file and cannot be null."
-[ -f "${v_output}" ] && exitError "File \"${v_output}\" already exists. Remove it before rerunning."
+[ -z "${v_out_file_param}" ] && exitError "First parameter is the target file and cannot be null."
+[ -f "${v_out_file_param}" ] && exitError "File \"${v_out_file_param}\" already exists. Remove it before rerunning."
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 
-v_output_fdr="$(cd "$(dirname "${v_output}")"; pwd)"
-v_output_file="$(basename "${v_output}")"
-v_output_file_noext="${v_output_file%.*}"
+v_out_file_fdr="$(cd "$(dirname "${v_out_file_param}")"; pwd)"
+v_out_file_name="$(basename "${v_out_file_param}")"
+v_out_file_name_noext="${v_out_file_name%.*}"
 
-v_output_full="${v_output_fdr}/${v_output_file}"
-v_output_error="${v_output_fdr}/${v_output_file_noext}.err"
+v_out_file_full="${v_out_file_fdr}/${v_out_file_name}"
+v_err_file_full="${v_out_file_fdr}/${v_out_file_name_noext}.err"
 
-[ -f "${v_output_error}" ] && rm -f "${v_output_error}"
+[ -f "${v_err_file_full}" ] && rm -f "${v_err_file_full}"
 
 echo "Generating ORACLE_HOME non-binary files list. Please wait.." 
 
 cd "$ORACLE_HOME"
 
 set +e # grep may return "Permission denied"
-find -type f -not -path "./.patch_storage/*" -not -name "tfa_setup" -print0 2>> "${v_output_error}" | xargs -0 grep -Il '.' 2>> "${v_output_error}" | tar -czf "${v_output_full}" -T -
+find -type f -not -path "./.patch_storage/*" -not -name "tfa_setup" -print0 2>> "${v_err_file_full}" | xargs -0 grep -Il '.' 2>> "${v_err_file_full}" | tar -czf "${v_out_file_full}" -T -
 
-[ -f "${v_output_error}" ] && echo "Total errors detected: $(wc -l < "${v_output_error}")"
+[ -f "${v_err_file_full}" ] && echo "Total errors detected: $(wc -l < "${v_err_file_full}")"
 
 exit 0

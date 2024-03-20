@@ -15,34 +15,34 @@ exitError ()
   exit 1
 }
 
-v_output="$1"
+v_out_file_param="$1"
 
-[ -z "${v_output}" ] && exitError "First parameter is the target file and cannot be null."
-[ -f "${v_output}" ] && exitError "File \"${v_output}\" already exists. Remove it before rerunning."
+[ -z "${v_out_file_param}" ] && exitError "First parameter is the target file and cannot be null."
+[ -f "${v_out_file_param}" ] && exitError "File \"${v_out_file_param}\" already exists. Remove it before rerunning."
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 
-v_output_fdr="$(cd "$(dirname "${v_output}")"; pwd)"
-v_output_file="$(basename "${v_output}")"
-v_output_file_noext="${v_output_file%.*}"
+v_out_file_fdr="$(cd "$(dirname "${v_out_file_param}")"; pwd)"
+v_out_file_name="$(basename "${v_out_file_param}")"
+v_out_file_name_noext="${v_out_file_name%.*}"
 
-v_output_full="${v_output_fdr}/${v_output_file}"
-v_output_error="${v_output_fdr}/${v_output_file_noext}.err"
+v_out_file_full="${v_out_file_fdr}/${v_out_file_name}"
+v_err_file_full="${v_out_file_fdr}/${v_out_file_name_noext}.err"
 
-[ -f "${v_output_error}" ] && rm -f "${v_output_error}"
+[ -f "${v_err_file_full}" ] && rm -f "${v_err_file_full}"
 
 echo "Generating sha256sum for \$ORACLE_HOME files. Please wait.." 
 
 cd "$ORACLE_HOME"
 set +e
-find -type f -exec sha256sum "{}" + > "${v_output_full}" 2>> "${v_output_error}"
+find -type f -exec sha256sum "{}" + > "${v_out_file_full}" 2>> "${v_err_file_full}"
 set -eo pipefail
 cd - > /dev/null
 
-sed -i 's/$/  F/' "${v_output_full}"
+sed -i 's/$/  F/' "${v_out_file_full}"
 
 set +e
-v_libs=$(find "$ORACLE_HOME" -type f -name "*.a" 2>> "${v_output_error}")
+v_libs=$(find "$ORACLE_HOME" -type f -name "*.a" 2>> "${v_err_file_full}")
 set -eo pipefail
 
 v_ext_fold=`mktemp -d`
@@ -57,16 +57,16 @@ do
   mkdir "${v_ext_fold}"
   cd "${v_ext_fold}"
   set +e
-  ar x "${v_lib}" 2>> "${v_output_error}"
+  ar x "${v_lib}" 2>> "${v_err_file_full}"
   set -eo pipefail
   find -type f -exec sha256sum "{}" + > "${v_out_file}"
   cd - > /dev/null
   sed -i "s|  \.|  ${v_lib}|" "${v_out_file}"
   sed -i 's/$/  L/' "${v_out_file}"
-  cat "${v_out_file}" >> "${v_output}"
+  cat "${v_out_file}" >> "${v_out_file_param}"
   rm -rf "${v_ext_fold}" "${v_out_file}"
 done
 
-[ -f "${v_output_error}" ] && echo "Total errors detected: $(wc -l < "${v_output_error}")"
+[ -f "${v_err_file_full}" ] && echo "Total errors detected: $(wc -l < "${v_err_file_full}")"
 
 exit 0
