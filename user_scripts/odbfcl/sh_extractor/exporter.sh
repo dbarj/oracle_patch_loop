@@ -88,6 +88,9 @@ else
   echo "Note: DB_EXP_CRED (provided)."
 fi
 
+# v_sysdba_connect needs to be exported
+export v_sysdba_connect
+
 v_pattern_cnt=`awk -F" " '{print NF-1}' <<< "${v_pattern}"`
 [ ${v_pattern_cnt} -ne 0 ] && exitError "Pattern \"${v_output}\" must not have any spaces. Eg: ${v_example}"
 
