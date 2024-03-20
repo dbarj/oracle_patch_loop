@@ -7,12 +7,12 @@
 
 set -eo pipefail
 
-function echoError ()
+echoError ()
 {
   (>&2 echo "$1")
 }
 
-function exitError ()
+exitError ()
 {
   echoError "$1"
   exit 1

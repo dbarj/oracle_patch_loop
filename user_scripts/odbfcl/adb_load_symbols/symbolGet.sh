@@ -7,12 +7,12 @@
 # set -eo pipefail
 set -e # grep can return 0 lines
 
-function echoError ()
+echoError ()
 {
   (>&2 echo "$1")
 }
 
-function exitError ()
+exitError ()
 {
   echoError "$1"
   exit 1
