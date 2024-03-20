@@ -15,10 +15,10 @@ function exitError ()
   exit 1
 }
 
-v_output_file="$1"
+v_output="$1"
 
-[ -z "${v_output_file}" ] && exitError "First parameter is the target file and cannot be null."
-[ -f "${v_output_file}" ] && exitError "File \"${v_output_file}\" already exists. Remove it before rerunning."
+[ -z "${v_output}" ] && exitError "First parameter is the target file and cannot be null."
+[ -f "${v_output}" ] && exitError "File \"${v_output}\" already exists. Remove it before rerunning."
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 
@@ -61,6 +61,6 @@ sed -r 's/[[:space:]]+/ /g' |
 # Replace first space per tab
 sed 's/ /'$'\t''/' |
 # Replace first space per tab (that was the second)
-sed 's/ /'$'\t''/' > "${v_output_file}"
+sed 's/ /'$'\t''/' > "${v_output}"
 
 exit 0

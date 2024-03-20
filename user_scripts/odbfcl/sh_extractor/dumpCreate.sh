@@ -18,10 +18,11 @@ function exitError ()
 v_dump_user_name="$1"
 v_output="$2"
 
-[ -z "$v_output" ] && exitError "First parameter is the target file and cannot be null."
+[ -z "${v_output}" ] && exitError "First parameter is the target file and cannot be null."
+[ -f "${v_output}" ] && exitError "File \"${v_output}\" already exists. Remove it before rerunning."
+
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
-[ -f "${v_output}" ] && exitError "File \"${v_output}\" already exists. Remove it before rerunning."
 
 v_output_fdr="$(cd "$(dirname "${v_output}")"; pwd)"
 v_output_file="$(basename "${v_output}")"
