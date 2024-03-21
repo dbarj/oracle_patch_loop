@@ -26,6 +26,9 @@
         v_size=$(lvs --noheadings -o seg_size ${v_disk})
         if grep -q 'release 5.' /etc/oracle-release
         then
+          # Term all oracle sessions
+          pkill -U oracle || true
+          sleep 5
           # Kill all oracle sessions
           pkill -9 -U oracle || true
           sleep 5

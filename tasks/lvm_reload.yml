@@ -4,6 +4,9 @@
       export PATH=$PATH:/sbin:/usr/sbin
       v_snapshot="{{ vm_snapshot }}"
       v_disk="/dev/mapper/vg_u01-lv_u01"
+      # Term all oracle sessions
+      pkill -U oracle || true
+      sleep 5
       # Kill all oracle sessions
       pkill -9 -U oracle || true
       sleep 5

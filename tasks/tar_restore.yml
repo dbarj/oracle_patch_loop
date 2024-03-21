@@ -8,6 +8,10 @@
 - name: "Kill all Oracle processes"
   shell: |
       set -e -x
+      # Term all oracle sessions
+      pkill -U oracle || true
+      # Kill all oracle sessions
+      sleep 5
       pkill -9 -U oracle || true
   become: true
   become_user: root
