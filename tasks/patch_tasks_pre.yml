@@ -57,7 +57,7 @@
       - err_list.type == patch.type
       - err_list.id == patch.id
 
-  # When processing processing something, or perform_patch_actions = true
+  # When processing something, or perform_patch_actions = true
   - block:
 
     # Place patch file on the shared folder
@@ -181,9 +181,13 @@
       unarchive:
         src: "{{ db_patch }}"
         dest: "{{ shared_folder }}"
+      when: patch.patch_folder is undefined
 
     # When patch_folder variable is defined (mostly for BPs), extract that folder from unziped patch to apply
     - block:
+
+      - name : Unzip Patch to VM shared folder
+        shell: "unzip {{ db_patch }} '{{ unzip_patch_folder }}/{{ patch.patch_folder }}/*' -d {{ shared_folder }}"
 
       - name: Process only patch subfolder
         command: "mv {{ unzip_patch_folder }}/{{ patch.patch_folder }} {{ shared_folder }}"
@@ -198,6 +202,12 @@
 
       when: patch.patch_folder is defined
 
+    - name: Remove file downloaded from OCI Bucket
+      file:
+        state: absent
+        path: "{{ db_patch }}"
+      when: patch_location_type == "bucket"
+
     when: perform_patch_actions
 
   # Trigger database refresh command.
@@ -206,7 +216,7 @@
   - include: vbox_reload.yml
     when: not oci_mode
 
-  # We will run the lvm reload if we found the LVM entry to restore or if we are not running 
+  # We will run the lvm reload if we found the LVM entry to restore or if we are not running
   - include: lvm_reload.yml
     when: >
         oci_mode and
