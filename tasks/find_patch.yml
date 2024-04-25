@@ -36,7 +36,7 @@
       oci_download_file: "{{ oci_action.objects | map(attribute='name') | select('search',(patch.file_suf | default('')) ~ '.zip') | select('search', my_query) | list | first }}"
     when: 
       - oci_action.objects | map(attribute='name') | select('search', my_query) | list | length > 0
-      - patch.type == "MRP" and patch.type == "DPBP"
+      - patch.type == "MRP" or patch.type == "DPBP"
 
   when: patch_location_type == "bucket"
 
