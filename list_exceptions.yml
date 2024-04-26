@@ -26,6 +26,7 @@ list_retry_datapatch:
   - { version: "12.1.0.2" , type : "BP"  , id : 230418 , retries : 3 }
   - { version: "12.1.0.2" , type : "BP"  , id : 230718 , retries : 3 }
   - { version: "12.1.0.2" , type : "BP"  , id : 231017 , retries : 3 }
+  - { version: "12.1.0.2" , type : "BP"  , id : 240416 , retries : 3 }
 ######
   - { version: "12.1.0.2" , type : "PSU" , id : 200714 , retries : 2 }
   - { version: "12.1.0.2" , type : "PSU" , id : 201020 , retries : 2 }
@@ -41,6 +42,7 @@ list_retry_datapatch:
   - { version: "12.1.0.2" , type : "PSU" , id : 230418 , retries : 2 }
   - { version: "12.1.0.2" , type : "PSU" , id : 230718 , retries : 2 }
   - { version: "12.1.0.2" , type : "PSU" , id : 231017 , retries : 2 }
+  - { version: "12.1.0.2" , type : "PSU" , id : 240416 , retries : 2 }
 ######
   - { version: "12.2.0.1" , type : "RU"  , id : 190716 , retries : 1 }
   - { version: "12.2.0.1" , type : "RU"  , id : 191015 , retries : 1 }

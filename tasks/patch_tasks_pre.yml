@@ -187,7 +187,7 @@
     - block:
 
       - name : Unzip Patch to VM shared folder
-        shell: "unzip {{ db_patch }} '{{ unzip_patch_folder }}/{{ patch.patch_folder }}/*' -d {{ shared_folder }}"
+        shell: "unzip {{ db_patch }} '{{ patch.patch_number }}/{{ patch.patch_folder }}/*' -d {{ shared_folder }}"
 
       - name: Process only patch subfolder
         command: "mv {{ unzip_patch_folder }}/{{ patch.patch_folder }} {{ shared_folder }}"
