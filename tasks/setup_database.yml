@@ -7,6 +7,11 @@
   set_fact:
     dbhome_locl: "{{ dbhomeoutput.stdout }}"
 
+- name : Override DB Home
+  set_fact:
+    dbhome_locl: "{{ dbhomeoutput.stdout }}"
+  when: patch.oracle_home is defined
+
 - name : Print DB Home
   debug: var=dbhome_locl
 
@@ -100,7 +105,7 @@
       db_start_retried: false
 
 # when: db_version != "11.2.0.2" and db_version != "11.2.0.3" and db_version != "11.2.0.4"
-  when: ( db_version | regex_replace('^([^\.]+).*','\\1') | int ) > 11
+  when: ( db_version | regex_replace('^([^\.]+).*','\\1') | int ) > 11 and ( db_version | regex_replace('^([^\.]+).*','\\1') | int ) < 23
 
 
 - name : Define CDB variable
@@ -108,6 +113,12 @@
     db_iscdb: false
 # when: db_version == "11.2.0.2" or db_version == "11.2.0.3" or db_version == "11.2.0.4"
   when: ( db_version | regex_replace('^([^\.]+).*','\\1') | int ) <= 11
+
+- name : Define CDB variable
+  set_fact:
+    db_iscdb: true
+# when: db_version == "11.2.0.2" or db_version == "11.2.0.3" or db_version == "11.2.0.4"
+  when: ( db_version | regex_replace('^([^\.]+).*','\\1') | int ) >= 23
 
 ### Adjust dump_user_int based on database type and provided value.
 
