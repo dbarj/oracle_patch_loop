@@ -937,10 +937,11 @@ list_21000:
 ####################
 
 list_23000:
-  - { type : "BETA" , id : 1 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta1.tar.gz" }
-  - { type : "BETA" , id : 2 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta2.tar.gz" }
-  - { type : "BETA" , id : 3 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta3.tar.gz" }
+#  - { type : "BETA" , id : 1 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta1.tar.gz" }
+#  - { type : "BETA" , id : 2 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta2.tar.gz" }
+#  - { type : "BETA" , id : 3 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta3.tar.gz" }
   - { type : "BETA" , id : 4 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta4.tar.gz" }
-  - { type : "FREE" , id : 2 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.FreeRel1_Beta2.tar.gz" , oracle_sid : "FREE" , expdp_comp : false }
-  - { type : "FREE" , id : 3 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.FreeRel2_Beta3.tar.gz" , oracle_sid : "FREE" , expdp_comp : false }
+  - { type : "FREE" , id : 2 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.FreeRel2.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree" , expdp_comp : false }
+  - { type : "FREE" , id : 3 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.FreeRel3.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree" , expdp_comp : false }
+  - { type : "FREE" , id : 4 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.FreeRel4.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
 # - { type : "RU"   , id : 3  , patch_number : 00000000 , base_snap : "23.2.0" }
