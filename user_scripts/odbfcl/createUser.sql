@@ -21,5 +21,7 @@ GRANT CREATE TABLE TO &v_username.;
 
 -- REMOVE_IF_ZIP_AFTER
 
+-- This is no longer enabled after wrapper moved to PL/SQL
+
 -- For unwrapper:
-GRANT CREATE PROCEDURE TO &v_username.;
+-- GRANT CREATE PROCEDURE TO &v_username.;

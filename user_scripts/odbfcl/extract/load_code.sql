@@ -37,10 +37,10 @@ drop table &v_username..T_HASH_LOAD purge;
 
 -- REMOVE_IF_ZIP_AFTER
 
+-- This is no longer enabled after wrapper moved to PL/SQL
+
 -- BEGIN - Added to avoid "Java not installed" errors.
-WHENEVER SQLERROR CONTINUE
-
-@@unwrap_code.sql
-
+-- WHENEVER SQLERROR CONTINUE
+-- @@unwrap_code.sql
+-- WHENEVER SQLERROR EXIT SQL.SQLCODE
 -- END - Added to avoid "Java not installed" errors.
-WHENEVER SQLERROR EXIT SQL.SQLCODE
