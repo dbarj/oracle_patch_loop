@@ -46,7 +46,7 @@ SPO OFF
 set define '&'
 
 SPO gen_diff.sh
-PRO set -eo pipefail
+PRO set -e
 PRO v_type="$1"
 PRO v_file_1="$2"
 PRO v_file_2="$3"
@@ -57,7 +57,7 @@ PRO # -2 to remove '> ' or '< '
 PRO # +3 to include ' | '
 PRO if [ -z ${v_size} ]
 PRO then
-PRO   touch "${v_file_1}_${v_file_2}.txt"
+PRO   touch "${v_file_1}_${v_file_2}.${v_type}.txt"
 PRO   exit 0
 PRO fi
 PRO v_size=$(((v_size-2)*2+3))
@@ -66,7 +66,7 @@ PRO sdiff -w ${v_size} -bB -t -l "${v_file_1}.sql" "${v_file_2}.sql" | cat -n | 
 SPO OFF
 
 SPO load_codes.sh
-PRO set -eo pipefail
+PRO set -e
 PRO
 PRO v_outpref="./list"
 PRO v_file="${v_outpref}.csv"
@@ -100,7 +100,7 @@ PRO rm -f "${v_outpref}_load.log" "${v_outpref}_load.ctl" "${v_file}"
 SPO OFF
 
 SPO load_contents.sh
-PRO set -eo pipefail
+PRO set -e
 PRO
 PRO v_outpref="./list"
 PRO v_file="${v_outpref}.csv"
@@ -183,6 +183,7 @@ DECLARE
     SELECT MD5_HASH_FROM, MD5_HASH_TO
       FROM DIFF_CONTENTS;
   V_FOUND BOOLEAN;
+  V_COUNT NUMBER := 0;
 BEGIN
   FOR V IN V_VERS
   LOOP
@@ -192,7 +193,8 @@ BEGIN
     R_HASH.L(V.ORAVERSION_FROM, V.ORASERIES_FROM, V.ORAPATCH_FROM, V.ORAVERSION_TO, V.ORASERIES_TO, V.ORAPATCH_TO);
     FOR I IN V_DIFF_CODES (V.ORAVERSION_TO, V.ORASERIES_TO, V.ORAPATCH_TO)
     LOOP
-      DBMS_OUTPUT.PUT_LINE('! echo Processing ' || I.OLD_VALUE || '_' || I.NEW_VALUE);
+      V_COUNT := V_COUNT + 1;
+      DBMS_OUTPUT.PUT_LINE('! echo Processing ' || V_COUNT || ': ' || I.OLD_VALUE || '_' || I.NEW_VALUE);
       DBMS_OUTPUT.PUT_LINE('@get_code.sql ' || I.OLD_VALUE);
       DBMS_OUTPUT.PUT_LINE('@get_code.sql ' || I.NEW_VALUE);
       DBMS_OUTPUT.PUT_LINE('! sh gen_diff.sh codes ' || I.OLD_VALUE || ' ' || I.NEW_VALUE);
@@ -204,7 +206,8 @@ BEGIN
     R_TXTCOLLECTION.L(V.ORAVERSION_FROM, V.ORASERIES_FROM, V.ORAPATCH_FROM, V.ORAVERSION_TO, V.ORASERIES_TO, V.ORAPATCH_TO);
     FOR I IN V_DIFF_CONTENTS (V.ORAVERSION_TO, V.ORASERIES_TO, V.ORAPATCH_TO)
     LOOP
-      DBMS_OUTPUT.PUT_LINE('! echo Processing ' || I.OLD_VALUE || '_' || I.NEW_VALUE);
+      V_COUNT := V_COUNT + 1;
+      DBMS_OUTPUT.PUT_LINE('! echo Processing ' || V_COUNT || ': ' || I.OLD_VALUE || '_' || I.NEW_VALUE);
       DBMS_OUTPUT.PUT_LINE('@get_contents.sql ' || I.OLD_VALUE);
       DBMS_OUTPUT.PUT_LINE('@get_contents.sql ' || I.NEW_VALUE);
       DBMS_OUTPUT.PUT_LINE('! sh gen_diff.sh contents ' || I.OLD_VALUE || ' ' || I.NEW_VALUE);

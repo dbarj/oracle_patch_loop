@@ -892,7 +892,7 @@ list_19000:
   - { type : "MRP"  , id : 240716 , patch_number : 36778719 , base_ru : '19.22' , dep_type : 'RU' , dep_id : 22 , apply_method : "napply" }
   - { type : "MRP"  , id : 240521 , patch_number : 36576266 , base_ru : '19.23' , dep_type : 'RU' , dep_id : 23 , apply_method : "napply" }
   - { type : "MRP"  , id : 240618 , patch_number : 36701173 , base_ru : '19.23' , dep_type : 'RU' , dep_id : 23 , apply_method : "napply" }
-  - { type : "MRP"  , id : 240716 , patch_number : 36779399 , base_ru : '19.23' , dep_type : 'RU' , dep_id : 23 , apply_method : "napply" }
+  - { type : "MRP"  , id : 240716 , patch_number : 36779386 , base_ru : '19.23' , dep_type : 'RU' , dep_id : 23 , apply_method : "napply" }
 # 19c OJVM
   - { type : "OJVM" , id : 190416 , patch_number : 29548437 }
   - { type : "OJVM" , id : 190716 , patch_number : 29774421 }
@@ -957,12 +957,13 @@ list_21000:
 ####################
 
 list_23000:
-#  - { type : "BETA" , id : 1 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta1.tar.gz" }
-#  - { type : "BETA" , id : 2 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta2.tar.gz" }
-#  - { type : "BETA" , id : 3 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta3.tar.gz" }
-#  - { type : "BETA" , id : 4   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta4.tar.gz" }
+#  - { type : "BETA" , id : 1  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta1.tar.gz" }
+#  - { type : "BETA" , id : 2  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta2.tar.gz" }
+#  - { type : "BETA" , id : 3  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta3.tar.gz" }
+#  - { type : "BETA" , id : 4  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta4.tar.gz" }
   - { type : "RU"   , id : 4.1 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RU_4_1.tar.gz" }
+  - { type : "RU"   , id : 5   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RUGI_5_0.tar.gz" }
 # - { type : "RU"   , id : 5   , patch_number : 36741532 }
-  - { type : "FREE" , id : 2   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.FreeRel2.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree" , expdp_comp : false }
-  - { type : "FREE" , id : 3   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.FreeRel3.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree" , expdp_comp : false }
+  - { type : "FREE" , id : 2   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.FreeRel2.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
+  - { type : "FREE" , id : 3   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.FreeRel3.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
   - { type : "FREE" , id : 4   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.FreeRel4.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
