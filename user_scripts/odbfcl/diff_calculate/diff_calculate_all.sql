@@ -65,6 +65,44 @@ PRO
 PRO sdiff -w ${v_size} -bB -t -l "${v_file_1}.sql" "${v_file_2}.sql" | cat -n | grep -v -e '($' > "${v_file_1}_${v_file_2}.${v_type}.txt"
 SPO OFF
 
+SPO gen_sql.sh
+PRO set -e
+PRO v_file="$1"
+PRO v_output="$2"
+PRO
+PRO cat "${v_file}" | sort -u > "${v_file}.new"
+PRO mv "${v_file}.new" "${v_file}"
+PRO
+PRO rm -f "${v_output}"
+PRO touch "${v_output}"
+PRO
+PRO v_counter=1
+PRO v_total=$(cat "${v_file}" | wc -l)
+PRO v_entries=$(cat "${v_file}")
+PRO
+PRO OIFS="$IFS"; IFS=$'\n'
+PRO for v_line in $v_entries
+PRO do
+PRO   IFS="$OIFS"
+PRO   v_hash_1=$(cut -d: -f 1 <<< "${v_line}")
+PRO   v_hash_2=$(cut -d: -f 2 <<< "${v_line}")
+PRO   v_type=$(cut -d: -f 3 <<< "${v_line}")
+PRO   echo "! echo Processing ${v_counter}/${v_total}: ${v_hash_1}_${v_hash_2}" >> "${v_output}"
+PRO   if [ "${v_type}" = "codes" ]
+PRO   then
+PRO     echo "@get_code.sql ${v_hash_1}" >> "${v_output}"
+PRO     echo "@get_code.sql ${v_hash_2}" >> "${v_output}"
+PRO   elif [ "${v_type}" = "contents" ]
+PRO   then
+PRO     echo "@get_contents.sql ${v_hash_1}" >> "${v_output}"
+PRO     echo "@get_contents.sql ${v_hash_2}" >> "${v_output}"
+PRO   fi
+PRO   echo "! sh gen_diff.sh ${v_type} ${v_hash_1} ${v_hash_2}" >> "${v_output}"
+PRO   echo "! rm -f ${v_hash_1}.sql ${v_hash_2}.sql" >> "${v_output}"
+PRO   ((v_counter++))
+PRO done
+SPO OFF
+
 SPO load_codes.sh
 PRO set -e
 PRO
@@ -144,7 +182,7 @@ SPO OFF
 -------------------------------------
 
 set serverout on lines 10000 trims on verify off feed off
-SPOOL aaa.sql
+SPOOL hash.txt
 
 DECLARE
   CURSOR V_VERS IS
@@ -183,7 +221,6 @@ DECLARE
     SELECT MD5_HASH_FROM, MD5_HASH_TO
       FROM DIFF_CONTENTS;
   V_FOUND BOOLEAN;
-  V_COUNT NUMBER := 0;
 BEGIN
   FOR V IN V_VERS
   LOOP
@@ -193,12 +230,7 @@ BEGIN
     R_HASH.L(V.ORAVERSION_FROM, V.ORASERIES_FROM, V.ORAPATCH_FROM, V.ORAVERSION_TO, V.ORASERIES_TO, V.ORAPATCH_TO);
     FOR I IN V_DIFF_CODES (V.ORAVERSION_TO, V.ORASERIES_TO, V.ORAPATCH_TO)
     LOOP
-      V_COUNT := V_COUNT + 1;
-      DBMS_OUTPUT.PUT_LINE('! echo Processing ' || V_COUNT || ': ' || I.OLD_VALUE || '_' || I.NEW_VALUE);
-      DBMS_OUTPUT.PUT_LINE('@get_code.sql ' || I.OLD_VALUE);
-      DBMS_OUTPUT.PUT_LINE('@get_code.sql ' || I.NEW_VALUE);
-      DBMS_OUTPUT.PUT_LINE('! sh gen_diff.sh codes ' || I.OLD_VALUE || ' ' || I.NEW_VALUE);
-      DBMS_OUTPUT.PUT_LINE('! rm -f ' || I.OLD_VALUE || '.sql ' || I.NEW_VALUE || '.sql');
+      DBMS_OUTPUT.PUT_LINE(I.OLD_VALUE || ':' || I.NEW_VALUE || ':codes');
       V_FOUND := TRUE;
     END LOOP;
     -- CONTENTS
@@ -206,12 +238,7 @@ BEGIN
     R_TXTCOLLECTION.L(V.ORAVERSION_FROM, V.ORASERIES_FROM, V.ORAPATCH_FROM, V.ORAVERSION_TO, V.ORASERIES_TO, V.ORAPATCH_TO);
     FOR I IN V_DIFF_CONTENTS (V.ORAVERSION_TO, V.ORASERIES_TO, V.ORAPATCH_TO)
     LOOP
-      V_COUNT := V_COUNT + 1;
-      DBMS_OUTPUT.PUT_LINE('! echo Processing ' || V_COUNT || ': ' || I.OLD_VALUE || '_' || I.NEW_VALUE);
-      DBMS_OUTPUT.PUT_LINE('@get_contents.sql ' || I.OLD_VALUE);
-      DBMS_OUTPUT.PUT_LINE('@get_contents.sql ' || I.NEW_VALUE);
-      DBMS_OUTPUT.PUT_LINE('! sh gen_diff.sh contents ' || I.OLD_VALUE || ' ' || I.NEW_VALUE);
-      DBMS_OUTPUT.PUT_LINE('! rm -f ' || I.OLD_VALUE || '.sql ' || I.NEW_VALUE || '.sql');
+      DBMS_OUTPUT.PUT_LINE(I.OLD_VALUE || ':' || I.NEW_VALUE || ':contents');
       V_FOUND := TRUE;
     END LOOP;
     ROLLBACK;
@@ -232,7 +259,9 @@ END;
 /
 SPOOL OFF
 
-@aaa.sql
+! sh gen_sql.sh hash.txt run.sql
+
+@run.sql
 
 --------------------------
 ------- LOAD CODES -------
@@ -337,4 +366,6 @@ SET TERMOUT OFF ECHO OFF
 ----------------------
 
 ! rm -f gen_diff.sh
-! rm -f aaa.sql
+! rm -f gen_sql.sh
+! rm -f run.sql
+! rm -f hash.txt
