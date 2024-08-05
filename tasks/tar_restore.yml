@@ -40,7 +40,7 @@
 - name: UNTAR full Oracle
   shell: |
       rm -rf /u01/*
-      tar -xzf {{ patch.apply_file }}
+      tar -xzf {{ tar_file }}
   args:
     chdir: "/"
   register: tmp_shell_output

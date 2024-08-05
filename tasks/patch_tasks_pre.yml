@@ -166,7 +166,7 @@
     set_fact:
       perform_patch_actions: false
       restore_from_tar: true
-    when: patch.apply_method is defined and patch.apply_method == "tar" and not restore_from_lvm
+    when: patch.apply_method is defined and ( patch.apply_method == "tar" or patch.apply_method == "download_tar" ) and not restore_from_lvm
 
   # This part was together with the block before the lvm_check.
   # It was put here together as we don't need to unzip the patch if using the VM.
@@ -231,8 +231,12 @@
     when: oci_mode and found_lvm_entry
 
   # It is not possible to have both restore_from_lvm and restore_from_tar as true
-  - include: tar_restore.yml
-    when: restore_from_tar
+  - include: tar_download.yml
+    when: restore_from_tar and patch.apply_method == "download_tar"
+
+  # It is not possible to have both restore_from_lvm and restore_from_tar as true
+  - include: tar_restore.yml tar_file="{{ patch.apply_file }}"
+    when: restore_from_tar and patch.apply_method == "tar"
 
   # When patch has a pre-req, call the prepare_dependency script to setup.
   - include: prepare_dependency.yml

@@ -966,6 +966,7 @@ list_23000:
   - { type : "RU"   , id : 5   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RUGI_5_0.tar.gz" }
 # - { type : "RU"   , id : 5   , patch_number : 36741532 , dep_type : 'RU' , dep_id : 4 }
   - { type : "BASE" , id : 5   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.BASE_5_0.tar.gz" }
-  - { type : "FREE" , id : 2   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.FreeRel2.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
-  - { type : "FREE" , id : 3   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.FreeRel3.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
-  - { type : "FREE" , id : 4   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.FreeRel4.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
+  - { type : "FREE" , id : 2   , patch_number : 00000000 , apply_method : "download_tar" , apply_file : "u01.FreeRel2.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
+  - { type : "FREE" , id : 3   , patch_number : 00000000 , apply_method : "download_tar" , apply_file : "u01.FreeRel3.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
+  - { type : "FREE" , id : 4   , patch_number : 00000000 , apply_method : "download_tar" , apply_file : "u01.FreeRel4.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
+  - { type : "FREE" , id : 5   , patch_number : 00000000 , apply_method : "download_tar" , apply_file : "u01.FreeRel5.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }

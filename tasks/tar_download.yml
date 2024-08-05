@@ -1,0 +1,43 @@
+# If bucket
+- block:
+
+  - name: List files in OCI Bucket
+    include_role:
+      name: oci_object_storage_object_facts
+    vars:
+      object_action: "list"
+      oci_list_bucket: "{{ patch_location_bucket }}"
+  
+  - name: Download TAR file from OCI Bucket
+    shell: |
+        export LC_ALL=C.UTF-8
+        export LANG=C.UTF-8
+        oci os object get --bucket-name {{ patch_location_bucket }} --name {{ oci_download_file }} --file {{ shared_folder }}/{{ oci_download_file | basename }}
+    vars:
+      my_query: "{{ patch.apply_file }}"
+      oci_download_file: "{{ oci_action.objects | map(attribute='name') | select('search', my_query) | list | first }}"
+    when: oci_action.objects | map(attribute='name') | select('search', my_query) | list | length > 0
+
+  when: patch_location_type == "bucket"
+
+- name: Finding TAR File
+  find:
+    paths:            "{{ shared_folder }}"
+    patterns:         "{{ patch.apply_file }}"
+    recurse:          "no"
+    file_type:        "file"
+  register: find_result
+
+# If TAR was not found
+- name: Could not find TAR file
+  fail:
+    msg: "Could not find TAR file."
+  when: find_result.files[0] is undefined
+
+# Restore tar file
+- include: tar_restore.yml tar_file="{{ find_result.files[0].path }}"
+
+- name : "Remove TAR {{ find_result.files[0].path }} from shared folder"
+  file:
+    state: absent
+    path: "{{ find_result.files[0].path }}"
