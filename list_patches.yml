@@ -957,10 +957,10 @@ list_21000:
 ####################
 
 list_23000:
-#  - { type : "BETA" , id : 1  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta1.tar.gz" }
-#  - { type : "BETA" , id : 2  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta2.tar.gz" }
-#  - { type : "BETA" , id : 3  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta3.tar.gz" }
-#  - { type : "BETA" , id : 4  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta4.tar.gz" }
+# - { type : "BETA" , id : 1  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta1.tar.gz" }
+# - { type : "BETA" , id : 2  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta2.tar.gz" }
+# - { type : "BETA" , id : 3  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta3.tar.gz" }
+# - { type : "BETA" , id : 4  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta4.tar.gz" }
   - { type : "RU"   , id : 4   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RU_4_0.tar.gz" }
   - { type : "RU"   , id : 4.1 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RU_4_1.tar.gz" }
   - { type : "RU"   , id : 5   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RUGI_5_0.tar.gz" }
