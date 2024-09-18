@@ -2,6 +2,7 @@
 - include: run_sql.yml
   vars:
     sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database for UNTAR" }
+  ignore_errors: yes # added as the previous database may be running with a diff home setting (example, it was /opt/oracle/product/23c/dbhomeFree and now is /opt/oracle/product/23ai/dbhomeFree) and may fail.
   # when: not oci_mode or patch.dep_type is defined
   # When patch has a dependency, if the dependency is loaded running the full patch process instead of loading from lvm, the DB will be left online.
 

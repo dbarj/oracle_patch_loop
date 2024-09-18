@@ -9,7 +9,7 @@
 
 - name : Override DB Home
   set_fact:
-    dbhome_locl: "{{ dbhomeoutput.stdout }}"
+    dbhome_locl: "{{ patch.oracle_home }}"
   when: patch.oracle_home is defined
 
 - name : Print DB Home
