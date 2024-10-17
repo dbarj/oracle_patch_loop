@@ -107,7 +107,10 @@
           $ORACLE_HOME/runInstaller -silent -responseFile /u01/install/db_install.rsp
           v_ret=$?
           # ret = 6 is "Successfully Setup Software with warning(s)."
-          [ ${v_ret} -ne 0 -a ${v_ret} -ne 6 ] && exit 1
+          if [ ${v_ret} -ne 0 -a ${v_ret} -ne 6 ]
+          then
+            exit 1
+          fi
       environment:
         ORACLE_HOME: "{{ dbhome_locl }}"
         ORACLE_SID: "{{ mysid }}"
