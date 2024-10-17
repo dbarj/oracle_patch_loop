@@ -181,7 +181,13 @@
       unarchive:
         src: "{{ db_patch }}"
         dest: "{{ shared_folder }}"
-      when: patch.patch_folder is undefined
+      when: patch.patch_folder is undefined and (patch.apply_method is undefined or patch.apply_method != "gold_image")
+
+    - name : Copy zip Patch to VM shared folder
+      copy:
+        src: "{{ db_patch }}"
+        dest: "{{ shared_folder }}"
+      when: patch.apply_method is defined and patch.apply_method == "gold_image"
 
     # When patch_folder variable is defined (mostly for BPs), extract that folder from unziped patch to apply
     - block:
@@ -200,7 +206,7 @@
       - name : Rename patch subfolder
         shell: "mv {{ shared_folder }}/{{ patch.patch_folder }} {{ unzip_patch_folder }}"
 
-      when: patch.patch_folder is defined
+      when: patch.patch_folder is defined and (patch.apply_method is undefined or patch.apply_method != "gold_image")
 
     - name: Remove file downloaded from OCI Bucket
       file:

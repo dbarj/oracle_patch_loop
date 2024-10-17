@@ -34,6 +34,12 @@
     path: "{{ unzip_patch_folder }}"
   when: perform_patch_actions
 
+- name : Remove zipped patch
+  file:
+    state: absent
+    path: "{{ shared_folder }}/{{ db_patch | basename }}"
+  when: perform_patch_actions and patch.apply_method is defined and patch.apply_method == "gold_image"
+
 # Here I don't check for perform_patch_actions as in some cases (like for LVM image usage) the patch will still be downloaded.
 - name: Remove file downloaded from OCI Bucket
   file:

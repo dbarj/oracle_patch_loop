@@ -81,6 +81,57 @@
     - set_fact: shell_output="{{tmp_shell_output}}"
       when: tmp_shell_output is not skipped
 
+    ## RUGI ##
+
+    - name: Deploy new ORACLE_HOME
+      shell: |
+          set -eo pipefail
+          # Save database files
+          rm -f /tmp/${ORACLE_SID}.tar.gz
+          cd $ORACLE_HOME/dbs
+          tar -cvzf /tmp/${ORACLE_SID}.tar.gz {hc_${ORACLE_SID}.dat,spfile${ORACLE_SID}.ora,orapw${ORACLE_SID}}
+          # Remove old home
+          rm -rf $ORACLE_HOME
+          # Create new home
+          mkdir $ORACLE_HOME
+          cd /u01/install
+          unzip -q -d $ORACLE_HOME {{ shared_folder }}/{{ db_patch | basename }}
+          # Recover saved files
+          cd $ORACLE_HOME/dbs
+          tar -xvf /tmp/${ORACLE_SID}.tar.gz
+          rm -f /tmp/${ORACLE_SID}.tar.gz
+          # Remove old home from inventory
+          sed -i '/dbhome_1/d' /u01/app/oraInstall/ContentsXML/inventory.xml
+          # Install new home
+          set +e
+          $ORACLE_HOME/runInstaller -silent -responseFile /u01/install/db_install.rsp
+          v_ret=$?
+          # ret = 6 is "Successfully Setup Software with warning(s)."
+          [ ${v_ret} -ne 0 -a ${v_ret} -ne 6 ] && exit 1
+      environment:
+        ORACLE_HOME: "{{ dbhome_locl }}"
+        ORACLE_SID: "{{ mysid }}"
+      register: tmp_shell_output
+      become: true
+      become_user: oracle
+      when: patch.apply_method is defined and patch.apply_method == "gold_image"
+      delegate_to: "{{ vm_ip_address }}"
+
+    - name: Call root.sh
+      shell: |
+          set -eo pipefail
+          $ORACLE_HOME/root.sh
+      environment:
+        ORACLE_HOME: "{{ dbhome_locl }}"
+      become: true
+      become_user: root
+      when: patch.apply_method is defined and patch.apply_method == "gold_image"
+      delegate_to: "{{ vm_ip_address }}"
+
+    # Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+    - set_fact: shell_output="{{tmp_shell_output}}"
+      when: tmp_shell_output is not skipped
+
     - name: Opatch Output
       debug: msg="{{ shell_output.stdout_lines }}"
       when: shell_output.stdout_lines is defined

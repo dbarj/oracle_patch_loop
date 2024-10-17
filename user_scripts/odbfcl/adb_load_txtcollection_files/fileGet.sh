@@ -40,7 +40,7 @@ cd "$ORACLE_HOME"
 
 set +e # grep may return "Permission denied"
 find -type f -not -path "./.patch_storage/*" -not -name "tfa_setup" -print0 2>> "${v_err_file_full}" | xargs -0 -n 100 grep -Il '.' 2>> "${v_err_file_full}" | tar -czf "${v_out_file_full}" -T -
-# "-n 100" added to xargs due to bug in grep where it is skipping files when the input list is huge. Tested with DB 18.12.
+# "-n 100" added to xargs due to bug in grep where it is skipping files when the input list is huge. Tested with DB 18.12. https://debbugs.gnu.org/cgi/bugreport.cgi?bug=73360
 
 [ -f "${v_err_file_full}" ] && echo "Total errors detected: $(wc -l < "${v_err_file_full}")"
 
