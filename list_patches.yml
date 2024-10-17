@@ -651,11 +651,11 @@ list_12201:
   - { type : "RU"   , id : 230117 , patch_number : 34850184 } # PASSWORD PROTECTED
   - { type : "RU"   , id : 230418 , patch_number : 35115783 } # PASSWORD PROTECTED
   - { type : "RU"   , id : 230718 , patch_number : 35407080 } # PASSWORD PROTECTED
-  - { type : "RU"   , id : 231017 , patch_number : 35746058 } # PASSWORD PROTECTED
-  - { type : "RU"   , id : 240116 , patch_number : 35966787 } # PASSWORD PROTECTED
-  - { type : "RU"   , id : 240416 , patch_number : 36325581 } # PASSWORD PROTECTED
-  - { type : "RU"   , id : 240716 , patch_number : 36650048 } # PASSWORD PROTECTED
-  - { type : "RU"   , id : 241015 , patch_number : 36941400 } # TIER 1
+  - { type : "RU"   , id : 231017 , patch_number : 35746058 }
+  - { type : "RU"   , id : 240116 , patch_number : 35966787 } # START TIER 1
+  - { type : "RU"   , id : 240416 , patch_number : 36325581 }
+  - { type : "RU"   , id : 240716 , patch_number : 36650048 }
+  - { type : "RU"   , id : 241015 , patch_number : 36941400 }
 # 12.2.0.1 RUR
   - { type : "RUR"  , id : 171017 , patch_number : 26518812 , base_ru : JUL2017 }
   - { type : "RUR"  , id : 180116 , patch_number : 27013506 , base_ru : JUL2017 }
@@ -702,12 +702,12 @@ list_12201:
   - { type : "OJVM" , id : 210720 , patch_number : 32876409 }
   - { type : "OJVM" , id : 211019 , patch_number : 33192662 }
   - { type : "OJVM" , id : 220118 , patch_number : 33561275 } # LAST PATCH
-  - { type : "OJVM" , id : 220419 , patch_number : 33829783 } # PASSWORD PROTECTED
-  - { type : "OJVM" , id : 220719 , patch_number : 34086867 } # PASSWORD PROTECTED
-  - { type : "OJVM" , id : 221018 , patch_number : 34412174 } # PASSWORD PROTECTED
+  - { type : "OJVM" , id : 220419 , patch_number : 33829783 }
+  - { type : "OJVM" , id : 220719 , patch_number : 34086867 }
+  - { type : "OJVM" , id : 221018 , patch_number : 34412174 }
   - { type : "OJVM" , id : 230117 , patch_number : 34763276 } # PASSWORD PROTECTED
   - { type : "OJVM" , id : 230418 , patch_number : 35058256 } # PASSWORD PROTECTED
-  - { type : "OJVM" , id : 230718 , patch_number : 35348984 } # PASSWORD PROTECTED
+  - { type : "OJVM" , id : 230718 , patch_number : 35348984 }
   - { type : "OJVM" , id : 231017 , patch_number : 35685669 }
   - { type : "OJVM" , id : 240116 , patch_number : 35926712 }
   - { type : "OJVM" , id : 240416 , patch_number : 36222324 } # START TIER 1
@@ -988,10 +988,10 @@ list_23000:
   - { type : "RU"   , id : 4   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RU_4_0.tar.gz" }
   - { type : "RU"   , id : 4.1 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RU_4_1.tar.gz" }
   - { type : "RU"   , id : 5   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RUGI_5_0.tar.gz" }
-# - { type : "RU"   , id : 6   , patch_number : 37037086 }
-  - { type : "RU"   , id : 6   , patch_number : 37037908 , apply_method : "gold_image" }
 # - { type : "RU"   , id : 5   , patch_number : 36741532 , dep_type : 'RU' , dep_id : 4 }
   - { type : "BASE" , id : 5   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.BASE_5_0.tar.gz" }
+# - { type : "RU"   , id : 6   , patch_number : 37037086 }
+  - { type : "RU"   , id : 6   , patch_number : 37037908 , apply_method : "gold_image" }
   - { type : "FREE" , id : 2   , patch_number : 00000000 , apply_method : "download_tar" , apply_file : "u01.FreeRel2.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
   - { type : "FREE" , id : 3   , patch_number : 00000000 , apply_method : "download_tar" , apply_file : "u01.FreeRel3.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
   - { type : "FREE" , id : 4   , patch_number : 00000000 , apply_method : "download_tar" , apply_file : "u01.FreeRel4.tar.gz" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
