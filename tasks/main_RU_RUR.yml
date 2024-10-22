@@ -21,9 +21,15 @@
   set_fact:
     oci_instance_id: "{{ item.oci_instance_id }}"
     patch_base:    "{{ item.base_snap }}"
-    out_of_box_id: "{{ item.out_of_box_id | default(-1, true) }}"
+    out_of_box_id: "{{ item.out_of_box_id | default(-1) }}"
   with_items: "{{ list_info_oci }}"
   when: item.id == db_version and oci_mode
+
+# Before, with default(-1,true) above, it was also changing when out_of_box_id was 0
+- name : Fix out_of_box_id
+  set_fact:
+    out_of_box_id: -1
+  when: out_of_box_id == ''
 
 # This parameter will control if database start command was ever called.
 - name : Define database_started variable to false.

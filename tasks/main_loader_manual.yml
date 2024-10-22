@@ -163,9 +163,15 @@
 
 - name : Define Cloud params
   set_fact:
-    out_of_box_id: "{{ item.out_of_box_id | default(-1, true) }}"
+    out_of_box_id: "{{ item.out_of_box_id | default(-1) }}"
   with_items: "{{ list_info_oci }}"
   when: item.id == db_version
+
+# Before, with default(-1,true) above, it was also changing when out_of_box_id was 0
+- name : Fix out_of_box_id
+  set_fact:
+    out_of_box_id: -1
+  when: out_of_box_id == ''
 
 - include: "impdp_file_adb.yml patch={{ item }}"
   with_items:
