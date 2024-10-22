@@ -47,11 +47,11 @@ list_info_oci:
   - { id : "11.2.0.1" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
   - { id : "11.2.0.2" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
   - { id : "11.2.0.3" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
-  - { id : "11.2.0.4" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" }
-  - { id : "12.1.0.1" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" }
-  - { id : "12.1.0.2" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" }
-  - { id : "12.2.0.1" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" }
+  - { id : "11.2.0.4" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : 0 }
+  - { id : "12.1.0.1" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : 0 }
+  - { id : "12.1.0.2" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : 0 }
+  - { id : "12.2.0.1" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : 0 }
   - { id : "18.0.0.0" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : 3 }
   - { id : "19.0.0.0" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : 3 }
   - { id : "21.0.0.0" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : 3 }
-  - { id : "23.0.0.0" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : null }
+  - { id : "23.0.0.0" , oci_instance_id : "ocid1.instance.oc1.phx.xxx" , base_snap : "base" , out_of_box_id : 5 }
