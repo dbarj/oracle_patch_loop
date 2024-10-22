@@ -92,7 +92,7 @@
       - patch.id <= (param_patch_to | float)   or param_patch_to == -1
       - patch.id > (out_of_box_id | float)
 
-  when: param_type is undefined or param_type == "RU"
+  when: param_type is undefined or param_type == "RU" or param_type == "BASE"
 
 ### OJVM
 - block:
