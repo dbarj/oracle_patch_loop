@@ -90,7 +90,6 @@
       - patch.id == (param_patch | float)      or param_patch == -1
       - patch.id >= (param_patch_from | float) or param_patch_from == -1
       - patch.id <= (param_patch_to | float)   or param_patch_to == -1
-      - patch.id > (out_of_box_id | float)
 
   when: param_type is undefined or param_type == "RU" or param_type == "BASE"
 

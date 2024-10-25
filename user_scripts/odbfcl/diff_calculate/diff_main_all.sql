@@ -36,4 +36,5 @@ DEF P_FOLDER = '&2'
 
 @&P_FOLDER./diff_calculate_all.sql '&P_CRED.' 'all'
 
-exit
+-- Do not exit or it will stop next execution code.
+-- exit
