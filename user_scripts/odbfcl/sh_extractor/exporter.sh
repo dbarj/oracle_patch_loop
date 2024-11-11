@@ -86,6 +86,26 @@ else
   echo "Note: DB_EXP_CRED (provided)."
 fi
 
+# Check if DB_EXP_USER was exported.
+# If DB_EXP_USER defines the user inside the database to export the oradiff data.
+v_def_dump_user_name='hash'
+if [ -z "$DB_EXP_USER" ]
+then
+  v_dump_user_name=${v_def_dump_user_name}
+  echo "Note: Variable 'DB_EXP_USER' was not exported. Assigning DB_EXP_USER='${v_dump_user_name}' (default)."
+else
+  v_dump_user_name=$(echo "${v_dump_user_name}" | tr '[:upper:]' '[:lower:]')
+  echo "Note: DB_EXP_USER (provided)."
+fi
+
+# Check if v_dump_user_name is the default or not.
+if [ "$v_def_dump_user_name" = "$v_dump_user_name" ]
+then
+  v_is_def_dump_user=true
+else
+  v_is_def_dump_user=false
+fi
+
 # v_sysdba_connect needs to be exported
 export v_sysdba_connect
 
@@ -99,7 +119,6 @@ v_zip=${v_pattern}.zip
 ########################
 # Define dump username #
 ########################
-v_dump_user_name='hash'
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
@@ -142,7 +161,7 @@ sh "${v_thisdir}/symbolGet.sh" ${v_file}
 ! ${v_load_file} && zip -m ${v_zip} ${v_file}
 
 v_thisdir="${v_thisdir_bkp}" # REMOVE_IF_ZIP
-sh "${v_thisdir}/schemaCreate.sh" ${v_dump_user_name}
+sh "${v_thisdir}/schemaCreate.sh" ${v_dump_user_name} ${v_is_def_dump_user}
 
 if ${v_load_file}
 then

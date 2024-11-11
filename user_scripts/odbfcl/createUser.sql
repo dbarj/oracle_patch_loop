@@ -5,8 +5,15 @@ def v_username='&1.'
 def v_password='&2.'
 def v_data_tbs='&3.'
 def v_temp_tbs='&4.'
+def v_def_user='&5.'
 
-DROP USER &v_username. CASCADE;
+BEGIN
+  IF '&v_def_user.' = 'true'
+  THEN
+    EXECUTE IMMEDIATE 'DROP USER &v_username. CASCADE';
+  END IF;
+END;
+/
 
 WHENEVER SQLERROR EXIT SQL.SQLCODE
 
