@@ -1,6 +1,5 @@
 #!/bin/bash
 # Script to get the sha256sum of all ORACLE_HOME files and libraries
-# Created by Rodrigo Jorge <http://www.dbarj.com.br/>
 
 set -eo pipefail
 

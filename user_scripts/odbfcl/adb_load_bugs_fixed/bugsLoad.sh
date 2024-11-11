@@ -1,6 +1,5 @@
 #!/bin/bash
 # Script to load all bugs on database
-# Created by Rodrigo Jorge <http://www.dbarj.com.br/>
 
 set -eo pipefail
 

@@ -1,6 +1,5 @@
 #!/bin/bash
 # Script to list all symbols in ORACLE_HOME
-# Created by Rodrigo Jorge <http://www.dbarj.com.br/>
 
 # Thanks Frits Hooglang
 

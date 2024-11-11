@@ -1,6 +1,5 @@
 #!/bin/bash
 # Script to collect dictionary tables
-# Created by Rodrigo Jorge <http://www.dbarj.com.br/>
 
 set -eo pipefail
 

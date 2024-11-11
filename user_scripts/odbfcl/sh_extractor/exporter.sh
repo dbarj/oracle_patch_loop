@@ -1,6 +1,5 @@
 #!/bin/bash
 # Script to collect all info needed from the DB
-# Created by Rodrigo Jorge <http://www.dbarj.com.br/>
 # v1.1.0.0
 
 set -eo pipefail

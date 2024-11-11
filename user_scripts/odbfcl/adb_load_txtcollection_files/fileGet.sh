@@ -1,6 +1,5 @@
 #!/bin/bash
 # Script to get all non-binary files in ORACLE_HOME
-# Created by Rodrigo Jorge <http://www.dbarj.com.br/>
 
 # TODO: Fix: tar: ./rdbms/log/stout_orcl_17338.txt: Cannot stat: No such file or directory
 # SOLUTION: Stop DB before collection, or add flag to make tar ignore missing files

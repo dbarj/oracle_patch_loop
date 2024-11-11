@@ -1,6 +1,5 @@
 #!/bin/bash
 # Script to get all bugs fixed on OPatch
-# Created by Rodrigo Jorge <http://www.dbarj.com.br/>
 
 set -eo pipefail
 
