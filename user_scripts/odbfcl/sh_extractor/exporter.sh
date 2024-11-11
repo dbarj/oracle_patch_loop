@@ -1,6 +1,5 @@
 #!/bin/bash
 # Script to collect all info needed from the DB
-# v1.1.0.0
 
 set -eo pipefail
 
