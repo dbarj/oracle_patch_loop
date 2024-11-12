@@ -16,6 +16,8 @@ exitError ()
 
 v_dump_user_name="$1"
 
+[ -z "${v_dump_user_name}" ] && exitError "First parameter is the DB Schema and cannot be null."
+
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 

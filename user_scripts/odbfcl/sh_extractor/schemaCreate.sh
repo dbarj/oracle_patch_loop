@@ -20,6 +20,8 @@ v_def_dump_user_name="$2"
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
+[ -z "${v_dump_user_name}" ] && exitError "First parameter is the DB Schema and cannot be null."
+
 # If DB_EXP_USER_PASS is exported, use it as the password.
 [ -n "$DB_EXP_USER_PASS" ] && v_dump_user_pass="$DB_EXP_USER_PASS" || v_dump_user_pass='HhAaSsHh..135'
 

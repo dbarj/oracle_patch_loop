@@ -18,7 +18,9 @@ v_dump_user_name="$1"
 v_file="$2"
 v_outpref="${v_file}"
 
-[ -z "${v_file}" ] && exitError "First parameter is the source file and cannot be null."
+[ -z "${v_dump_user_name}" ] && exitError "First parameter is the DB Schema and cannot be null."
+[ -z "${v_file}" ] && exitError "Second parameter is the source file and cannot be null."
+
 [ ! -f "${v_file}" -o ! -r "${v_file}" ] && exitError "File '${v_file}' does not exist."
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
