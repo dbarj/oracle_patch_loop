@@ -82,7 +82,7 @@ then
   v_sysdba_connect='/ as sysdba'
   echo "Note: Variable 'DB_EXP_CRED' was not exported. Assigning DB_EXP_CRED='${v_sysdba_connect}' (default)."
 else
-  v_sysdba_connect=$(echo "${DB_EXP_CRED}" | tr '[:upper:]' '[:lower:]')
+  v_sysdba_connect="${DB_EXP_CRED}"
   echo "Note: DB_EXP_CRED (provided)."
 fi
 
@@ -106,8 +106,8 @@ else
   v_is_def_dump_user=false
 fi
 
-# v_sysdba_connect needs to be exported
-export v_sysdba_connect
+# DB_EXP_CRED needs to be exported
+export DB_EXP_CRED
 
 v_pattern_cnt=`awk -F" " '{print NF-1}' <<< "${v_pattern}"`
 [ ${v_pattern_cnt} -ne 0 ] && exitError "Pattern \"${v_output}\" must not have any spaces. Eg: ${v_example}"

@@ -24,7 +24,8 @@ v_outpref="${v_file}"
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
-[ -z "${v_sysdba_connect}" ] && v_sysdba_connect='/ as sysdba'
+# If DB_EXP_CRED is exported, use it as the credentials.
+[ -n "$DB_EXP_CRED" ] && v_sysdba_connect="$DB_EXP_CRED" || v_sysdba_connect='/ as sysdba'
 
 echo "Loading ORACLE_HOME non-binary files. Please wait.." 
 

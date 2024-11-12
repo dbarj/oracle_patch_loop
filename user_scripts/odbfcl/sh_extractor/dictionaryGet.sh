@@ -24,7 +24,8 @@ v_dump_dir_name='expdir_hash'
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
 cd "${v_thisdir}"
 
-[ -z "${v_sysdba_connect}" ] && v_sysdba_connect='/ as sysdba'
+# If DB_EXP_CRED is exported, use it as the credentials.
+[ -n "$DB_EXP_CRED" ] && v_sysdba_connect="$DB_EXP_CRED" || v_sysdba_connect='/ as sysdba'
 
 echo "Generating table export. Please wait.." 
 
