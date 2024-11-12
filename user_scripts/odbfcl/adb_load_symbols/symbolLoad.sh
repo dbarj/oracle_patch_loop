@@ -16,7 +16,7 @@ exitError ()
 
 v_dump_user_name="$1"
 v_file="$2"
-v_outpref="${v_file}"
+v_outpref="${v_file%.*}"
 
 [ -z "${v_dump_user_name}" ] && exitError "First parameter is the DB Schema and cannot be null."
 [ -z "${v_file}" ] && exitError "Second parameter is the source file and cannot be null."
