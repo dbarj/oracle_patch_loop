@@ -19,7 +19,7 @@ exitError ()
 
 v_out_file_param="$1"
 
-[ -z "${v_out_file_param}" ] && exitError "First parameter is the target file and cannot be null."
+[ -z "${v_out_file_param}" ] && exitError "1st parameter is the target file and cannot be null."
 [ -f "${v_out_file_param}" ] && exitError "File \"${v_out_file_param}\" already exists. Remove it before rerunning."
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
