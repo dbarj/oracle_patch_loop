@@ -15,13 +15,13 @@ exitError ()
 }
 
 v_dump_user_name="$1"
-v_file="$2"
-v_outpref="${v_file%.*}"
+v_data_file_param="$2"
+v_out_prefix="${v_data_file_param%.*}"
 
 [ -z "${v_dump_user_name}" ] && exitError "1st parameter is the DB Schema and cannot be null."
-[ -z "${v_file}" ] && exitError "2nd parameter is the source file and cannot be null."
+[ -z "${v_data_file_param}" ] && exitError "2nd parameter is the source file and cannot be null."
 
-[ ! -f "${v_file}" -o ! -r "${v_file}" ] && exitError "File '${v_file}' does not exist."
+[ ! -f "${v_data_file_param}" -o ! -r "${v_data_file_param}" ] && exitError "File '${v_data_file_param}' does not exist."
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
@@ -31,7 +31,10 @@ v_outpref="${v_file%.*}"
 
 echo "Loading bugs list. Please wait.." 
 
-cat << EOF > "${v_outpref}_load.ctl"
+v_control_file="${v_out_prefix}_load.ctl"
+v_log_file="${v_out_prefix}_load.log"
+
+cat << EOF > "${v_control_file}"
 LOAD
 INTO TABLE ${v_dump_user_name}.T_BUGSFIXED
 APPEND
@@ -39,15 +42,23 @@ FIELDS TERMINATED BY x'09'
 (bug_id, patch_id, bug_desc)
 EOF
 
+set +e
 $ORACLE_HOME/bin/sqlldr \
 userid=\'"${v_sysdba_connect}"\' \
-control="${v_outpref}_load.ctl" \
+control="${v_control_file}" \
 errors=0 \
 discardmax=0 \
 direct=Y \
-data="${v_file}" \
-log="${v_outpref}_load.log"
+data="${v_data_file_param}" \
+log="${v_log_file}"
+v_ret=$?
+set -eo pipefail
 
-rm -f "${v_outpref}_load.log" "${v_outpref}_load.ctl"
+if [ $v_ret -ne 0 ]
+then
+  exitError "sqlldr failed to load '${v_data_file_param}'. Check also the 'bad' file for more information."
+fi
+
+rm -f "${v_log_file}" "${v_control_file}"
 
 exit 0
