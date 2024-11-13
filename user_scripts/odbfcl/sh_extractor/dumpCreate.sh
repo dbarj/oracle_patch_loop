@@ -34,19 +34,23 @@ v_out_file_name_noext="${v_out_file_name%.*}"
 v_out_file_full="${v_out_file_fdr}/${v_out_file_name}"
 v_err_file_full="${v_out_file_fdr}/${v_out_file_name_noext}.err"
 
-# If DB_EXP_USER_PASS is exported, use it as the password.
+# If DB_EXP_USER_PASS is exported, use it.
 [ -n "$DB_EXP_USER_PASS" ] && v_dump_user_pass="$DB_EXP_USER_PASS" || v_dump_user_pass='HhAaSsHh..135'
 
-v_dump_dir_name='expdir_hash'
+# If DB_EXP_CRED is exported, use it.
+[ -n "$DB_EXP_CRED" ] && v_sysdba_connect="$DB_EXP_CRED" || v_sysdba_connect='/ as sysdba'
+
+# If DB_EXP_DIRECTORY is exported, use it.
+[ -n "$DB_EXP_DIRECTORY" ] && v_dump_dir_name=$DB_EXP_DIRECTORY || v_dump_dir_name='expdir_hash'
+
+# If DB_EXP_COMPRESS is exported, use it.
+[ -n "$DB_EXP_COMPRESS" ] && v_enable_compress=$DB_EXP_COMPRESS || v_enable_compress='false'
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
 cd "${v_thisdir}"
 
 v_output_file_cnt=`awk -F" " '{print NF-1}' <<< "${v_out_file_name_noext}"`
 [ ${v_output_file_cnt} -ne 0 ] && exitError "File \"${v_out_file_param}\" must not have any spaces."
-
-# If DB_EXP_CRED is exported, use it as the credentials.
-[ -n "$DB_EXP_CRED" ] && v_sysdba_connect="$DB_EXP_CRED" || v_sysdba_connect='/ as sysdba'
 
 echo "Generating table export. Please wait.." 
 
@@ -67,6 +71,11 @@ then
   v_compress_alg='compression=all'
 else
   v_compress_alg='compression=all compression_algorithm=high'
+fi
+
+if [ "$v_enable_compress" != "true" ]
+then
+  v_compress_alg=''
 fi
 
 if [ $v_version -gt 19 ]

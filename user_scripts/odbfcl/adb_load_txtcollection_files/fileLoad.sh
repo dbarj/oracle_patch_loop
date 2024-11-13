@@ -58,6 +58,7 @@ FIELDS TERMINATED BY ','
 (path char(4000), contents lobfile(path) terminated by eof)
 EOF
 
+set +e
 $ORACLE_HOME/bin/sqlldr \
 userid=\'"${v_sysdba_connect}"\' \
 control="${v_control_file}" \
@@ -66,6 +67,13 @@ discardmax=0 \
 direct=Y \
 data="${v_list_file}" \
 log="${v_log_file}"
+v_ret=$?
+set -eo pipefail
+
+if [ $v_ret -ne 0 ]
+then
+  exitError "sqlldr failed to load '${v_data_file_param}'. Check also the 'bad' file for more information."
+fi
 
 cd ..
 rm -rf "${v_unzip_folder}"

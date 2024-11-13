@@ -14,6 +14,14 @@ exitError ()
   exit 1
 }
 
+echoDebug ()
+{
+  if [ $DEBUG -eq 1 ]
+  then
+    echo "$1"
+  fi
+}
+
 v_pattern="$1"
 
 v_example='19.0.0.0_RU14_20220101'
@@ -24,6 +32,9 @@ v_def_gen_dump='true'
 v_def_ignore_error='true'
 v_def_sysdba_connect='/ as sysdba'
 v_def_dump_user_name='hash'
+v_def_dump_user_pass='HhAaSsHh..135'
+v_def_dump_exp_dir='expdir_hash'
+v_def_dump_exp_comp='false'
 
 [ -z "$v_pattern" -o "$#" -ne 1 ] && exitError "Usage: $0 <pattern>
 
@@ -69,6 +80,28 @@ Environment Variables:
 
       Default value: '${v_def_dump_user_name}'
 
+  DB_EXP_USER_PASS
+
+      Password for the temporary schema that will temporarily hold the oradiff data.
+
+      Default value: '${v_def_dump_user_pass}'
+
+  DB_EXP_DIRECTORY
+
+      Temporary directory that will be created to export the genetared data.
+      Only valid when DB_EXP_GEN_DUMP=true.
+
+      Default value: '${v_def_dump_exp_dir}'
+
+  DB_EXP_COMPRESS
+
+      Enable data pump compression.
+      (Requires licensing of the Oracle Advanced Compression option).
+      Only valid when DB_EXP_GEN_DUMP=true.
+
+      Accepted values: 'true' or 'false'.
+      Default value: '${v_def_dump_exp_comp}'
+
 "
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
@@ -78,7 +111,7 @@ Environment Variables:
 if [ -z "$DB_EXP_MERGE_DUMP" ]
 then
   v_load_file=${v_def_load_file}
-  # echo "Note: Variable 'DB_EXP_MERGE_DUMP' was not exported. Assigning DB_EXP_MERGE_DUMP=${v_load_file} (default)."
+  echoDebug "Note: Variable 'DB_EXP_MERGE_DUMP' was not exported. Assigning DB_EXP_MERGE_DUMP=${v_load_file} (default)."
 else
   v_load_file=$(echo "${DB_EXP_MERGE_DUMP}" | tr '[:upper:]' '[:lower:]')
   echo "Note: DB_EXP_MERGE_DUMP=${v_load_file} (provided)."
@@ -93,7 +126,7 @@ fi
 if [ -z "$DB_EXP_GEN_DUMP" ]
 then
   v_gen_dump=${v_def_gen_dump}
-  # echo "Note: Variable 'DB_EXP_GEN_DUMP' was not exported. Assigning DB_EXP_GEN_DUMP=${v_gen_dump} (default)."
+  echoDebug "Note: Variable 'DB_EXP_GEN_DUMP' was not exported. Assigning DB_EXP_GEN_DUMP=${v_gen_dump} (default)."
 else
   v_gen_dump=$(echo "${DB_EXP_GEN_DUMP}" | tr '[:upper:]' '[:lower:]')
   echo "Note: DB_EXP_GEN_DUMP=${v_gen_dump} (provided)."
@@ -108,7 +141,7 @@ fi
 if [ -z "$DB_EXP_IGNORE_ERROR" ]
 then
   v_ignore_error=${v_def_ignore_error}
-  # echo "Note: Variable 'DB_EXP_IGNORE_ERROR' was not exported. Assigning DB_EXP_IGNORE_ERROR=${v_ignore_error} (default)."
+  echoDebug "Note: Variable 'DB_EXP_IGNORE_ERROR' was not exported. Assigning DB_EXP_IGNORE_ERROR=${v_ignore_error} (default)."
 else
   v_ignore_error=$(echo "${DB_EXP_IGNORE_ERROR}" | tr '[:upper:]' '[:lower:]')
   echo "Note: DB_EXP_IGNORE_ERROR=${v_ignore_error} (provided)."
@@ -123,7 +156,10 @@ fi
 if [ -z "$DB_EXP_CRED" ]
 then
   v_sysdba_connect=${v_def_sysdba_connect}
-  # echo "Note: Variable 'DB_EXP_CRED' was not exported. Assigning DB_EXP_CRED='${v_sysdba_connect}' (default)."
+  # To be used by child shells.
+  DB_EXP_CRED=${v_sysdba_connect}
+  export DB_EXP_CRED
+  echoDebug "Note: Variable 'DB_EXP_CRED' was not exported. Assigning DB_EXP_CRED='${v_sysdba_connect}' (default)."
 else
   v_sysdba_connect="${DB_EXP_CRED}"
   echo "Note: DB_EXP_CRED (provided)."
@@ -133,22 +169,57 @@ fi
 if [ -z "$DB_EXP_USER" ]
 then
   v_dump_user_name=${v_def_dump_user_name}
-  # echo "Note: Variable 'DB_EXP_USER' was not exported. Assigning DB_EXP_USER='${v_dump_user_name}' (default)."
+  echoDebug "Note: Variable 'DB_EXP_USER' was not exported. Assigning DB_EXP_USER='${v_dump_user_name}' (default)."
 else
   v_dump_user_name=$(echo "${v_dump_user_name}" | tr '[:upper:]' '[:lower:]')
   echo "Note: DB_EXP_USER (provided)."
 fi
 
-# Check if v_dump_user_name is the default or not.
+# If DB_EXP_USER_PASS defines the user inside the database to export the oradiff data.
+if [ -z "$DB_EXP_USER_PASS" ]
+then
+  # To be used by child shells.
+  DB_EXP_USER_PASS=${v_def_dump_user_pass}
+  export DB_EXP_USER_PASS
+  echoDebug "Note: Variable 'DB_EXP_USER_PASS' was not exported. Assigning DB_EXP_USER_PASS='${v_def_dump_user_pass}' (default)."
+else
+  echo "Note: DB_EXP_USER_PASS (provided)."
+fi
+
+# If DB_EXP_DIRECTORY defines the user inside the database to export the oradiff data.
+if [ -z "$DB_EXP_DIRECTORY" ]
+then
+  # To be used by child shells.
+  DB_EXP_DIRECTORY=${v_def_dump_exp_dir}
+  export DB_EXP_DIRECTORY
+  echoDebug "Note: Variable 'DB_EXP_DIRECTORY' was not exported. Assigning DB_EXP_DIRECTORY='${v_def_dump_exp_dir}' (default)."
+else
+  echo "Note: DB_EXP_DIRECTORY (provided)."
+fi
+
+# If DB_EXP_COMPRESS defines the user inside the database to export the oradiff data.
+if [ -z "$DB_EXP_COMPRESS" ]
+then
+  # To be used by child shells.
+  DB_EXP_COMPRESS=${v_def_dump_exp_comp}
+  export DB_EXP_COMPRESS
+  echoDebug "Note: Variable 'DB_EXP_COMPRESS' was not exported. Assigning DB_EXP_COMPRESS='${v_def_dump_exp_comp}' (default)."
+else
+  echo "Note: DB_EXP_COMPRESS (provided)."
+fi
+
+if [ "${v_def_dump_exp_comp}" != "false" -a "${v_def_dump_exp_comp}" != "true" ]
+then
+  exitError "DB_EXP_COMPRESS must be 'true' or 'false'."
+fi
+
+# Check if v_dump_user_name is the default. If it is, we drop it before and after.
 if [ "$v_def_dump_user_name" = "$v_dump_user_name" ]
 then
   v_drop_dump_user=true
 else
   v_drop_dump_user=false
 fi
-
-# DB_EXP_CRED needs to be exported
-export DB_EXP_CRED
 
 v_pattern_cnt=`awk -F" " '{print NF-1}' <<< "${v_pattern}"`
 [ ${v_pattern_cnt} -ne 0 ] && exitError "Pattern \"${v_output}\" must not have any spaces. Eg: ${v_example}"

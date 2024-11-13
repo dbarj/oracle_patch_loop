@@ -21,13 +21,14 @@ v_dump_user_name="$1"
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
-v_dump_dir_name='expdir_hash'
+# If DB_EXP_CRED is exported, use it.
+[ -n "$DB_EXP_CRED" ] && v_sysdba_connect="$DB_EXP_CRED" || v_sysdba_connect='/ as sysdba'
+
+# If DB_EXP_DIRECTORY is exported, use it.
+[ -n "$DB_EXP_DIRECTORY" ] && v_dump_dir_name=$DB_EXP_DIRECTORY || v_dump_dir_name='expdir_hash'
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
 cd "${v_thisdir}"
-
-# If DB_EXP_CRED is exported, use it as the credentials.
-[ -n "$DB_EXP_CRED" ] && v_sysdba_connect="$DB_EXP_CRED" || v_sysdba_connect='/ as sysdba'
 
 echo "Generating table export. Please wait.." 
 
