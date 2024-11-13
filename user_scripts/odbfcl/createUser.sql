@@ -5,10 +5,10 @@ def v_username='&1.'
 def v_password='&2.'
 def v_data_tbs='&3.'
 def v_temp_tbs='&4.'
-def v_def_user='&5.'
+def v_drop_user='&5.'
 
 BEGIN
-  IF '&v_def_user.' = 'true'
+  IF '&v_drop_user.' = 'true'
   THEN
     EXECUTE IMMEDIATE 'DROP USER &v_username. CASCADE';
   END IF;

@@ -27,7 +27,9 @@ Eg: $0 ${v_example}
 The output is a zip file.
 "
 
-# Check if DB_EXP_MERGE_DUMP was exported.
+[ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
+[ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
+
 # If DB_EXP_MERGE_DUMP=false, then the generated ORACLE_HOME related files (bugs, symbols, chksum, etc) won't be loaded on DB tables, but added to zip as separate files.
 if [ -z "$DB_EXP_MERGE_DUMP" ]
 then
@@ -43,7 +45,6 @@ then
   exitError "DB_EXP_MERGE_DUMP must be 'true' or 'false'."
 fi
 
-# Check if DB_EXP_GEN_DUMP was exported.
 # If DB_EXP_GEN_DUMP=false, then nothing will be exported. Only the schema populated.
 if [ -z "$DB_EXP_GEN_DUMP" ]
 then
@@ -59,7 +60,6 @@ then
   exitError "DB_EXP_GEN_DUMP must be 'true' or 'false'."
 fi
 
-# Check if DB_EXP_IGNORE_ERROR was exported.
 # If DB_EXP_IGNORE_ERROR=false, the code will stop on some critical errors.
 if [ -z "$DB_EXP_IGNORE_ERROR" ]
 then
@@ -75,7 +75,6 @@ then
   exitError "DB_EXP_IGNORE_ERROR must be 'true' or 'false'."
 fi
 
-# Check if DB_EXP_CRED was exported.
 # If DB_EXP_CRED is exported, then connect using this string instead of '/ as sysdba'.
 if [ -z "$DB_EXP_CRED" ]
 then
@@ -86,7 +85,6 @@ else
   echo "Note: DB_EXP_CRED (provided)."
 fi
 
-# Check if DB_EXP_USER was exported.
 # If DB_EXP_USER defines the user inside the database to export the oradiff data.
 v_def_dump_user_name='hash'
 if [ -z "$DB_EXP_USER" ]
@@ -101,9 +99,9 @@ fi
 # Check if v_dump_user_name is the default or not.
 if [ "$v_def_dump_user_name" = "$v_dump_user_name" ]
 then
-  v_is_def_dump_user=true
+  v_drop_dump_user=true
 else
-  v_is_def_dump_user=false
+  v_drop_dump_user=false
 fi
 
 # DB_EXP_CRED needs to be exported
@@ -119,9 +117,6 @@ v_zip=${v_pattern}.zip
 ########################
 # Define dump username #
 ########################
-
-[ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
-[ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
 echo "Checking if common user. Please wait.."
 v_common_user=$($ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" @${v_thisdir}/get_user_prefix.sql) && v_ret=$? || v_ret=$?
@@ -161,7 +156,7 @@ sh "${v_thisdir}/symbolGet.sh" ${v_file}
 ! ${v_load_file} && zip -m ${v_zip} ${v_file}
 
 v_thisdir="${v_thisdir_bkp}" # REMOVE_IF_ZIP
-sh "${v_thisdir}/schemaCreate.sh" ${v_dump_user_name} ${v_is_def_dump_user}
+sh "${v_thisdir}/schemaCreate.sh" ${v_dump_user_name} ${v_drop_dump_user}
 
 if ${v_load_file}
 then
@@ -194,7 +189,7 @@ sh "${v_thisdir}/dictionaryGet.sh" ${v_dump_user_name}
 
 if ${v_gen_dump}
 then
-  sh "${v_thisdir}/dumpCreate.sh" ${v_dump_user_name} tables_${v_pattern}.dmp
+  sh "${v_thisdir}/dumpCreate.sh" ${v_dump_user_name} tables_${v_pattern}.dmp ${v_drop_dump_user}
   set +e
   zip -m ${v_pattern}.zip tables_${v_pattern}.dmp tables_${v_pattern}.log
   v_ret=$?

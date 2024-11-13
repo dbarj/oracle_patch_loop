@@ -16,9 +16,11 @@ exitError ()
 
 v_dump_user_name="$1"
 v_out_file_param="$2"
+v_drop_dump_user="$3"
 
-[ -z "${v_dump_user_name}" ] && exitError "First parameter is the DB Schema and cannot be null."
-[ -z "${v_out_file_param}" ] && exitError "Second parameter is the target file and cannot be null."
+[ -z "${v_dump_user_name}" ] && exitError "1st parameter is the DB Schema and cannot be null."
+[ -z "${v_out_file_param}" ] && exitError "2nd parameter is the target file and cannot be null."
+[ -z "${v_drop_dump_user}" ] && exitError "3rd parameter is if DB Schema can be dropped and cannot be null."
 
 [ -f "${v_out_file_param}" ] && exitError "File \"${v_out_file_param}\" already exists. Remove it before rerunning."
 
@@ -107,7 +109,7 @@ fi
 cd odbfcl/sh_extractor/ # REMOVE_IF_ZIP
 $ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
 set verify off
-@cleanUser.sql "${v_dump_user_name}" "${v_dump_dir_name}"
+@cleanUser.sql "${v_dump_user_name}" "${v_dump_dir_name}" "${v_drop_dump_user}"
 EOF
 
 exit 0

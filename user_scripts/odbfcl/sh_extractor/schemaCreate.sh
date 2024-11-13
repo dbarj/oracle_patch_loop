@@ -15,12 +15,13 @@ exitError ()
 }
 
 v_dump_user_name="$1"
-v_def_dump_user_name="$2"
+v_drop_dump_user="$2"
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
-[ -z "${v_dump_user_name}" ] && exitError "First parameter is the DB Schema and cannot be null."
+[ -z "${v_dump_user_name}" ] && exitError "1st parameter is the DB Schema and cannot be null."
+[ -z "${v_drop_dump_user}" ] && exitError "2nd parameter is if DB Schema can be dropped and cannot be null."
 
 # If DB_EXP_USER_PASS is exported, use it as the password.
 [ -n "$DB_EXP_USER_PASS" ] && v_dump_user_pass="$DB_EXP_USER_PASS" || v_dump_user_pass='HhAaSsHh..135'
@@ -42,7 +43,7 @@ echo "Creating export user. Please wait.."
 cd "${v_thisdir}"/../ # REMOVE_IF_ZIP
 $ORACLE_HOME/bin/sqlplus "${v_sysdba_connect}" <<EOF
 set verify off
-@tables_recreate.sql "${v_dump_user_name}" "${v_dump_user_pass}" "${v_dump_user_tbs}" "${v_dump_user_temp}" "${v_def_dump_user_name}"
+@tables_recreate.sql "${v_dump_user_name}" "${v_dump_user_pass}" "${v_dump_user_tbs}" "${v_dump_user_temp}" "${v_drop_dump_user}"
 EOF
 
 exit 0
