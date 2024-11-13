@@ -38,7 +38,7 @@ Environment Variables:
   DB_EXP_MERGE_DUMP
 
       The generated ORACLE_HOME related files (bugs, symbols, chksum, etc)
-      won't be loaded on DB tables, but added to zip as separate files.
+      will be loaded on DB tables, not added to zip as separate files.
 
       Accepted values: 'true' or 'false'.
       Default value: '${v_def_load_file}'
@@ -59,7 +59,7 @@ Environment Variables:
 
   DB_EXP_CRED
 
-      SQLPlus connect string.
+      SQL*Plus connect string.
 
       Default value: '${v_def_sysdba_connect}'
 
