@@ -115,6 +115,8 @@ then
   fi
 fi
 
+[ -f "${v_err_file_full}" ] && rm -f "${v_err_file_full}"
+
 cd odbfcl/sh_extractor/ # REMOVE_IF_ZIP
 $ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
 set verify off

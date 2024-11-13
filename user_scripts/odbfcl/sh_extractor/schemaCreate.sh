@@ -23,20 +23,20 @@ v_drop_dump_user="$2"
 [ -z "${v_dump_user_name}" ] && exitError "1st parameter is the DB Schema and cannot be null."
 [ -z "${v_drop_dump_user}" ] && exitError "2nd parameter is if DB Schema can be dropped and cannot be null."
 
-# If DB_EXP_USER_PASS is exported, use it as the password.
+# If DB_EXP_USER_PASS is exported, use it.
 [ -n "$DB_EXP_USER_PASS" ] && v_dump_user_pass="$DB_EXP_USER_PASS" || v_dump_user_pass='HhAaSsHh..135'
 
-# If DB_EXP_USER_PASS is exported, use it as the password.
+# If DB_EXP_USER_TBS is exported, use it.
 [ -n "$DB_EXP_USER_TBS" ] && v_dump_user_tbs="$DB_EXP_USER_TBS" || v_dump_user_tbs='USERS'
 
-# If DB_EXP_USER_PASS is exported, use it as the password.
+# If DB_EXP_USER_TEMP is exported, use it.
 [ -n "$DB_EXP_USER_TEMP" ] && v_dump_user_temp="$DB_EXP_USER_TEMP" || v_dump_user_temp='TEMP'
-
-v_thisdir="$(cd "$(dirname "$0")"; pwd)"
-cd "${v_thisdir}"
 
 # If DB_EXP_CRED is exported, use it as the credentials.
 [ -n "$DB_EXP_CRED" ] && v_sysdba_connect="$DB_EXP_CRED" || v_sysdba_connect='/ as sysdba'
+
+v_thisdir="$(cd "$(dirname "$0")"; pwd)"
+cd "${v_thisdir}"
 
 echo "Creating export user. Please wait.." 
 

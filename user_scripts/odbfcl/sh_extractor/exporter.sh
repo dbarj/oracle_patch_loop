@@ -16,7 +16,7 @@ exitError ()
 
 echoDebug ()
 {
-  if [ $DEBUG -eq 1 ]
+  if [ "$DEBUG" = "1" ]
   then
     echo "$1"
   fi
@@ -33,8 +33,11 @@ v_def_ignore_error='true'
 v_def_sysdba_connect='/ as sysdba'
 v_def_dump_user_name='hash'
 v_def_dump_user_pass='HhAaSsHh..135'
+v_def_dump_user_tbs='USERS'
+v_def_dump_user_temp='TEMP'
 v_def_dump_exp_dir='expdir_hash'
 v_def_dump_exp_comp='false'
+v_def_dump_int_only='true'
 
 [ -z "$v_pattern" -o "$#" -ne 1 ] && exitError "Usage: $0 <pattern>
 
@@ -86,6 +89,18 @@ Environment Variables:
 
       Default value: '${v_def_dump_user_pass}'
 
+  DB_EXP_USER_TBS
+
+      Default permanent tablespace for the temporary schema.
+
+      Default value: '${v_def_dump_user_tbs}'
+
+  DB_EXP_USER_TEMP
+
+      Default temp tablespace for the temporary schema.
+
+      Default value: '${v_def_dump_user_temp}'
+
   DB_EXP_DIRECTORY
 
       Temporary directory that will be created to export the genetared data.
@@ -102,7 +117,20 @@ Environment Variables:
       Accepted values: 'true' or 'false'.
       Default value: '${v_def_dump_exp_comp}'
 
+  DB_EXP_INTERNAL_ONLY
+
+      If we want to retrieve dictionary info of full database or just internal
+      oracle maintained schemas.
+
+      Accepted values: 'true' or 'false'.
+      Default value: '${v_def_dump_int_only}'
+
+
 "
+
+###################
+# Check variables #
+###################
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
@@ -175,7 +203,7 @@ else
   echo "Note: DB_EXP_USER (provided)."
 fi
 
-# If DB_EXP_USER_PASS defines the user inside the database to export the oradiff data.
+# If DB_EXP_USER_PASS defines the user password inside the database to export the oradiff data.
 if [ -z "$DB_EXP_USER_PASS" ]
 then
   # To be used by child shells.
@@ -186,31 +214,69 @@ else
   echo "Note: DB_EXP_USER_PASS (provided)."
 fi
 
-# If DB_EXP_DIRECTORY defines the user inside the database to export the oradiff data.
+# If DB_EXP_USER_TBS defines the user tablespace inside the database to export the oradiff data.
+if [ -z "$DB_EXP_USER_TBS" ]
+then
+  # To be used by child shells.
+  DB_EXP_USER_TBS=${v_def_dump_user_tbs}
+  export DB_EXP_USER_TBS
+  echoDebug "Note: Variable 'DB_EXP_USER_TBS' was not exported. Assigning DB_EXP_USER_TBS='${DB_EXP_USER_TBS}' (default)."
+else
+  echo "Note: DB_EXP_USER_TBS (provided)."
+fi
+
+# If DB_EXP_USER_TEMP defines the user temp tablespace inside the database to export the oradiff data.
+if [ -z "$DB_EXP_USER_TEMP" ]
+then
+  # To be used by child shells.
+  DB_EXP_USER_TEMP=${v_def_dump_user_temp}
+  export DB_EXP_USER_TEMP
+  echoDebug "Note: Variable 'DB_EXP_USER_TEMP' was not exported. Assigning DB_EXP_USER_TEMP='${DB_EXP_USER_TEMP}' (default)."
+else
+  echo "Note: DB_EXP_USER_TEMP (provided)."
+fi
+
+# If DB_EXP_DIRECTORY defines the directory name inside the database to export the oradiff data.
 if [ -z "$DB_EXP_DIRECTORY" ]
 then
   # To be used by child shells.
   DB_EXP_DIRECTORY=${v_def_dump_exp_dir}
   export DB_EXP_DIRECTORY
-  echoDebug "Note: Variable 'DB_EXP_DIRECTORY' was not exported. Assigning DB_EXP_DIRECTORY='${v_def_dump_exp_dir}' (default)."
+  echoDebug "Note: Variable 'DB_EXP_DIRECTORY' was not exported. Assigning DB_EXP_DIRECTORY='${DB_EXP_DIRECTORY}' (default)."
 else
   echo "Note: DB_EXP_DIRECTORY (provided)."
 fi
 
-# If DB_EXP_COMPRESS defines the user inside the database to export the oradiff data.
+# If DB_EXP_COMPRESS defines if compression can be used to export the oradiff data.
 if [ -z "$DB_EXP_COMPRESS" ]
 then
   # To be used by child shells.
   DB_EXP_COMPRESS=${v_def_dump_exp_comp}
   export DB_EXP_COMPRESS
-  echoDebug "Note: Variable 'DB_EXP_COMPRESS' was not exported. Assigning DB_EXP_COMPRESS='${v_def_dump_exp_comp}' (default)."
+  echoDebug "Note: Variable 'DB_EXP_COMPRESS' was not exported. Assigning DB_EXP_COMPRESS='${DB_EXP_COMPRESS}' (default)."
 else
   echo "Note: DB_EXP_COMPRESS (provided)."
 fi
 
-if [ "${v_def_dump_exp_comp}" != "false" -a "${v_def_dump_exp_comp}" != "true" ]
+if [ "${DB_EXP_COMPRESS}" != "false" -a "${DB_EXP_COMPRESS}" != "true" ]
 then
   exitError "DB_EXP_COMPRESS must be 'true' or 'false'."
+fi
+
+# If DB_EXP_INTERNAL_ONLY defines if we filter for internal schemas during export of oradiff data.
+if [ -z "$DB_EXP_INTERNAL_ONLY" ]
+then
+  # To be used by child shells.
+  DB_EXP_INTERNAL_ONLY=${v_def_dump_int_only}
+  export DB_EXP_INTERNAL_ONLY
+  echoDebug "Note: Variable 'DB_EXP_INTERNAL_ONLY' was not exported. Assigning DB_EXP_INTERNAL_ONLY='${DB_EXP_INTERNAL_ONLY}' (default)."
+else
+  echo "Note: DB_EXP_INTERNAL_ONLY (provided)."
+fi
+
+if [ "${DB_EXP_INTERNAL_ONLY}" != "false" -a "${DB_EXP_INTERNAL_ONLY}" != "true" ]
+then
+  exitError "DB_EXP_INTERNAL_ONLY must be 'true' or 'false'."
 fi
 
 # Check if v_dump_user_name is the default. If it is, we drop it before and after.

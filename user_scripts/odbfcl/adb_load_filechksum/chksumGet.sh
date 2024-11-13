@@ -68,4 +68,6 @@ done
 
 [ -f "${v_err_file_full}" ] && echo "Total errors detected: $(wc -l < "${v_err_file_full}")"
 
+[ -f "${v_err_file_full}" -a ! -s "${v_err_file_full}" ] && rm -f "${v_err_file_full}"
+
 exit 0

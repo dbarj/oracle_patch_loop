@@ -17,6 +17,7 @@ exitError ()
 v_dump_user_name="$1"
 v_data_file_param="$2"
 v_out_prefix="${v_data_file_param%.*}"
+v_out_prefix="${v_out_prefix%.*}" # Remove second extension
 
 [ -z "${v_dump_user_name}" ] && exitError "1st parameter is the DB Schema and cannot be null."
 [ -z "${v_data_file_param}" ] && exitError "2nd parameter is the source file and cannot be null."
@@ -33,15 +34,15 @@ echo "Loading ORACLE_HOME non-binary files. Please wait.."
 
 v_control_file="${v_out_prefix}_load.ctl"
 v_log_file="${v_out_prefix}_load.log"
-v_unzip_folder="${v_out_prefix}_unzip"
-v_list_file="unzip_files.txt"
+v_untar_folder="${v_out_prefix}_untar"
+v_list_file="tar_list_files.txt"
 
-rm -rf "${v_unzip_folder}"
-mkdir "${v_unzip_folder}"
-tar -tvf "${v_data_file_param}" | grep -o '\./.*' > "${v_unzip_folder}/${v_list_file}"
-tar -xf "${v_data_file_param}" -C "${v_unzip_folder}"
+rm -rf "${v_untar_folder}"
+mkdir "${v_untar_folder}"
+tar -tvf "${v_data_file_param}" | grep -o '\./.*' > "${v_untar_folder}/${v_list_file}"
+tar -xf "${v_data_file_param}" -C "${v_untar_folder}"
 
-cd "${v_unzip_folder}"
+cd "${v_untar_folder}"
 
 $ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
 whenever sqlerror exit failure rollback
@@ -76,7 +77,7 @@ then
 fi
 
 cd ..
-rm -rf "${v_unzip_folder}"
+rm -rf "${v_untar_folder}"
 
 $ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
 whenever sqlerror exit failure rollback
