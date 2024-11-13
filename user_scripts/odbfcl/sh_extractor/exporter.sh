@@ -18,6 +18,13 @@ v_pattern="$1"
 
 v_example='19.0.0.0_RU14_20220101'
 
+# Defaults
+v_def_load_file='true'
+v_def_gen_dump='true'
+v_def_ignore_error='true'
+v_def_sysdba_connect='/ as sysdba'
+v_def_dump_user_name='hash'
+
 [ -z "$v_pattern" -o "$#" -ne 1 ] && exitError "Usage: $0 <pattern>
 
 First parameter is the output file name and cannot be null.
@@ -25,6 +32,43 @@ First parameter is the output file name and cannot be null.
 Eg: $0 ${v_example}
 
 The output is a zip file.
+
+Environment Variables:
+
+  DB_EXP_MERGE_DUMP
+
+      The generated ORACLE_HOME related files (bugs, symbols, chksum, etc)
+      won't be loaded on DB tables, but added to zip as separate files.
+
+      Accepted values: 'true' or 'false'.
+      Default value: '${v_def_load_file}'
+
+  DB_EXP_GEN_DUMP
+
+      If schema is exported after being populated.
+
+      Accepted values: 'true' or 'false'.
+      Default value: '${v_def_gen_dump}'
+
+  DB_EXP_IGNORE_ERROR
+
+      Code will ignore critical errors.
+
+      Accepted values: 'true' or 'false'.
+      Default value: '${v_def_ignore_error}'
+
+  DB_EXP_CRED
+
+      SQLPlus connect string.
+
+      Default value: '${v_def_sysdba_connect}'
+
+  DB_EXP_USER
+
+      Schema inside the database that will temporarily hold the oradiff data.
+
+      Default value: '${v_def_dump_user_name}'
+
 "
 
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
@@ -33,7 +77,7 @@ The output is a zip file.
 # If DB_EXP_MERGE_DUMP=false, then the generated ORACLE_HOME related files (bugs, symbols, chksum, etc) won't be loaded on DB tables, but added to zip as separate files.
 if [ -z "$DB_EXP_MERGE_DUMP" ]
 then
-  v_load_file=true
+  v_load_file=${v_def_load_file}
   # echo "Note: Variable 'DB_EXP_MERGE_DUMP' was not exported. Assigning DB_EXP_MERGE_DUMP=${v_load_file} (default)."
 else
   v_load_file=$(echo "${DB_EXP_MERGE_DUMP}" | tr '[:upper:]' '[:lower:]')
@@ -48,7 +92,7 @@ fi
 # If DB_EXP_GEN_DUMP=false, then nothing will be exported. Only the schema populated.
 if [ -z "$DB_EXP_GEN_DUMP" ]
 then
-  v_gen_dump=true
+  v_gen_dump=${v_def_gen_dump}
   # echo "Note: Variable 'DB_EXP_GEN_DUMP' was not exported. Assigning DB_EXP_GEN_DUMP=${v_gen_dump} (default)."
 else
   v_gen_dump=$(echo "${DB_EXP_GEN_DUMP}" | tr '[:upper:]' '[:lower:]')
@@ -63,7 +107,7 @@ fi
 # If DB_EXP_IGNORE_ERROR=false, the code will stop on some critical errors.
 if [ -z "$DB_EXP_IGNORE_ERROR" ]
 then
-  v_ignore_error=true
+  v_ignore_error=${v_def_ignore_error}
   # echo "Note: Variable 'DB_EXP_IGNORE_ERROR' was not exported. Assigning DB_EXP_IGNORE_ERROR=${v_ignore_error} (default)."
 else
   v_ignore_error=$(echo "${DB_EXP_IGNORE_ERROR}" | tr '[:upper:]' '[:lower:]')
@@ -78,19 +122,18 @@ fi
 # If DB_EXP_CRED is exported, then connect using this string instead of '/ as sysdba'.
 if [ -z "$DB_EXP_CRED" ]
 then
-  v_sysdba_connect='/ as sysdba'
-  echo "Note: Variable 'DB_EXP_CRED' was not exported. Assigning DB_EXP_CRED='${v_sysdba_connect}' (default)."
+  v_sysdba_connect=${v_def_sysdba_connect}
+  # echo "Note: Variable 'DB_EXP_CRED' was not exported. Assigning DB_EXP_CRED='${v_sysdba_connect}' (default)."
 else
   v_sysdba_connect="${DB_EXP_CRED}"
   echo "Note: DB_EXP_CRED (provided)."
 fi
 
 # If DB_EXP_USER defines the user inside the database to export the oradiff data.
-v_def_dump_user_name='hash'
 if [ -z "$DB_EXP_USER" ]
 then
   v_dump_user_name=${v_def_dump_user_name}
-  echo "Note: Variable 'DB_EXP_USER' was not exported. Assigning DB_EXP_USER='${v_dump_user_name}' (default)."
+  # echo "Note: Variable 'DB_EXP_USER' was not exported. Assigning DB_EXP_USER='${v_dump_user_name}' (default)."
 else
   v_dump_user_name=$(echo "${v_dump_user_name}" | tr '[:upper:]' '[:lower:]')
   echo "Note: DB_EXP_USER (provided)."
@@ -127,8 +170,15 @@ then
   exitError "${v_common_user}"
 fi
 
-[ -n "${v_common_user}" ] && v_dump_user_name="${v_common_user}${v_dump_user_name}"
-##################
+if [ "$v_def_dump_user_name" = "$v_dump_user_name" ]
+then
+  [ -n "${v_common_user}" ] && v_dump_user_name="${v_common_user}${v_dump_user_name}"
+fi
+
+##############
+# Start Code #
+##############
+
 v_thisdir_bkp="${v_thisdir}" # REMOVE_IF_ZIP
 
 v_thisdir="${v_thisdir_bkp}/../adb_load_bugs_fixed" # REMOVE_IF_ZIP
