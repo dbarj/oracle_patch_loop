@@ -1,0 +1,15 @@
+--------------------------------------
+-- >= 12
+--------------------------------------
+
+INSERT INTO &v_int_schema_tab. (TYPE,NAME)
+SELECT DISTINCT 'U',USERNAME
+FROM   CDB_USERS
+WHERE  ORACLE_MAINTAINED = 'Y'
+UNION ALL
+SELECT DISTINCT 'R',ROLE
+FROM   CDB_ROLES
+WHERE  ORACLE_MAINTAINED = 'Y'
+UNION ALL
+SELECT 'X','PUBLIC'
+FROM   DUAL;

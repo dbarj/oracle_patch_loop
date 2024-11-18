@@ -53,7 +53,7 @@ DECLARE
         V_SQL := V_SQL || ' WHERE ' || IN_WHERE_CLAUSE_12;
       END IF;
     END IF;
-    DBMS_OUTPUT.PUT_LINE(V_SQL);
+    DBMS_OUTPUT.PUT_LINE(V_SQL || ';');
 
     EXECUTE IMMEDIATE 'alter session set current_schema=SYS';
     EXECUTE IMMEDIATE V_SQL;

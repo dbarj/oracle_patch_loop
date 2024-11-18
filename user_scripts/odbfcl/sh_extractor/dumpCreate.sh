@@ -35,16 +35,16 @@ v_out_file_full="${v_out_file_fdr}/${v_out_file_name}"
 v_err_file_full="${v_out_file_fdr}/${v_out_file_name_noext}.err"
 
 # If DB_EXP_USER_PASS is exported, use it.
-[ -n "$DB_EXP_USER_PASS" ] && v_dump_user_pass="$DB_EXP_USER_PASS" || v_dump_user_pass='HhAaSsHh..135'
+[ -z "$DB_EXP_USER_PASS" ] && DB_EXP_USER_PASS='HhAaSsHh..135'
 
-# If DB_EXP_CRED is exported, use it.
-[ -n "$DB_EXP_CRED" ] && v_sysdba_connect="$DB_EXP_CRED" || v_sysdba_connect='/ as sysdba'
+# If DB_EXP_CONN is exported, use it.
+[ -z "$DB_EXP_CONN" ] && DB_EXP_CONN='/ as sysdba'
 
 # If DB_EXP_DIRECTORY is exported, use it.
-[ -n "$DB_EXP_DIRECTORY" ] && v_dump_dir_name=$DB_EXP_DIRECTORY || v_dump_dir_name='expdir_hash'
+[ -z "$DB_EXP_DIRECTORY" ] && DB_EXP_DIRECTORY='expdir_oradiff'
 
 # If DB_EXP_COMPRESS is exported, use it.
-[ -n "$DB_EXP_COMPRESS" ] && v_enable_compress=$DB_EXP_COMPRESS || v_enable_compress='false'
+[ -z "$DB_EXP_COMPRESS" ] && DB_EXP_COMPRESS='false'
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
 cd "${v_thisdir}"
@@ -55,12 +55,12 @@ v_output_file_cnt=`awk -F" " '{print NF-1}' <<< "${v_out_file_name_noext}"`
 echo "Generating table export. Please wait.." 
 
 cd "${v_thisdir}"/../../ # REMOVE_IF_ZIP
-$ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
-@externalDir.sql "${v_out_file_fdr}" "${v_dump_user_name}" "${v_dump_dir_name}"
+$ORACLE_HOME/bin/sqlplus -L -S "${DB_EXP_CONN}" <<EOF
+@externalDir.sql "${v_out_file_fdr}" "${v_dump_user_name}" "${DB_EXP_DIRECTORY}"
 EOF
 
 # Get DB Version
-v_version=$($ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" @${v_thisdir}/get_db_version.sql)
+v_version=$($ORACLE_HOME/bin/sqlplus -L -S "${DB_EXP_CONN}" @${v_thisdir}/get_db_version.sql)
 [ -z "${v_version}" ] && v_version=0
 
 if [ $v_version -eq 10 ]
@@ -73,7 +73,7 @@ else
   v_compress_alg='compression=all compression_algorithm=high'
 fi
 
-if [ "$v_enable_compress" != "true" ]
+if [ "$DB_EXP_COMPRESS" != "true" ]
 then
   v_compress_alg=''
 fi
@@ -94,8 +94,8 @@ exec 3>&1
 
 set +e
 $ORACLE_HOME/bin/expdp \
-userid="${v_dump_user_name}/${v_dump_user_pass}" \
-directory=${v_dump_dir_name} \
+userid="${v_dump_user_name}/${DB_EXP_USER_PASS}" \
+directory=${DB_EXP_DIRECTORY} \
 "${v_compress_alg}" \
 dumpfile="${v_out_file_name}" \
 logfile="${v_out_file_name_noext}.log" \
@@ -118,9 +118,9 @@ fi
 [ -f "${v_err_file_full}" ] && rm -f "${v_err_file_full}"
 
 cd odbfcl/sh_extractor/ # REMOVE_IF_ZIP
-$ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
+$ORACLE_HOME/bin/sqlplus -L -S "${DB_EXP_CONN}" <<EOF
 set verify off
-@cleanUser.sql "${v_dump_user_name}" "${v_dump_dir_name}" "${v_drop_dump_user}"
+@cleanUser.sql "${v_dump_user_name}" "${DB_EXP_DIRECTORY}" "${v_drop_dump_user}"
 EOF
 
 exit 0

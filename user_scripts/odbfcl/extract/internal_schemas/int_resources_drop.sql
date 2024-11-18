@@ -1,0 +1,1 @@
+drop table &v_int_schema_tab. purge;

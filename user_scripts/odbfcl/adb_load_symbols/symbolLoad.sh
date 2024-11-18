@@ -26,8 +26,8 @@ v_out_prefix="${v_data_file_param%.*}"
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
-# If DB_EXP_CRED is exported, use it as the credentials.
-[ -n "$DB_EXP_CRED" ] && v_sysdba_connect="$DB_EXP_CRED" || v_sysdba_connect='/ as sysdba'
+# If DB_EXP_CONN is exported, use it as the credentials.
+[ -z "$DB_EXP_CONN" ] && DB_EXP_CONN='/ as sysdba'
 
 echo "Loading symbols list. Please wait.." 
 
@@ -44,7 +44,7 @@ EOF
 
 set +e
 $ORACLE_HOME/bin/sqlldr \
-userid=\'"${v_sysdba_connect}"\' \
+userid=\'"${DB_EXP_CONN}"\' \
 control="${v_control_file}" \
 errors=0 \
 discardmax=0 \

@@ -10,4 +10,8 @@ def v_drop_user='&5.'
 
 conn &v_username./&v_password.
 
+set termout off
+
 @@tables_create.sql
+
+set termout on

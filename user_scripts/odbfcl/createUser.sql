@@ -7,11 +7,17 @@ def v_data_tbs='&3.'
 def v_temp_tbs='&4.'
 def v_drop_user='&5.'
 
+DECLARE
+   USER_DOES_NOT_EXIST EXCEPTION;
+   PRAGMA EXCEPTION_INIT(USER_DOES_NOT_EXIST, -1918);
 BEGIN
   IF '&v_drop_user.' = 'true'
   THEN
     EXECUTE IMMEDIATE 'DROP USER &v_username. CASCADE';
   END IF;
+EXCEPTION
+   WHEN USER_DOES_NOT_EXIST THEN
+      NULL;
 END;
 /
 

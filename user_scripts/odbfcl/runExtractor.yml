@@ -7,6 +7,7 @@
     export ORACLE_SID
     export DB_EXP_GEN_DUMP=false
     export DB_EXP_IGNORE_ERROR=false
+    export DB_EXP_INTERNAL_ONLY=false
     export DB_EXP_USER_PASS="{{ dump_pass }}"
     [ ! -d ~/exporter_logs ] && mkdir ~/exporter_logs
     sh "{{ VM_folder }}/user_scripts/odbfcl/sh_extractor/exporter.sh" db 2>&1 | tee ~/exporter_logs/{{ file_suffix }}.log

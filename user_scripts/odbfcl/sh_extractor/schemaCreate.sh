@@ -24,16 +24,16 @@ v_drop_dump_user="$2"
 [ -z "${v_drop_dump_user}" ] && exitError "2nd parameter is if DB Schema can be dropped and cannot be null."
 
 # If DB_EXP_USER_PASS is exported, use it.
-[ -n "$DB_EXP_USER_PASS" ] && v_dump_user_pass="$DB_EXP_USER_PASS" || v_dump_user_pass='HhAaSsHh..135'
+[ -z "$DB_EXP_USER_PASS" ] && DB_EXP_USER_PASS='HhAaSsHh..135'
 
 # If DB_EXP_USER_TBS is exported, use it.
-[ -n "$DB_EXP_USER_TBS" ] && v_dump_user_tbs="$DB_EXP_USER_TBS" || v_dump_user_tbs='USERS'
+[ -z "$DB_EXP_USER_TBS" ] && DB_EXP_USER_TBS='USERS'
 
 # If DB_EXP_USER_TEMP is exported, use it.
-[ -n "$DB_EXP_USER_TEMP" ] && v_dump_user_temp="$DB_EXP_USER_TEMP" || v_dump_user_temp='TEMP'
+[ -z "$DB_EXP_USER_TEMP" ] && DB_EXP_USER_TEMP='TEMP'
 
-# If DB_EXP_CRED is exported, use it as the credentials.
-[ -n "$DB_EXP_CRED" ] && v_sysdba_connect="$DB_EXP_CRED" || v_sysdba_connect='/ as sysdba'
+# If DB_EXP_CONN is exported, use it as the credentials.
+[ -z "$DB_EXP_CONN" ] && DB_EXP_CONN='/ as sysdba'
 
 v_thisdir="$(cd "$(dirname "$0")"; pwd)"
 cd "${v_thisdir}"
@@ -41,9 +41,9 @@ cd "${v_thisdir}"
 echo "Creating export user. Please wait.." 
 
 cd "${v_thisdir}"/../ # REMOVE_IF_ZIP
-$ORACLE_HOME/bin/sqlplus "${v_sysdba_connect}" <<EOF
+$ORACLE_HOME/bin/sqlplus "${DB_EXP_CONN}" <<EOF
 set verify off
-@tables_recreate.sql "${v_dump_user_name}" "${v_dump_user_pass}" "${v_dump_user_tbs}" "${v_dump_user_temp}" "${v_drop_dump_user}"
+@tables_recreate.sql "${v_dump_user_name}" "${DB_EXP_USER_PASS}" "${DB_EXP_USER_TBS}" "${DB_EXP_USER_TEMP}" "${v_drop_dump_user}"
 EOF
 
 exit 0

@@ -27,8 +27,8 @@ v_out_prefix="${v_out_prefix%.*}" # Remove second extension
 [ -z "$ORACLE_HOME" ] && exitError "\$ORACLE_HOME is unset."
 [ -z "$ORACLE_SID" ] && exitError "\$ORACLE_SID is unset."
 
-# If DB_EXP_CRED is exported, use it as the credentials.
-[ -n "$DB_EXP_CRED" ] && v_sysdba_connect="$DB_EXP_CRED" || v_sysdba_connect='/ as sysdba'
+# If DB_EXP_CONN is exported, use it as the credentials.
+[ -z "$DB_EXP_CONN" ] && DB_EXP_CONN='/ as sysdba'
 
 echo "Loading ORACLE_HOME non-binary files. Please wait.." 
 
@@ -44,7 +44,7 @@ tar -xf "${v_data_file_param}" -C "${v_untar_folder}"
 
 cd "${v_untar_folder}"
 
-$ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
+$ORACLE_HOME/bin/sqlplus -L -S "${DB_EXP_CONN}" <<EOF
 whenever sqlerror exit failure rollback
 create table ${v_dump_user_name}.t_txtcollection_load
 ( path varchar2(500) not null, contents clob not null, md5_hash raw(16) )
@@ -61,7 +61,7 @@ EOF
 
 set +e
 $ORACLE_HOME/bin/sqlldr \
-userid=\'"${v_sysdba_connect}"\' \
+userid=\'"${DB_EXP_CONN}"\' \
 control="${v_control_file}" \
 errors=0 \
 discardmax=0 \
@@ -79,7 +79,7 @@ fi
 cd ..
 rm -rf "${v_untar_folder}"
 
-$ORACLE_HOME/bin/sqlplus -L -S "${v_sysdba_connect}" <<EOF
+$ORACLE_HOME/bin/sqlplus -L -S "${DB_EXP_CONN}" <<EOF
 whenever sqlerror exit failure rollback
 update ${v_dump_user_name}.t_txtcollection_load
 set md5_hash=sys.dbms_crypto.hash(contents,2);

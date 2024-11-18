@@ -1,10 +1,11 @@
 DECLARE
   V_VERS_1D NUMBER := '&P_VERS_1D.';
+  V_USER    VARCHAR2(30) := '&&V_USERNAME.';
 
-  PROCEDURE RUN_INSERT (OUT_TAB_NAME VARCHAR2,
-                        IN_TAB_NAME VARCHAR2,
-                        IN_WHERE_CLAUSE_12 VARCHAR2 DEFAULT NULL,
-                        IN_WHERE_CLAUSE_11 VARCHAR2 DEFAULT NULL)
+  PROCEDURE RUN_INSERT (P_TGT_TABLE VARCHAR2,
+                        P_SRC_TABLE VARCHAR2,
+                        P_WHERE_CLAUSE_12 VARCHAR2 DEFAULT NULL,
+                        P_WHERE_CLAUSE_11 VARCHAR2 DEFAULT NULL)
   AS
     V_TAB_COLS VARCHAR2(32767);
     V_INS_COLS VARCHAR2(32767);
@@ -16,7 +17,7 @@ DECLARE
     INTO   V_OBJ_EXISTS
     FROM   DBA_OBJECTS V1
     WHERE  V1.OWNER = 'SYS'
-    AND    V1.OBJECT_NAME = IN_TAB_NAME;
+    AND    V1.OBJECT_NAME = P_SRC_TABLE;
 
     $IF DBMS_DB_VERSION.VER_LE_10_2
     $THEN
@@ -36,36 +37,40 @@ DECLARE
                 nvl(c2.column_name,'NULL') c2_column_name,
                 c1.column_id
         from   dba_tab_columns c1, dba_tab_columns c2
-        where  c1.table_name = OUT_TAB_NAME
-        and    c2.table_name (+) = IN_TAB_NAME
-        and    c1.owner = '&v_username.'
+        where  c1.owner = V_USER
+        and    c1.table_name = P_TGT_TABLE
         and    c2.owner(+) = 'SYS'
+        and    c2.table_name (+) = P_SRC_TABLE
         and    c1.column_name = c2.column_name (+)
         order by c1.column_id
       );
 
-    V_SQL := 'INSERT /*+ APPEND */ INTO &v_username..' || OUT_TAB_NAME || '(' || V_TAB_COLS || ') SELECT ';
+    V_SQL := 'INSERT /*+ APPEND */ INTO ' || V_USER || '.' || P_TGT_TABLE || '(' || V_TAB_COLS || ') SELECT ';
 
     V_SQL := V_SQL || V_INS_COLS;
 
-    V_SQL := V_SQL || ' FROM ' || IN_TAB_NAME;
+    V_SQL := V_SQL || ' FROM ' || P_SRC_TABLE;
 
     IF V_VERS_1D <= 11 THEN
-      IF IN_WHERE_CLAUSE_11 IS NOT NULL THEN
-        V_SQL := V_SQL || ' WHERE ' || IN_WHERE_CLAUSE_11;
+      IF P_WHERE_CLAUSE_11 IS NOT NULL THEN
+        V_SQL := V_SQL || ' WHERE ' || P_WHERE_CLAUSE_11;
       END IF;
     else
-      IF IN_WHERE_CLAUSE_12 IS NOT NULL THEN
-        V_SQL := V_SQL || ' WHERE ' || IN_WHERE_CLAUSE_12;
+      IF P_WHERE_CLAUSE_12 IS NOT NULL THEN
+        V_SQL := V_SQL || ' WHERE ' || P_WHERE_CLAUSE_12;
       END IF;
     END IF;
 
+    DBMS_OUTPUT.PUT_LINE('----------');
     IF V_OBJ_EXISTS = 1
     THEN
-      DBMS_OUTPUT.PUT_LINE(V_SQL);
+      DBMS_OUTPUT.PUT_LINE(V_SQL || ';');
       EXECUTE IMMEDIATE V_SQL;
     ELSE
-      DBMS_OUTPUT.PUT_LINE(IN_TAB_NAME || ' does not exist.');
+      DBMS_OUTPUT.PUT_LINE(P_SRC_TABLE || ' does not exist.');
+      V_SQL := 'DROP TABLE ' || V_USER || '.' || P_TGT_TABLE || ' PURGE';
+      DBMS_OUTPUT.PUT_LINE(V_SQL || ';');
+      EXECUTE IMMEDIATE V_SQL;
     END IF;
 
   END;
