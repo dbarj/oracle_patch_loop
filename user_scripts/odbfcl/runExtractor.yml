@@ -14,7 +14,7 @@
     [ ! -d ~/exporter_logs ] && mkdir ~/exporter_logs
     [ -d ~/oradiff_exporter ] && rm -rf ~/oradiff_exporter && mkdir ~/oradiff_exporter
     unzip -q "{{ VM_folder }}/user_scripts/odbfcl/oradiff_exporter.zip" -d ~/
-    sh "~/oradiff_exporter/exporter.sh" db 2>&1 | tee ~/exporter_logs/{{ file_suffix }}.log
+    sh ~/oradiff_exporter/exporter.sh db 2>&1 | tee ~/exporter_logs/{{ file_suffix }}.log
   environment:
     ORACLE_HOME: "{{ dbhome_locl }}"
     ORACLE_SID: "{{ mysid }}"
