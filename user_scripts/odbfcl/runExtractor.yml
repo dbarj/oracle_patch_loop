@@ -5,6 +5,8 @@
     set -eo pipefail
     export ORACLE_HOME
     export ORACLE_SID
+    export DB_EXP_USER="{{ dump_user_int }}"
+    export DB_EXP_DIRECTORY="{{ dump_dir_name }}"
     export DB_EXP_GEN_DUMP=false
     export DB_EXP_IGNORE_ERROR=false
     export DB_EXP_INTERNAL_ONLY=false
