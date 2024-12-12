@@ -10,6 +10,6 @@ config_oci.yml
 loader_uploads.yml
 main.retry
 tasks/main_loader_uploads.yml
-user_scripts/odbfcl/sh_extractor/*.zip
-user_scripts/odbfcl/sh_extractor/build_zip.sh
-user_scripts/odbfcl/sh_extractor/oradiff_exporter/*
+user_scripts_old/odbfcl/sh_extractor.*/*.zip
+user_scripts_old/odbfcl/sh_extractor.*/build_zip.sh
+user_scripts_old/odbfcl/sh_extractor.*/oradiff_exporter/*
