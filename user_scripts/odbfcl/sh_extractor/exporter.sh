@@ -42,20 +42,20 @@ v_def_dump_int_only='true'
 
 [ -z "$v_pattern" -o "$#" -ne 1 -o "$v_pattern" = "-help" ] && echoError "Usage: $0 <pattern> | -help
 
-Example:
- 
-  \$ $0 ${v_example}
-
-  The output will be a zip file named '${v_example}.zip'.
+First parameter is the output file name and cannot be null.
 
 ORAdiff exporter will collect all metadata information from the database,
 to be loaded in the ORAdiff utility for comparison with another patch set,
 including another custom patch set you already loaded.
 
-First parameter is the output file name and cannot be null.
+Example:
+ 
+  \$ $0 ${v_example}
+
+  The output will be a zip file named '${v_example}.zip'.
 "
 
-[ -z "$v_pattern" ] && echoError "The behaviour of the ORAdiff exporter can be changed by exporting
+[ -z "$v_pattern" -o "$#" -ne 1 ] && echoError "The behaviour of the ORAdiff exporter can be changed by exporting
 some environment variables. (Use -help for more details)"
 
 [ "$v_pattern" = "-help" ] && echoError "The behaviour of the ORAdiff exporter can be changed by exporting
