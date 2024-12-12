@@ -85,9 +85,12 @@ update ${v_dump_user_name}.t_txtcollection_load
 set md5_hash=sys.dbms_crypto.hash(contents,2);
 
 insert /*+ append */ into ${v_dump_user_name}.dm_contents (md5_hash, contents)
-select md5_hash, contents
+select md5_hash,
+       contents
 from (
-  select md5_hash, contents, rank() over (partition by md5_hash order by rowid asc) col_ind
+  select md5_hash,
+         contents,
+         rank() over (partition by md5_hash order by rowid asc) col_ind
   from   ${v_dump_user_name}.t_txtcollection_load
 )
 where col_ind=1;
