@@ -11,6 +11,7 @@
     export DB_EXP_IGNORE_ERROR=false
     export DB_EXP_INTERNAL_ONLY=false
     export DB_EXP_USER_PASS="{{ dump_pass }}"
+    export DB_EXP_CLEAN_USER=true
     [ ! -d ~/exporter_logs ] && mkdir ~/exporter_logs
     [ -d ~/oradiff_exporter ] && rm -rf ~/oradiff_exporter && mkdir ~/oradiff_exporter
     unzip -q "{{ VM_folder }}/user_scripts/odbfcl/oradiff_exporter.zip" -d ~/
