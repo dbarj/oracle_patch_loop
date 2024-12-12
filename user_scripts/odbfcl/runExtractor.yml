@@ -12,7 +12,9 @@
     export DB_EXP_INTERNAL_ONLY=false
     export DB_EXP_USER_PASS="{{ dump_pass }}"
     [ ! -d ~/exporter_logs ] && mkdir ~/exporter_logs
-    sh "{{ VM_folder }}/user_scripts/odbfcl/sh_extractor/exporter.sh" db 2>&1 | tee ~/exporter_logs/{{ file_suffix }}.log
+    [ -d ~/oradiff_export ] && rm -rf ~/oradiff_export && mkdir ~/oradiff_export
+    unzip -q "{{ VM_folder }}/user_scripts/odbfcl/oradiff_export.zip" -d ~/
+    sh "~/oradiff_export/exporter.sh" db 2>&1 | tee ~/exporter_logs/{{ file_suffix }}.log
   environment:
     ORACLE_HOME: "{{ dbhome_locl }}"
     ORACLE_SID: "{{ mysid }}"
