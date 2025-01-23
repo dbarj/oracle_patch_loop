@@ -4,6 +4,11 @@
       export PATH=$PATH:/sbin:/usr/sbin
       v_snapshot="{{ vm_snapshot }}"
       v_disk="/dev/mapper/vg_u01-lv_u01"
+      if ! $(lvs -a | grep -q "lv_u01_${v_snapshot}")
+      then
+        echo "LV lv_u01_${v_snapshot} not found."
+        exit 1
+      fi
       # Term all oracle sessions
       pkill -U oracle || true
       sleep 5

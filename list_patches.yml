@@ -758,7 +758,7 @@ list_18000:
   - { type : "RU"   , id : 26     , patch_number : 36339040 } # NOT AVAILABLE TO DOWNLOAD
   - { type : "RU"   , id : 27     , patch_number : 36682577 } # NOT AVAILABLE TO DOWNLOAD
   - { type : "RU"   , id : 28     , patch_number : 36941408 } # NOT AVAILABLE TO DOWNLOAD
-  - { type : "RU"   , id : 28     , patch_number : 37318028 } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "RU"   , id : 29     , patch_number : 37318028 } # NOT AVAILABLE TO DOWNLOAD
 # 18c RUR
 # - { type : "RUR"  , id : 1      , patch_number : 28346593 , base_ru : '18.2'  }
 # - { type : "RUR"  , id : 2      , patch_number : 28601267 , base_ru : '18.2'  }

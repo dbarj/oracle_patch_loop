@@ -6,7 +6,8 @@
       export PATH=$PATH:/sbin:/usr/sbin
       v_snapshot="{{ save_snapshot }}"
       v_disk_vg='/dev/mapper/vg_u01'
-      for lv_name in `lvs --noheadings -o lv_name | grep -E 'PSU|RU' | grep '{{ db_version_short }}' | grep -v ${v_snapshot}`
+      v_db_version_short="{{ db_version_short }}"
+      for lv_name in `lvs --noheadings -o lv_name | grep -E 'PSU|RU' | grep "${v_db_version_short}" | grep -v ${v_snapshot}`
       do
         lvremove -f ${v_disk_vg}-${lv_name}
       done
@@ -21,7 +22,7 @@
       export PATH=$PATH:/sbin:/usr/sbin
       v_snapshot="{{ save_snapshot }}"
       v_disk='/dev/mapper/vg_u01-lv_u01'
-      if ! $(lvs -a | grep -q "${v_snapshot}")
+      if ! $(lvs -a | grep -q "lv_u01_${v_snapshot}")
       then
         v_size=$(lvs --noheadings -o seg_size ${v_disk})
         if grep -q 'release 5.' /etc/oracle-release
