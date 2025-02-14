@@ -1,0 +1,136 @@
+# If bucket
+- block:
+
+  - name: List files in OCI Bucket
+    include_role:
+      name: oci_object_storage_object_facts
+    vars:
+      object_action: "list"
+      oci_list_bucket: "{{ patch_location_bucket }}"
+  
+  - name: Download RPM file from OCI Bucket
+    shell: |
+        export LC_ALL=C.UTF-8
+        export LANG=C.UTF-8
+        oci os object get --bucket-name {{ patch_location_bucket }} --name {{ oci_download_file }} --file {{ shared_folder }}/{{ oci_download_file | basename }}
+    vars:
+      my_query: "{{ patch.apply_file }}"
+      oci_download_file: "{{ oci_action.objects | map(attribute='name') | select('search', my_query) | list | first }}"
+    when: oci_action.objects | map(attribute='name') | select('search', my_query) | list | length > 0
+
+  when: patch_location_type == "bucket"
+
+- name: Finding RPM File
+  find:
+    paths:            "{{ shared_folder }}"
+    patterns:         "{{ patch.apply_file }}"
+    recurse:          "no"
+    file_type:        "file"
+  register: find_result
+
+# If RPM was not found
+- name: Could not find RPM file
+  fail:
+    msg: "Could not find RPM file."
+  when: find_result.files[0] is undefined
+
+## FREE RPM ##
+
+- name: Deploy new ORACLE_HOME
+  shell: |
+      set -eo pipefail
+      # Recreate oracle home
+      rm -rf /u01/app/oracle/product/database/dbhome_1
+      mkdir /u01/app/oracle/product/database/dbhome_1
+      # Unzip RPM
+      cd /u01/install
+      (rm -rf tmp; mkdir tmp; cd tmp; rpm2cpio {{ shared_folder }}/{{ patch.apply_file }} | cpio -i -d)
+      # Move RPM contents
+      mv ./tmp/opt/oracle/product/*/*/* $ORACLE_HOME
+      rmdir -p ./tmp/opt/oracle/product/*/*/ || true
+      # Clean leftover files
+      [ -d ./tmp/opt/ ] && exit 1
+      rm -rf tmp
+      # Recreate oradata/fra
+      rm -rf /u01/app/{oradata,fra}; mkdir /u01/app/{oradata,fra}
+      # Remove old entries from inventory
+      sed -i '/^<HOME NAME/d' /u01/app/oraInstall/ContentsXML/inventory.xml
+      sed '/^FREE:/d' /etc/oratab > /tmp/oratab.new; cat /tmp/oratab.new > /etc/oratab; rm -f /tmp/oratab.new
+      # Attach new home
+      $ORACLE_HOME/oui/bin/attachHome.sh -silent -ignoreSysPrereqs -force INVENTORY_LOCATION=/u01/app/oraInstall
+  environment:
+    ORACLE_HOME: "{{ dbhome_locl }}"
+    ORACLE_SID: "{{ mysid }}"
+  register: shell_output
+  become: true
+  become_user: oracle
+  delegate_to: "{{ vm_ip_address }}"
+
+- name: Call root.sh
+  shell: |
+      set -eo pipefail
+      $ORACLE_HOME/root.sh
+  environment:
+    ORACLE_HOME: "{{ dbhome_locl }}"
+  become: true
+  become_user: root
+  delegate_to: "{{ vm_ip_address }}"
+
+- name: Create new database
+  shell: |
+      set -eo pipefail
+      set +e
+      # Create database
+      $ORACLE_HOME/bin/dbca -silent -createDatabase \
+      -gdbName orcl \
+      -templateName FREE_Database.dbc \
+      -characterSet AL32UTF8 \
+      -createAsContainerDatabase true \
+      -numberOfPDBs 1 \
+      -pdbAdminPassword "Rodrigo.123" \
+      -pdbName PDB01 \
+      -useLocalUndoForPDBs true \
+      -databaseConfigType SINGLE \
+      -databaseType MULTIPURPOSE \
+      -datafileDestination /u01/app/oradata \
+      -dvConfiguration false \
+      -emConfiguration NONE \
+      -enableArchive false \
+      -memoryMgmtType AUTO_SGA \
+      -totalMemory 4000 \
+      -nationalCharacterSet AL16UTF16 \
+      -olsConfiguration false \
+      -recoveryAreaDestination /u01/app/fra \
+      -sampleSchema false \
+      -sid FREE \
+      -storageType FS \
+      -useOMF false \
+      -sysPassword "Rodrigo.123" \
+      -systemPassword "Rodrigo.123"
+      v_ret=$?
+      # ret = 6 is "Successfully Setup Software with warning(s)."
+      if [ ${v_ret} -ne 0 -a ${v_ret} -ne 6 ]
+      then
+        exit 1
+      fi
+  environment:
+    ORACLE_HOME: "{{ dbhome_locl }}"
+    ORACLE_SID: "{{ mysid }}"
+  register: shell_output
+  become: true
+  become_user: oracle
+  delegate_to: "{{ vm_ip_address }}"
+
+- name: DBCA Output
+  debug: msg="{{ shell_output.stdout_lines }}"
+  when: shell_output.stdout_lines is defined
+
+- name : "Remove RPM {{ find_result.files[0].path }} from shared folder"
+  file:
+    state: absent
+    path: "{{ find_result.files[0].path }}"
+
+# Stop the database
+- include: run_sql.yml
+  vars:
+    sql_param : { file : "shutdown.sql" , folder : "patch_sql" , task_action : "Stop Database" }

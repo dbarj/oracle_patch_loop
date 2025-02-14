@@ -18,7 +18,7 @@
 - name : Fail when ORACLE_HOME is null
   fail:
     msg: "Could not find ORACLE_HOME. Check if database {{ mysid }} is registered in /etc/oratab."
-  when: dbhomeoutput.stdout == ''
+  when: dbhome_locl == ''
 
 - block:
 

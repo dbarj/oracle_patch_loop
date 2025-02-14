@@ -121,6 +121,12 @@
 
     when: not database_started
 
+  # This is needed when database is started already and there are multiple home PATHs (23ai)
+  - name : Override DB Home
+    set_fact:
+      dbhome_locl: "{{ patch.oracle_home }}"
+    when: database_started and patch.oracle_home is defined
+
   # Check if there is an image of the requested patch.
   # If this is the case, we can skip the patch operations (set perform_patch_actions to false).
   - block:
@@ -243,6 +249,10 @@
   # It is not possible to have both restore_from_lvm and restore_from_tar as true
   - include: tar_restore.yml tar_file="{{ patch.apply_file }}"
     when: restore_from_tar and patch.apply_method == "tar"
+
+  # When download_rpm is true
+  - include: free_rpm_download.yml
+    when: patch.apply_method == "download_rpm"
 
   # When patch has a pre-req, call the prepare_dependency script to setup.
   - include: prepare_dependency.yml

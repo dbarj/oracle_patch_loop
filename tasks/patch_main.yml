@@ -120,6 +120,10 @@
       when: patch.apply_method is defined and patch.apply_method == "gold_image"
       delegate_to: "{{ vm_ip_address }}"
 
+    # Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
+    - set_fact: shell_output="{{tmp_shell_output}}"
+      when: tmp_shell_output is not skipped
+
     - name: Call root.sh
       shell: |
           set -eo pipefail
@@ -131,11 +135,7 @@
       when: patch.apply_method is defined and patch.apply_method == "gold_image"
       delegate_to: "{{ vm_ip_address }}"
 
-    # Put the value inside another variable to avoid it from getting replaced with "skip_reason": "Conditional result was False"
-    - set_fact: shell_output="{{tmp_shell_output}}"
-      when: tmp_shell_output is not skipped
-
-    - name: Opatch Output
+    - name: Patch Output
       debug: msg="{{ shell_output.stdout_lines }}"
       when: shell_output.stdout_lines is defined
 
