@@ -759,6 +759,35 @@ list_18000:
   - { type : "RU"   , id : 27     , patch_number : 36682577 } # NOT AVAILABLE TO DOWNLOAD
   - { type : "RU"   , id : 28     , patch_number : 36941408 } # NOT AVAILABLE TO DOWNLOAD
   - { type : "RU"   , id : 29     , patch_number : 37318028 } # NOT AVAILABLE TO DOWNLOAD
+# 18c GI
+  - { type : "GI"   , id : 2      , patch_number : 27681568 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 3      , patch_number : 28096386 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 4      , patch_number : 28659165 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 5      , patch_number : 28828717 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 6      , patch_number : 29301682 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 7      , patch_number : 29708703 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 8      , patch_number : 30116795 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 9      , patch_number : 30480702 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 10     , patch_number : 30899645 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 11     , patch_number : 31305362 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 12     , patch_number : 31748523 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 13     , patch_number : 32226219 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 14     , patch_number : 32524152 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 15     , patch_number : 32905273 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "GI"   , id : 16     , patch_number : 33334777 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "GI"   , id : 17     , patch_number : 33582710 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 18     , patch_number : 33878362 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "GI"   , id : 19     , patch_number : 34219576 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "GI"   , id : 20     , patch_number : 34517244 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "GI"   , id : 21     , patch_number : 34853460 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "GI"   , id : 22     , patch_number : 35114007 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "GI"   , id : 23     , patch_number : 35405749 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "GI"   , id : 24     , patch_number : 35743376 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "GI"   , id : 25     , patch_number : 35962393 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "GI"   , id : 26     , patch_number : 36338157 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "GI"   , id : 27     , patch_number : 36681295 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "GI"   , id : 28     , patch_number : 36940355 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
+  - { type : "GI"   , id : 29     , patch_number : 37313863 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true } # NOT AVAILABLE TO DOWNLOAD
 # 18c RUR
 # - { type : "RUR"  , id : 1      , patch_number : 28346593 , base_ru : '18.2'  }
 # - { type : "RUR"  , id : 2      , patch_number : 28601267 , base_ru : '18.2'  }
@@ -848,21 +877,46 @@ list_19000:
   - { type : "RU"   , id : 24     , patch_number : 36582781 }
   - { type : "RU"   , id : 25     , patch_number : 36912597 }
   - { type : "RU"   , id : 26     , patch_number : 37260974 }
+# 19c GI
+  - { type : "GI"   , id : 3      , patch_number : 29517302 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 4      , patch_number : 29708769 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 5      , patch_number : 30116789 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 6      , patch_number : 30501910 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 7      , patch_number : 30899722 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 8      , patch_number : 31305339 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 9      , patch_number : 31750108 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 10     , patch_number : 32226239 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 11     , patch_number : 32545008 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 12     , patch_number : 32895426 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 13     , patch_number : 33182768 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 14     , patch_number : 33509923 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 15     , patch_number : 33803476 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 16     , patch_number : 34130714 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 17     , patch_number : 34416665 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 18     , patch_number : 34762026 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 19     , patch_number : 35037840 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 20     , patch_number : 35319490 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 21     , patch_number : 35642822 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 22     , patch_number : 35940989 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 23     , patch_number : 36233126 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 24     , patch_number : 36582629 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 25     , patch_number : 36916690 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 26     , patch_number : 37257886 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
 # 19c RUR
-  - { type : "RUR"  , id : 1      , patch_number : 29799057 , base_ru : '19.3' }
-  - { type : "RUR"  , id : 2      , patch_number : 30087906 , base_ru : '19.3' }
-  - { type : "RUR"  , id : 1      , patch_number : 30080447 , base_ru : '19.4' }
-  - { type : "RUR"  , id : 2      , patch_number : 30446228 , base_ru : '19.4' }
-  - { type : "RUR"  , id : 1      , patch_number : 30446054 , base_ru : '19.5' }
-  - { type : "RUR"  , id : 2      , patch_number : 30830913 , base_ru : '19.5' }
-  - { type : "RUR"  , id : 1      , patch_number : 30797938 , base_ru : '19.6' }
-  - { type : "RUR"  , id : 2      , patch_number : 31212138 , base_ru : '19.6' }
-  - { type : "RUR"  , id : 1      , patch_number : 31204483 , base_ru : '19.7' }
-  - { type : "RUR"  , id : 2      , patch_number : 31667176 , base_ru : '19.7' }
-  - { type : "RUR"  , id : 1      , patch_number : 31666885 , base_ru : '19.8' }
-  - { type : "RUR"  , id : 2      , patch_number : 32066676 , base_ru : '19.8' }
-  - { type : "RUR"  , id : 1      , patch_number : 32072711 , base_ru : '19.9' }
-  - { type : "RUR"  , id : 2      , patch_number : 32421507 , base_ru : '19.9' }
+  - { type : "RUR"  , id : 1      , patch_number : 29799057 , base_ru : '19.3'  }
+  - { type : "RUR"  , id : 2      , patch_number : 30087906 , base_ru : '19.3'  }
+  - { type : "RUR"  , id : 1      , patch_number : 30080447 , base_ru : '19.4'  }
+  - { type : "RUR"  , id : 2      , patch_number : 30446228 , base_ru : '19.4'  }
+  - { type : "RUR"  , id : 1      , patch_number : 30446054 , base_ru : '19.5'  }
+  - { type : "RUR"  , id : 2      , patch_number : 30830913 , base_ru : '19.5'  }
+  - { type : "RUR"  , id : 1      , patch_number : 30797938 , base_ru : '19.6'  }
+  - { type : "RUR"  , id : 2      , patch_number : 31212138 , base_ru : '19.6'  }
+  - { type : "RUR"  , id : 1      , patch_number : 31204483 , base_ru : '19.7'  }
+  - { type : "RUR"  , id : 2      , patch_number : 31667176 , base_ru : '19.7'  }
+  - { type : "RUR"  , id : 1      , patch_number : 31666885 , base_ru : '19.8'  }
+  - { type : "RUR"  , id : 2      , patch_number : 32066676 , base_ru : '19.8'  }
+  - { type : "RUR"  , id : 1      , patch_number : 32072711 , base_ru : '19.9'  }
+  - { type : "RUR"  , id : 2      , patch_number : 32421507 , base_ru : '19.9'  }
   - { type : "RUR"  , id : 1      , patch_number : 32441092 , base_ru : '19.10' }
   - { type : "RUR"  , id : 2      , patch_number : 32819074 , base_ru : '19.10' }
   - { type : "RUR"  , id : 3      , patch_number : 32923627 , base_ru : '19.10' }
@@ -956,69 +1010,86 @@ list_19000:
   - { type : "OJVM" , id : 241015 , patch_number : 36878697 }
   - { type : "OJVM" , id : 250121 , patch_number : 37102264 }
 # 19c DPBP
-  - { type : "DPBP" , id : 10 , patch_number : 32583144 , dep_type : 'RU' , dep_id : 10 }
-  - { type : "DPBP" , id : 11 , patch_number : 32958059 , dep_type : 'RU' , dep_id : 11 }
-  - { type : "DPBP" , id : 12 , patch_number : 33590062 , dep_type : 'RU' , dep_id : 12 }
-  - { type : "DPBP" , id : 13 , patch_number : 33952087 , dep_type : 'RU' , dep_id : 13 }
-  - { type : "DPBP" , id : 14 , patch_number : 34423086 , dep_type : 'RU' , dep_id : 14 }
-  - { type : "DPBP" , id : 15 , patch_number : 34547013 , dep_type : 'RU' , dep_id : 15 }
-  - { type : "DPBP" , id : 16 , patch_number : 34620690 , dep_type : 'RU' , dep_id : 16 }
-  - { type : "DPBP" , id : 17 , patch_number : 34734035 , dep_type : 'RU' , dep_id : 17 }
-  - { type : "DPBP" , id : 18 , patch_number : 34972375 , dep_type : 'RU' , dep_id : 18 }
-  - { type : "DPBP" , id : 19 , patch_number : 35261302 , dep_type : 'RU' , dep_id : 19 }
-  - { type : "DPBP" , id : 20 , patch_number : 35512813 , dep_type : 'RU' , dep_id : 20 }
-  - { type : "DPBP" , id : 21 , patch_number : 35787077 , dep_type : 'RU' , dep_id : 21 }
-  - { type : "DPBP" , id : 22 , patch_number : 36092868 , dep_type : 'RU' , dep_id : 22 }
-  - { type : "DPBP" , id : 23 , patch_number : 36420641 , dep_type : 'RU' , dep_id : 23 }
-  - { type : "DPBP" , id : 24 , patch_number : 36682332 , dep_type : 'RU' , dep_id : 24 }
-  - { type : "DPBP" , id : 25 , patch_number : 37056207 , dep_type : 'RU' , dep_id : 25 }
-  - { type : "DPBP" , id : 26 , patch_number : 37470729 , dep_type : 'RU' , dep_id : 26 }
+  - { type : "DPBP" , id : 10     , patch_number : 32583144 , dep_type : 'RU' , dep_id : 10 }
+  - { type : "DPBP" , id : 11     , patch_number : 32958059 , dep_type : 'RU' , dep_id : 11 }
+  - { type : "DPBP" , id : 12     , patch_number : 33590062 , dep_type : 'RU' , dep_id : 12 }
+  - { type : "DPBP" , id : 13     , patch_number : 33952087 , dep_type : 'RU' , dep_id : 13 }
+  - { type : "DPBP" , id : 14     , patch_number : 34423086 , dep_type : 'RU' , dep_id : 14 }
+  - { type : "DPBP" , id : 15     , patch_number : 34547013 , dep_type : 'RU' , dep_id : 15 }
+  - { type : "DPBP" , id : 16     , patch_number : 34620690 , dep_type : 'RU' , dep_id : 16 }
+  - { type : "DPBP" , id : 17     , patch_number : 34734035 , dep_type : 'RU' , dep_id : 17 }
+  - { type : "DPBP" , id : 18     , patch_number : 34972375 , dep_type : 'RU' , dep_id : 18 }
+  - { type : "DPBP" , id : 19     , patch_number : 35261302 , dep_type : 'RU' , dep_id : 19 }
+  - { type : "DPBP" , id : 20     , patch_number : 35512813 , dep_type : 'RU' , dep_id : 20 }
+  - { type : "DPBP" , id : 21     , patch_number : 35787077 , dep_type : 'RU' , dep_id : 21 }
+  - { type : "DPBP" , id : 22     , patch_number : 36092868 , dep_type : 'RU' , dep_id : 22 }
+  - { type : "DPBP" , id : 23     , patch_number : 36420641 , dep_type : 'RU' , dep_id : 23 }
+  - { type : "DPBP" , id : 24     , patch_number : 36682332 , dep_type : 'RU' , dep_id : 24 }
+  - { type : "DPBP" , id : 25     , patch_number : 37056207 , dep_type : 'RU' , dep_id : 25 }
+  - { type : "DPBP" , id : 26     , patch_number : 37470729 , dep_type : 'RU' , dep_id : 26 }
 
 ####################
 ##### 21.0.0.0 #####
 ####################
 
 list_21000:
-# - { type : "RU"   , id : 3   , patch_number : 00000000 , base_snap : "21.2.0" }
-  - { type : "RU"   , id : 4   , patch_number : 33239276 }
-  - { type : "RU"   , id : 5   , patch_number : 33516412 }
-  - { type : "RU"   , id : 6   , patch_number : 33843745 }
-  - { type : "RU"   , id : 7   , patch_number : 34160444 }
-  - { type : "RU"   , id : 8   , patch_number : 34527084 }
-  - { type : "RU"   , id : 9   , patch_number : 34839741 }
-  - { type : "RU"   , id : 10  , patch_number : 35134934 }
-  - { type : "RU"   , id : 11  , patch_number : 35428978 }
-  - { type : "RU"   , id : 12  , patch_number : 35740258 }
-  - { type : "RU"   , id : 13  , patch_number : 36041222 }
-  - { type : "RU"   , id : 14  , patch_number : 36352352 }
-  - { type : "RU"   , id : 15  , patch_number : 36696242 }
-  - { type : "RU"   , id : 16  , patch_number : 36991631 }
-  - { type : "RU"   , id : 17  , patch_number : 37350281 }
+# - { type : "RU"   , id : 3      , patch_number : 00000000 , base_snap : "21.2.0" }
+  - { type : "RU"   , id : 4      , patch_number : 33239276 }
+  - { type : "RU"   , id : 5      , patch_number : 33516412 }
+  - { type : "RU"   , id : 6      , patch_number : 33843745 }
+  - { type : "RU"   , id : 7      , patch_number : 34160444 }
+  - { type : "RU"   , id : 8      , patch_number : 34527084 }
+  - { type : "RU"   , id : 9      , patch_number : 34839741 }
+  - { type : "RU"   , id : 10     , patch_number : 35134934 }
+  - { type : "RU"   , id : 11     , patch_number : 35428978 }
+  - { type : "RU"   , id : 12     , patch_number : 35740258 }
+  - { type : "RU"   , id : 13     , patch_number : 36041222 }
+  - { type : "RU"   , id : 14     , patch_number : 36352352 }
+  - { type : "RU"   , id : 15     , patch_number : 36696242 }
+  - { type : "RU"   , id : 16     , patch_number : 36991631 }
+  - { type : "RU"   , id : 17     , patch_number : 37350281 }
+  - { type : "GI"   , id : 4      , patch_number : 33250101 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 5      , patch_number : 33531909 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 6      , patch_number : 33859395 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 7      , patch_number : 34155589 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 8      , patch_number : 34526142 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 9      , patch_number : 34838415 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 10     , patch_number : 35132566 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 11     , patch_number : 35427907 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 12     , patch_number : 35738010 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 13     , patch_number : 36031790 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 14     , patch_number : 36352207 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 15     , patch_number : 36696109 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 16     , patch_number : 36990664 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 17     , patch_number : 37349593 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
 
 ####################
 ##### 23.0.0.0 #####
 ####################
 
 list_23000:
-# - { type : "BETA" , id : 1  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta1.tar.gz" }
-# - { type : "BETA" , id : 2  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta2.tar.gz" }
-# - { type : "BETA" , id : 3  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta3.tar.gz" }
-# - { type : "BETA" , id : 4  , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta4.tar.gz" }
-  - { type : "RU"   , id : 4   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RU_4_0.tar.gz" }
-  - { type : "RU"   , id : 4.1 , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RU_4_1.tar.gz" }
-  - { type : "RU"   , id : 5   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RUGI_5_0.tar.gz" }
-# - { type : "RU"   , id : 5   , patch_number : 36741532 , dep_type : 'RU' , dep_id : 4 }
-  - { type : "BASE" , id : 5   , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.BASE_5_0.tar.gz" }
-# - { type : "RU"   , id : 6   , patch_number : 37037086 }
-# - { type : "RU"   , id : 7   , patch_number : 37366180 }
-  - { type : "RU"   , id : 6   , patch_number : 37037908 , apply_method : "gold_image" }
-  - { type : "RU"   , id : 7   , patch_number : 37370465 , apply_method : "gold_image" }
-  - { type : "FREE" , id : 2   , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23c-2.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
-  - { type : "FREE" , id : 3   , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23c-3.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
-  - { type : "FREE" , id : 4   , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-4.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
-  - { type : "FREE" , id : 5   , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-5.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
-  - { type : "FREE" , id : 6   , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-6.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
-  - { type : "FREE" , id : 7   , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-7.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
+# - { type : "BETA" , id : 1      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta1.tar.gz" }
+# - { type : "BETA" , id : 2      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta2.tar.gz" }
+# - { type : "BETA" , id : 3      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta3.tar.gz" }
+# - { type : "BETA" , id : 4      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.Beta4.tar.gz" }
+  - { type : "RU"   , id : 4      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RU_4_0.tar.gz" }
+  - { type : "RU"   , id : 4.1    , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RU_4_1.tar.gz" }
+  - { type : "RU"   , id : 5      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.RUGI_5_0.tar.gz" }
+# - { type : "RU"   , id : 5      , patch_number : 36741532 , dep_type : 'RU' , dep_id : 4 }
+  - { type : "BASE" , id : 5      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.BASE_5_0.tar.gz" }
+# - { type : "RU"   , id : 6      , patch_number : 37037086 }
+# - { type : "RU"   , id : 7      , patch_number : 37366180 }
+  - { type : "RU"   , id : 6      , patch_number : 37037908 , apply_method : "gold_image" }
+  - { type : "RU"   , id : 7      , patch_number : 37370465 , apply_method : "gold_image" }
+#  - { type : "GI"   , id : 5      , patch_number : 36739878 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 6      , patch_number : 37031054 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 7      , patch_number : 37353687 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "FREE" , id : 2      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23c-2.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
+  - { type : "FREE" , id : 3      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23c-3.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
+  - { type : "FREE" , id : 4      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-4.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
+  - { type : "FREE" , id : 5      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-5.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
+  - { type : "FREE" , id : 6      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-6.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
+  - { type : "FREE" , id : 7      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-7.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
 # 23ai DPBP
-  - { type : "DPBP" , id : 6 , patch_number : 37169536 , dep_type : 'RU' , dep_id : 6 }
-  - { type : "DPBP" , id : 7 , patch_number : 37491421 , dep_type : 'RU' , dep_id : 7 }
+  - { type : "DPBP" , id : 6      , patch_number : 37169536 , dep_type : 'RU' , dep_id : 6 }
+  - { type : "DPBP" , id : 7      , patch_number : 37491421 , dep_type : 'RU' , dep_id : 7 }
