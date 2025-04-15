@@ -186,6 +186,10 @@
       become_user: oracle
       delegate_to: "{{ vm_ip_address }}"
 
+    - name: Set load file name
+      set_fact:
+        load_file_name: "{{ dump_file_prefix }}.dmp"
+
     # User custom post-scripts
     - name: Run user custom post-scripts
       include: run_script.yml

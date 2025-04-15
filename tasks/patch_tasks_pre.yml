@@ -218,7 +218,7 @@
       file:
         state: absent
         path: "{{ db_patch }}"
-      when: patch_location_type == "bucket"
+      when: patch_location_type == "bucket" and (patch.upload_only is undefined or only_deploy_patch)
 
     when: perform_patch_actions
 
@@ -252,7 +252,7 @@
 
   # When download_rpm is true
   - include: free_rpm_download.yml
-    when: patch.apply_method == "download_rpm"
+    when: patch.apply_method is defined and patch.apply_method == "download_rpm"
 
   # When patch has a pre-req, call the prepare_dependency script to setup.
   - include: prepare_dependency.yml
