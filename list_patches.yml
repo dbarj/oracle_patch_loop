@@ -341,6 +341,7 @@ list_11204:
   - { type : "PSU"  , id : 240716 , patch_number : 36575425 }
 # - { type : "PSU"  , id : 241015 , patch_number : xxxxxxxx } # NOTHING TO FIX - NO PATCH CREATED
 # - { type : "PSU"  , id : 250121 , patch_number : xxxxxxxx } # NOTHING TO FIX - NO PATCH CREATED
+  - { type : "PSU"  , id : 250415 , patch_number : 37608089 }
 # 11.2.0.4 OJVM
   - { type : "OJVM" , id : 1      , patch_number : 19282021 }
   - { type : "OJVM" , id : 2      , patch_number : 19877440 }
@@ -384,6 +385,7 @@ list_11204:
   - { type : "OJVM" , id : 240716 , patch_number : 36533106 }
   - { type : "OJVM" , id : 241015 , patch_number : 36878781 }
   - { type : "OJVM" , id : 250121 , patch_number : 37226818 }
+  - { type : "OJVM" , id : 250415 , patch_number : 37547668 }
 # 11.2.0.4 BP
   - { type : "BP"   , id : 1      , patch_number : 17628025 , patch_folder : 17628006 }
   - { type : "BP"   , id : 2      , patch_number : 17838803 , patch_folder : 17741631 }
@@ -444,6 +446,7 @@ list_11204:
   - { type : "BP"   , id : 240716 , patch_number : 36663546 , patch_folder : 36521957 }
 # - { type : "BP"   , id : 241015 , patch_number : xxxxxxxx , patch_folder : xxxxxxxx } # NOTHING TO FIX - NO PATCH CREATED
 # - { type : "BP"   , id : 250121 , patch_number : xxxxxxxx , patch_folder : xxxxxxxx } # NOTHING TO FIX - NO PATCH CREATED
+  - { type : "BP"   , id : 250415 , patch_number : 37712353 , patch_folder : 37608128 }
 
 ####################
 ##### 12.1.0.1 #####
@@ -527,6 +530,7 @@ list_12102:
   - { type : "PSU"  , id : 240716 , patch_number : 36519012 }
   - { type : "PSU"  , id : 241015 , patch_number : 36834621 }
 # - { type : "PSU"  , id : 250121 , patch_number : xxxxxxxx } # NOTHING TO FIX - NO PATCH CREATED
+  - { type : "PSU"  , id : 250415 , patch_number : 37608146 }
 # 12.1.0.2 OJVM
   - { type : "OJVM" , id : 1      , patch_number : 19282028 }
   - { type : "OJVM" , id : 2      , patch_number : 19877336 }
@@ -570,6 +574,7 @@ list_12102:
   - { type : "OJVM" , id : 240716 , patch_number : 36533098 }
   - { type : "OJVM" , id : 241015 , patch_number : 36878764 }
   - { type : "OJVM" , id : 250121 , patch_number : 37226811 }
+  - { type : "OJVM" , id : 250415 , patch_number : 37547662 }
 # 12.1.0.2 BP
   - { type : "BP"   , id : 1      , patch_number : 19404326 , patch_folder : 19189240 }
   - { type : "BP"   , id : 2      , patch_number : 19774304 , patch_folder : 19649591 }
@@ -621,6 +626,7 @@ list_12102:
   - { type : "BP"   , id : 240716 , patch_number : 36663406 , patch_folder : 36519004 }
   - { type : "BP"   , id : 241015 , patch_number : 36961411 , patch_folder : 36834630 }
   - { type : "BP"   , id : 250121 , patch_number : 37372537 , patch_folder : 37226852 }
+  - { type : "BP"   , id : 250415 , patch_number : 37712366 , patch_folder : 37608165 }
 
 ####################
 ##### 12.2.0.1 #####
@@ -662,6 +668,7 @@ list_12201:
   - { type : "RU"   , id : 240716 , patch_number : 36650048 }
   - { type : "RU"   , id : 241015 , patch_number : 36941400 }
   - { type : "RU"   , id : 250121 , patch_number : 37317999 }
+  - { type : "RU"   , id : 250415 , patch_number : 37742706 }
 # 12.2.0.1 RUR
   - { type : "RUR"  , id : 171017 , patch_number : 26518812 , base_ru : JUL2017 }
   - { type : "RUR"  , id : 180116 , patch_number : 27013506 , base_ru : JUL2017 }
@@ -720,6 +727,7 @@ list_12201:
   - { type : "OJVM" , id : 240716 , patch_number : 36533083 }
   - { type : "OJVM" , id : 241015 , patch_number : 36878737 }
   - { type : "OJVM" , id : 250121 , patch_number : 37226803 }
+  - { type : "OJVM" , id : 250415 , patch_number : 37547642 }
 
 ####################
 ##### 18.0.0.0 #####
@@ -877,6 +885,7 @@ list_19000:
   - { type : "RU"   , id : 24     , patch_number : 36582781 }
   - { type : "RU"   , id : 25     , patch_number : 36912597 }
   - { type : "RU"   , id : 26     , patch_number : 37260974 }
+  - { type : "RU"   , id : 27     , patch_number : 37642901 }
 # 19c GI
   - { type : "GI"   , id : 3      , patch_number : 29517302 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
   - { type : "GI"   , id : 4      , patch_number : 29708769 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
@@ -902,6 +911,7 @@ list_19000:
   - { type : "GI"   , id : 24     , patch_number : 36582629 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
   - { type : "GI"   , id : 25     , patch_number : 36916690 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
   - { type : "GI"   , id : 26     , patch_number : 37257886 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 27     , patch_number : 37641958 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
 # 19c RUR
   - { type : "RUR"  , id : 1      , patch_number : 29799057 , base_ru : '19.3'  }
   - { type : "RUR"  , id : 2      , patch_number : 30087906 , base_ru : '19.3'  }
@@ -984,6 +994,12 @@ list_19000:
   - { type : "MRP"  , id : 241119 , patch_number : 37244031 , base_ru : '19.25' , dep_type : 'RU' , dep_id : 25 , apply_method : "napply" }
   - { type : "MRP"  , id : 241217 , patch_number : 37331661 , base_ru : '19.25' , dep_type : 'RU' , dep_id : 25 , apply_method : "napply" }
   - { type : "MRP"  , id : 250121 , patch_number : 37446465 , base_ru : '19.25' , dep_type : 'RU' , dep_id : 25 , apply_method : "napply" }
+  - { type : "MRP"  , id : 250218 , patch_number : 37546427 , base_ru : '19.25' , dep_type : 'RU' , dep_id : 25 , apply_method : "napply" }
+  - { type : "MRP"  , id : 250318 , patch_number : 37663443 , base_ru : '19.25' , dep_type : 'RU' , dep_id : 25 , apply_method : "napply" }
+  - { type : "MRP"  , id : 250415 , patch_number : 37769916 , base_ru : '19.25' , dep_type : 'RU' , dep_id : 25 , apply_method : "napply" }
+  - { type : "MRP"  , id : 250218 , patch_number : 37546431 , base_ru : '19.26' , dep_type : 'RU' , dep_id : 26 , apply_method : "napply" }
+  - { type : "MRP"  , id : 250318 , patch_number : 37663483 , base_ru : '19.26' , dep_type : 'RU' , dep_id : 26 , apply_method : "napply" }
+  - { type : "MRP"  , id : 250415 , patch_number : 37769923 , base_ru : '19.26' , dep_type : 'RU' , dep_id : 26 , apply_method : "napply" }
 # 19c OJVM
   - { type : "OJVM" , id : 190416 , patch_number : 29548437 }
   - { type : "OJVM" , id : 190716 , patch_number : 29774421 }
@@ -1009,6 +1025,7 @@ list_19000:
   - { type : "OJVM" , id : 240716 , patch_number : 36414915 }
   - { type : "OJVM" , id : 241015 , patch_number : 36878697 }
   - { type : "OJVM" , id : 250121 , patch_number : 37102264 }
+  - { type : "OJVM" , id : 250415 , patch_number : 37499406 }
 # 19c DPBP
   - { type : "DPBP" , id : 10     , patch_number : 32583144 , dep_type : 'RU' , dep_id : 10 }
   - { type : "DPBP" , id : 11     , patch_number : 32958059 , dep_type : 'RU' , dep_id : 11 }
@@ -1027,6 +1044,7 @@ list_19000:
   - { type : "DPBP" , id : 24     , patch_number : 36682332 , dep_type : 'RU' , dep_id : 24 }
   - { type : "DPBP" , id : 25     , patch_number : 37056207 , dep_type : 'RU' , dep_id : 25 }
   - { type : "DPBP" , id : 26     , patch_number : 37470729 , dep_type : 'RU' , dep_id : 26 }
+  - { type : "DPBP" , id : 27     , patch_number : 37777295 , dep_type : 'RU' , dep_id : 27 }
 
 ####################
 ##### 21.0.0.0 #####
@@ -1048,6 +1066,7 @@ list_21000:
   - { type : "RU"   , id : 15     , patch_number : 36696242 }
   - { type : "RU"   , id : 16     , patch_number : 36991631 }
   - { type : "RU"   , id : 17     , patch_number : 37350281 }
+  - { type : "RU"   , id : 18     , patch_number : 37655430 }
   - { type : "GI"   , id : 4      , patch_number : 33250101 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
   - { type : "GI"   , id : 5      , patch_number : 33531909 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
   - { type : "GI"   , id : 6      , patch_number : 33859395 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
@@ -1062,6 +1081,7 @@ list_21000:
   - { type : "GI"   , id : 15     , patch_number : 36696109 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
   - { type : "GI"   , id : 16     , patch_number : 36990664 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
   - { type : "GI"   , id : 17     , patch_number : 37349593 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "GI"   , id : 18     , patch_number : 37642955 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
 
 ####################
 ##### 23.0.0.0 #####
@@ -1079,17 +1099,22 @@ list_23000:
   - { type : "BASE" , id : 5      , patch_number : 00000000 , apply_method : "tar" , apply_file : "/u01.BASE_5_0.tar.gz" }
 # - { type : "RU"   , id : 6      , patch_number : 37037086 }
 # - { type : "RU"   , id : 7      , patch_number : 37366180 }
+# - { type : "RU"   , id : 8      , patch_number : 37701421 }
   - { type : "RU"   , id : 6      , patch_number : 37037908 , apply_method : "gold_image" }
   - { type : "RU"   , id : 7      , patch_number : 37370465 , apply_method : "gold_image" }
+  - { type : "RU"   , id : 8      , patch_number : 37703495 , apply_method : "gold_image" }
 #  - { type : "GI"   , id : 5      , patch_number : 36739878 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
   - { type : "GI"   , id : 6      , patch_number : 37031054 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
   - { type : "GI"   , id : 7      , patch_number : 37353687 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
-  - { type : "FREE" , id : 2      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23c-2.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
-  - { type : "FREE" , id : 3      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23c-3.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
-  - { type : "FREE" , id : 4      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-4.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
-  - { type : "FREE" , id : 5      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-5.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
-  - { type : "FREE" , id : 6      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-6.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
-  - { type : "FREE" , id : 7      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-7.0-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
+  - { type : "GI"   , id : 8      , patch_number : 37689703 , apply_method : 'skip' , file_suf : '_xmls' , upload_only : true }
+  - { type : "FREE" , id : 2      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23c-23.2-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
+  - { type : "FREE" , id : 3      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23c-23.3-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23c/dbhomeFree"  , expdp_comp : false }
+  - { type : "FREE" , id : 4      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.4-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
+  - { type : "FREE" , id : 5      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.5-2.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
+  - { type : "FREE" , id : 6      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.6-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
+  - { type : "FREE" , id : 7      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.7-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
+  - { type : "FREE" , id : 8      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.8-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
 # 23ai DPBP
   - { type : "DPBP" , id : 6      , patch_number : 37169536 , dep_type : 'RU' , dep_id : 6 }
   - { type : "DPBP" , id : 7      , patch_number : 37491421 , dep_type : 'RU' , dep_id : 7 }
+  - { type : "DPBP" , id : 8      , patch_number : 37805452 , dep_type : 'RU' , dep_id : 8 }

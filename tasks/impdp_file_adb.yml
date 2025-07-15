@@ -15,6 +15,10 @@
       loop_var: script_param
     when: user_impdp_pre is defined
 
+  - name: Set load file name
+    set_fact:
+      load_file_name: "{{ dump_file_prefix }}.dmp"
+
   # The impdp loader are the same steps executed after the expdp
   - include: run_script.yml
     loop: "{{ user_expdp_post | flatten(levels=1) }}"
