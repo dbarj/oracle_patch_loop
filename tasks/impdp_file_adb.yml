@@ -15,9 +15,15 @@
       loop_var: script_param
     when: user_impdp_pre is defined
 
-  - name: Set load file name
+  - name: Set DMP load file name
     set_fact:
       load_file_name: "{{ dump_file_prefix }}.dmp"
+    when: not (patch.upload_only | default(false))
+
+  - name: Set ZIP load file name
+    set_fact:
+      load_file_name: "{{ dump_file_prefix }}.zip"
+    when: patch.upload_only | default(false)
 
   # The impdp loader are the same steps executed after the expdp
   - include: run_script.yml

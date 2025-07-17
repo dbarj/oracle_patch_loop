@@ -342,6 +342,7 @@ list_11204:
 # - { type : "PSU"  , id : 241015 , patch_number : xxxxxxxx } # NOTHING TO FIX - NO PATCH CREATED
 # - { type : "PSU"  , id : 250121 , patch_number : xxxxxxxx } # NOTHING TO FIX - NO PATCH CREATED
   - { type : "PSU"  , id : 250415 , patch_number : 37608089 }
+# - { type : "PSU"  , id : 250715 , patch_number : xxxxxxxx } # NOTHING TO FIX - NO PATCH CREATED
 # 11.2.0.4 OJVM
   - { type : "OJVM" , id : 1      , patch_number : 19282021 }
   - { type : "OJVM" , id : 2      , patch_number : 19877440 }
@@ -448,6 +449,7 @@ list_11204:
 # - { type : "BP"   , id : 241015 , patch_number : xxxxxxxx , patch_folder : xxxxxxxx } # NOTHING TO FIX - NO PATCH CREATED
 # - { type : "BP"   , id : 250121 , patch_number : xxxxxxxx , patch_folder : xxxxxxxx } # NOTHING TO FIX - NO PATCH CREATED
   - { type : "BP"   , id : 250415 , patch_number : 37712353 , patch_folder : 37608128 }
+# - { type : "BP"   , id : 250715 , patch_number : xxxxxxxx , patch_folder : xxxxxxxx } # NOTHING TO FIX - NO PATCH CREATED
 
 ####################
 ##### 12.1.0.1 #####

@@ -251,10 +251,6 @@
       loop_control:
         loop_var: script_param
 
-    - name: Remove patch file
-      shell: |
-          rm -f {{ shared_folder }}/{{ dump_file_prefix }}.zip
-
     when: not only_deploy_patch and patch.upload_only is defined and patch.upload_only
 
   # Post Actions
