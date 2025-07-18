@@ -15,6 +15,16 @@
     restore_from_lvm: false
     restore_from_tar: false
 
+- name: Set DMP load file name
+  set_fact:
+    load_file_name: "{{ dump_file_prefix }}.dmp"
+  when: not (patch.upload_only | default(false))
+
+- name: Set ZIP load file name
+  set_fact:
+    load_file_name: "{{ dump_file_prefix }}.zip"
+  when: (patch.upload_only | default(false))
+
 # Immediatly stop when skip_all becomes true
 - block:
 
@@ -27,21 +37,21 @@
   # Ignore dumpfile checks when only_deploy_patch is true
   - block:
 
-    - name: "Check if {{ output_folder }}/expdp/{{ dump_file_prefix }}.dmp exists"
+    - name: "Check if {{ output_folder }}/expdp/{{ load_file_name }} exists"
       stat:
-        path: "{{ output_folder }}/expdp/{{ dump_file_prefix }}.dmp"
-      register: dump_stat_result
+        path: "{{ output_folder }}/expdp/{{ load_file_name }}"
+      register: load_file_stat_result
 
     # Will skip all the rest if the dump file exists
     - name : Define skip_all
       set_fact:
-        skip_all: "{{ dump_stat_result.stat.exists }}"
+        skip_all: "{{ load_file_stat_result.stat.exists }}"
       when: skip_dump_exists
 
     - name : Remove dump file if exists
       file:
         state: absent
-        path: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+        path: "{{ shared_folder }}/{{ load_file_name }}"
 
     when: not only_deploy_patch
 
@@ -218,7 +228,7 @@
       file:
         state: absent
         path: "{{ db_patch }}"
-      when: patch_location_type == "bucket" and (patch.upload_only is undefined or only_deploy_patch)
+      when: patch_location_type == "bucket" and (not (patch.upload_only | default(false)) or only_deploy_patch)
 
     when: perform_patch_actions
 

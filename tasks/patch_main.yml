@@ -173,7 +173,7 @@
 
       when: patch.type == "OJVM"
 
-    when: perform_patch_actions and patch.upload_only is not defined
+    when: perform_patch_actions and not (patch.upload_only | default(false))
 
   # Start the database
   - include: run_sql.yml
@@ -207,7 +207,7 @@
           directory={{ dump_dir_name }} \
           {{ expdp_compression | default('') }} \
           metrics=yes \
-          dumpfile={{ dump_file_prefix }}.dmp \
+          dumpfile={{ load_file_name }} \
           logfile={{ dump_file_prefix }}.log \
           content=data_only \
           schemas={{ dump_user_int }} \
@@ -219,17 +219,13 @@
       become_user: oracle
       delegate_to: "{{ vm_ip_address }}"
 
-    - name: Set load file name
-      set_fact:
-        load_file_name: "{{ dump_file_prefix }}.dmp"
-
     # User custom post-scripts
     - include: run_script.yml
       loop: "{{ user_expdp_post | flatten(levels=1) }}"
       loop_control:
         loop_var: script_param
 
-    when: not only_deploy_patch and patch.upload_only is not defined
+    when: not only_deploy_patch and not (patch.upload_only | default(false))
 
   # When patch.upload_only is defined and true
   - block:
@@ -237,13 +233,8 @@
     # User custom pre-scripts
     - name: Save patch file
       shell: |
-          cp -av {{ db_patch }} {{ shared_folder }}/{{ dump_file_prefix }}.zip
-          touch {{ shared_folder }}/{{ dump_file_prefix }}.dmp
+          cp -av {{ db_patch }} {{ shared_folder }}/{{ load_file_name }}
           touch {{ shared_folder }}/{{ dump_file_prefix }}.log
-
-    - name: Set load file name
-      set_fact:
-        load_file_name: "{{ dump_file_prefix }}.zip"
 
     # User custom post-scripts
     - include: run_script.yml
@@ -251,7 +242,7 @@
       loop_control:
         loop_var: script_param
 
-    when: not only_deploy_patch and patch.upload_only is defined and patch.upload_only
+    when: not only_deploy_patch and (patch.upload_only | default(false))
 
   # Post Actions
   - include: patch_tasks_post.yml

@@ -1,11 +1,11 @@
 # For main.yml, the pre_prepare_dump_file.yml won't be called.
-# So dump_stat_result may be false if the dump was created on this execution.
+# So load_file_stat_result may be false if the dump was created on this execution.
 - name: "Check if {{ shared_folder }}/{{ load_file_name }} exists"
   stat:
     path: "{{ shared_folder }}/{{ load_file_name }}"
-  register: dump_stat_result
+  register: load_file_stat_result
 
-# This dump_stat_result.stat.exists block is required only because this code is used
+# This load_file_stat_result.stat.exists block is required only because this code is used
 # for both the extraction (main.yml), where the file obviusly exists, but also on the
 # loader_adb.yml.
 
@@ -65,4 +65,4 @@
                     params : "'{{ dump_file_prefix }}.log'"
                   }
 
-  when: dump_stat_result.stat.exists
+  when: load_file_stat_result.stat.exists

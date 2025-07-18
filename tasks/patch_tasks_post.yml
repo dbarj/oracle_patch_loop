@@ -1,9 +1,9 @@
 # Skip the dump part if no expdp was executed
 - block:
 
-  - name: "Copy {{ dump_file_prefix }}.dmp to repository"
+  - name: "Copy {{ load_file_name }} to repository"
     copy:
-      src: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+      src: "{{ shared_folder }}/{{ load_file_name }}"
       dest: "{{ output_folder }}/expdp"
 
   - name: "Copy {{ dump_file_prefix }}.log to repository"
@@ -11,25 +11,15 @@
       src: "{{ shared_folder }}/{{ dump_file_prefix }}.log"
       dest: "{{ output_folder }}/expdp"
 
-  - name: "Copy {{ dump_file_prefix }}.zip to repository"
-    copy:
-      src: "{{ shared_folder }}/{{ dump_file_prefix }}.zip"
-      dest: "{{ output_folder }}/expdp"
-
-  - name : "Remove file {{ dump_file_prefix }}.dmp"
+  - name : "Remove file {{ load_file_name }}"
     file:
       state: absent
-      path: "{{ shared_folder }}/{{ dump_file_prefix }}.dmp"
+      path: "{{ shared_folder }}/{{ load_file_name }}"
 
   - name : "Remove file {{ dump_file_prefix }}.log"
     file:
       state: absent
       path: "{{ shared_folder }}/{{ dump_file_prefix }}.log"
-
-  - name : "Remove file {{ dump_file_prefix }}.zip"
-    file:
-      state: absent
-      path: "{{ shared_folder }}/{{ dump_file_prefix }}.zip"
 
   # This task will mark file as loaded
   - include: run_script.yml
