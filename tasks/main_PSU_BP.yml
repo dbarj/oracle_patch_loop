@@ -94,6 +94,27 @@
 
   when: param_type is undefined or param_type == "PSU" or param_type == "CPU" or param_type == "BASE"
 
+### BP
+- block:
+
+  - name : Define snapshot base version to rollback when reload is called.
+    set_fact:
+      vm_snapshot: "{{ patch_base }}"
+
+  # Execute for every BP
+  - include: "{{ patch_file }}"
+    loop: "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
+    loop_control:
+      loop_var: patch
+      label: "{{ patch.id }}"
+    when:
+      - patch.type == "BP"
+      - patch.id == (param_patch | float)      or param_patch == -1
+      - patch.id >= (param_patch_from | float) or param_patch_from == -1
+      - patch.id <= (param_patch_to | float)   or param_patch_to == -1
+
+  when: param_type is undefined or param_type == "BP"
+
 ### OJVM
 - block:
 
@@ -127,27 +148,6 @@
       - (patch.version | default(db_version)) == db_version
 
   when: param_type is undefined or param_type == "OJVM"
-
-### BP
-- block:
-
-  - name : Define snapshot base version to rollback when reload is called.
-    set_fact:
-      vm_snapshot: "{{ patch_base }}"
-
-  # Execute for every BP
-  - include: "{{ patch_file }}"
-    loop: "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
-    loop_control:
-      loop_var: patch
-      label: "{{ patch.id }}"
-    when:
-      - patch.type == "BP"
-      - patch.id == (param_patch | float)      or param_patch == -1
-      - patch.id >= (param_patch_from | float) or param_patch_from == -1
-      - patch.id <= (param_patch_to | float)   or param_patch_to == -1
-
-  when: param_type is undefined or param_type == "BP"
 
 # Stop OCI VM
 - name: Call role to stop OCI VM

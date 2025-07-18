@@ -93,6 +93,27 @@
 
   when: param_type is undefined or param_type == "RU" or param_type == "BASE"
 
+### RUR & MRP & DPBP & OTHERS
+- block:
+
+  - name : Define snapshot base version to rollback when reload is called.
+    set_fact:
+      vm_snapshot: "{{ patch_base }}"
+
+  # Execute for every patch
+  - include: "{{ patch_file }}"
+    loop: "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
+    loop_control:
+      loop_var: patch
+      label: "{{ patch.id }}"
+    when:
+      - (param_type is undefined and (patch.type != "RU" and patch.type != "OJVM")) or (param_type is defined and patch.type == param_type)
+      - patch.id == (param_patch | float)      or param_patch == -1
+      - patch.id >= (param_patch_from | float) or param_patch_from == -1
+      - patch.id <= (param_patch_to | float)   or param_patch_to == -1
+
+  when: param_type is undefined or (param_type != "RU" and param_type != "OJVM")
+
 ### OJVM
 - block:
 
@@ -125,27 +146,6 @@
       - patch.id <= (param_patch_to | float)   or param_patch_to == -1
 
   when: param_type is undefined or param_type == "OJVM"
-
-### RUR & MRP & DPBP & OTHERS
-- block:
-
-  - name : Define snapshot base version to rollback when reload is called.
-    set_fact:
-      vm_snapshot: "{{ patch_base }}"
-
-  # Execute for every patch
-  - include: "{{ patch_file }}"
-    loop: "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
-    loop_control:
-      loop_var: patch
-      label: "{{ patch.id }}"
-    when:
-      - (param_type is undefined and (patch.type != "RU" and patch.type != "OJVM")) or (param_type is defined and patch.type == param_type)
-      - patch.id == (param_patch | float)      or param_patch == -1
-      - patch.id >= (param_patch_from | float) or param_patch_from == -1
-      - patch.id <= (param_patch_to | float)   or param_patch_to == -1
-
-  when: param_type is undefined or (param_type != "RU" and param_type != "OJVM")
 
 # Stop OCI VM
 - name: Call role to stop OCI VM

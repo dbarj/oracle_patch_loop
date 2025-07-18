@@ -16,6 +16,7 @@
     bkp2_db_patch: "{{ bkp1_db_patch }}"
     bkp2_unzip_patch_folder: "{{ bkp1_unzip_patch_folder }}"
     bkp2_perform_patch_actions: "{{ bkp1_perform_patch_actions }}"
+    bkp2_load_file_name: "{{ bkp1_load_file_name }}"
   when: bkp1_patch is defined and bkp1_patch != None
 
 - name : Backup1 Variables
@@ -31,6 +32,7 @@
     bkp1_db_patch: "{{ db_patch }}"
     bkp1_unzip_patch_folder: "{{ unzip_patch_folder }}"
     bkp1_perform_patch_actions: "{{ perform_patch_actions }}"
+    bkp1_load_file_name: "{{ load_file_name }}"
 
 - name : Replace settings
   set_fact:
@@ -61,6 +63,7 @@
     db_patch: "{{ bkp1_db_patch }}"
     unzip_patch_folder: "{{ bkp1_unzip_patch_folder }}"
     perform_patch_actions: "{{ bkp1_perform_patch_actions }}"
+    load_file_name: "{{ bkp1_load_file_name }}"
 
 - name : Clean Backup1 Variables
   set_fact:
@@ -79,6 +82,7 @@
     bkp1_db_patch: "{{ bkp2_db_patch }}"
     bkp1_unzip_patch_folder: "{{ bkp2_unzip_patch_folder }}"
     bkp1_perform_patch_actions: "{{ bkp2_perform_patch_actions }}"
+    bkp1_load_file_name: "{{ bkp2_load_file_name }}"
   when: bkp2_patch is defined and bkp2_patch != None
 
 - name : Clean Backup2 Variables
