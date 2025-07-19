@@ -135,7 +135,7 @@
 
   # Execute for every OJVM
   - include: "{{ patch_file }}"
-    loop: "{{ lookup('vars', patch_list) | flatten(levels=1) }}"
+    loop: "{{ lookup('vars', patch_list) | flatten(levels=1) | sort(attribute='id') | reverse | list }}"
     loop_control:
       loop_var: patch
       label: "{{ patch.id }}"
