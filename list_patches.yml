@@ -1062,6 +1062,7 @@ list_19000:
   - { type : "DPBP" , id : 25     , patch_number : 37056207 , dep_type : 'RU' , dep_id : 25 }
   - { type : "DPBP" , id : 26     , patch_number : 37470729 , dep_type : 'RU' , dep_id : 26 }
   - { type : "DPBP" , id : 27     , patch_number : 37777295 , dep_type : 'RU' , dep_id : 27 }
+  - { type : "DPBP" , id : 28     , patch_number : 38170982 , dep_type : 'RU' , dep_id : 28 }
 
 ####################
 ##### 21.0.0.0 #####
@@ -1136,7 +1137,9 @@ list_23000:
   - { type : "FREE" , id : 6      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.6-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
   - { type : "FREE" , id : 7      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.7-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
   - { type : "FREE" , id : 8      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.8-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
+#  - { type : "FREE" , id : 9      , patch_number : 11111111 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.8-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
 # 23ai DPBP
   - { type : "DPBP" , id : 6      , patch_number : 37169536 , dep_type : 'RU' , dep_id : 6 }
   - { type : "DPBP" , id : 7      , patch_number : 37491421 , dep_type : 'RU' , dep_id : 7 }
   - { type : "DPBP" , id : 8      , patch_number : 37805452 , dep_type : 'RU' , dep_id : 8 }
+  - { type : "DPBP" , id : 9      , patch_number : 38171540 , dep_type : 'RU' , dep_id : 9 }
