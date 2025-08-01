@@ -1137,7 +1137,7 @@ list_23000:
   - { type : "FREE" , id : 6      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.6-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
   - { type : "FREE" , id : 7      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.7-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
   - { type : "FREE" , id : 8      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.8-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
-#  - { type : "FREE" , id : 9      , patch_number : 11111111 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.8-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
+  - { type : "FREE" , id : 9      , patch_number : 00000000 , apply_method : "download_rpm" , apply_file : "oracle-database-free-23ai-23.9-1.el8.x86_64.rpm" , oracle_sid : "FREE" , oracle_home : "/opt/oracle/product/23ai/dbhomeFree" , expdp_comp : false }
 # 23ai DPBP
   - { type : "DPBP" , id : 6      , patch_number : 37169536 , dep_type : 'RU' , dep_id : 6 }
   - { type : "DPBP" , id : 7      , patch_number : 37491421 , dep_type : 'RU' , dep_id : 7 }
